@@ -8,25 +8,78 @@ wheels/
 
 # Virtual environments
 .venv
+.venv/
+env/
+venv/
+ENV/
 
-# Environment variables and secrets (NUNCA commitar!)
+# Environment variables, credentials, and secrets (NEVER commit!)
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
 
-# Next.js build and cache
+# Next.js build and node packages
 frontend/.next/
 frontend/node_modules/
 node_modules/
+*.tsbuildinfo
 
 # Testing & Coverage
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Local cache and scratch
+# Local logs, debug traces, and scratchpad
 scratch/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database files and local dumps
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.sql
+
+# Machine Learning models and serialized weights
+*.joblib
+*.pkl
+*.pickle
+
+# Large tabular data files
+*.parquet
+*.feather
+
+# Scraper raw dumps, cache files, and runtime state
+data/*_cache.json
+data/*.html
+data/*.txt
+data/ng_state.json
+
+# Operating System artifacts
+.DS_Store
+Thumbs.db
+._*
+.Spotlight-V100
+.Trashes
+
+# IDE & Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.bak
+
+# Multi-agent coordination metadata
+.agents/
 
 # Archive node_modules
 archive/**/node_modules/

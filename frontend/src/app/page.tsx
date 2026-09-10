@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import { PropCard, PropBet, formatStatName } from '@/components/PropCard';
 
@@ -98,7 +98,121 @@ export default function Home() {
   const [loadingPortfolio, setLoadingPortfolio] = useState<boolean>(false);
   const [portfolioMessage, setPortfolioMessage] = useState<string | null>(null);
   const [portfolioFilter, setPortfolioFilter] = useState<'all' | 'pending' | 'won' | 'lost' | 'ne_sea'>('all');
+  const [portfolioGameFilter, setPortfolioGameFilter] = useState<string>('all');
   const [portfolioSearch, setPortfolioSearch] = useState<string>('');
+
+  const getBetGameInfo = useCallback((bet: any) => {
+    // 1. Direct match with schedule via game_id
+    if (bet.game_id && schedule && schedule.length > 0) {
+      const found = schedule.find((s: any) => s.game_id === bet.game_id);
+      if (found) {
+        return {
+          game_id: found.game_id,
+          away_team: found.away_team,
+          home_team: found.home_team,
+          label: `${found.away_team} @ ${found.home_team}`,
+          stadium: found.stadium,
+          gameday: found.gameday,
+          gametime: found.gametime,
+        };
+      }
+    }
+
+    // 2. Parse from game_id string (e.g. 2026_01_NE_SEA)
+    if (bet.game_id && typeof bet.game_id === 'string' && bet.game_id.includes('_')) {
+      const parts = bet.game_id.split('_');
+      if (parts.length >= 4) {
+        const away = parts[2];
+        const home = parts[3];
+        return {
+          game_id: bet.game_id,
+          away_team: away,
+          home_team: home,
+          label: `${away} @ ${home}`,
+        };
+      }
+    }
+
+    // 3. Match from bet.team and bet.opponent via schedule
+    if (bet.team && bet.opponent && schedule && schedule.length > 0) {
+      const found = schedule.find(
+        (s: any) =>
+          (s.away_team === bet.team && s.home_team === bet.opponent) ||
+          (s.away_team === bet.opponent && s.home_team === bet.team)
+      );
+      if (found) {
+        return {
+          game_id: found.game_id || `${bet.team}_${bet.opponent}`,
+          away_team: found.away_team,
+          home_team: found.home_team,
+          label: `${found.away_team} @ ${found.home_team}`,
+          stadium: found.stadium,
+          gameday: found.gameday,
+          gametime: found.gametime,
+        };
+      }
+    }
+
+    // 4. Fallback using team and opponent
+    if (bet.team && bet.opponent) {
+      return {
+        game_id: bet.game_id || `${bet.team}_vs_${bet.opponent}`,
+        away_team: bet.opponent,
+        home_team: bet.team,
+        label: `${bet.opponent} @ ${bet.team}`,
+      };
+    }
+
+    return {
+      game_id: bet.game_id || 'unknown',
+      away_team: bet.team || 'NFL',
+      home_team: bet.opponent || 'NFL',
+      label: bet.game_id || 'Jogo NFL',
+    };
+  }, [schedule]);
+
+  const portfolioGames = useMemo(() => {
+    const gameMap = new Map<string, {
+      game_id: string;
+      away_team: string;
+      home_team: string;
+      label: string;
+      stadium?: string;
+      gameday?: string;
+      gametime?: string;
+      count: number;
+      wonCount: number;
+      lostCount: number;
+      pendingCount: number;
+    }>();
+
+    portfolioBets.forEach((b: any) => {
+      const info = getBetGameInfo(b);
+      const gid = info.game_id || 'unknown';
+      if (!gameMap.has(gid)) {
+        gameMap.set(gid, {
+          game_id: gid,
+          away_team: info.away_team,
+          home_team: info.home_team,
+          label: info.label,
+          stadium: info.stadium,
+          gameday: info.gameday,
+          gametime: info.gametime,
+          count: 0,
+          wonCount: 0,
+          lostCount: 0,
+          pendingCount: 0,
+        });
+      }
+      const g = gameMap.get(gid)!;
+      g.count += 1;
+      if (b.result === 'won') g.wonCount += 1;
+      else if (b.result === 'lost') g.lostCount += 1;
+      else if (b.result === 'pending') g.pendingCount += 1;
+    });
+
+    return Array.from(gameMap.values()).sort((a, b) => b.count - a.count);
+  }, [portfolioBets, getBetGameInfo]);
 
   // Box Score Modal States
   const [boxScoreOpen, setBoxScoreOpen] = useState<boolean>(false);
@@ -2372,16 +2486,25 @@ export default function Home() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleOpenBoxScore({ game_id: '2026_01_NE_SEA', away_team: 'NE', home_team: 'SEA' })}
-                      className="px-4 py-3 rounded-xl bg-[#000000] hover:bg-[#15130F] text-[#D4AF37] font-mono text-xs uppercase tracking-wider border border-[#D4AF37]/40 transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(212,175,55,0.15)]"
-                      title="Ver estatísticas reais e resultado de todas as apostas do jogo de ontem"
-                    >
-                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                      </svg>
-                      <span>Box Score: Patriots x Seahawks</span>
-                    </button>
+                    {(() => {
+                      const activeGame = portfolioGameFilter !== 'all'
+                        ? portfolioGames.find(g => g.game_id === portfolioGameFilter)
+                        : null;
+                      const targetGameId = activeGame?.game_id || '2026_01_NE_SEA';
+                      const targetLabel = activeGame ? activeGame.label : 'Patriots x Seahawks';
+                      return (
+                        <button
+                          onClick={() => handleOpenBoxScore(activeGame || { game_id: targetGameId, away_team: 'NE', home_team: 'SEA' })}
+                          className="px-4 py-3 rounded-xl bg-[#000000] hover:bg-[#15130F] text-[#D4AF37] font-mono text-xs uppercase tracking-wider border border-[#D4AF37]/40 transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(212,175,55,0.15)]"
+                          title={`Ver estatísticas reais e resultado de todas as apostas de ${targetLabel}`}
+                        >
+                          <svg className="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                          </svg>
+                          <span>Box Score: {targetLabel}</span>
+                        </button>
+                      );
+                    })()}
 
                     <button
                       onClick={handleResetSettlement}
@@ -2411,80 +2534,189 @@ export default function Home() {
               {/* Ledger / Table of Bets in Portfolio */}
               <div className="bg-[#0C0C0E] border border-[#2B261D] rounded-2xl overflow-hidden shadow-2xl">
                 {/* Table Header & Search Filter */}
-                <div className="p-5 border-b border-[#2B261D] flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
-                  {/* Status Filter Tabs */}
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <button
-                      onClick={() => setPortfolioFilter('all')}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
-                        portfolioFilter === 'all'
-                          ? 'bg-[#FFFFFF] text-[#000000] font-bold border border-[#D4AF37]'
-                          : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
-                      }`}
-                    >
-                      TODAS ({portfolioSummary?.total_bets || 0})
-                    </button>
-                    <button
-                      onClick={() => setPortfolioFilter(portfolioFilter === 'ne_sea' ? 'all' : 'ne_sea')}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all flex items-center gap-1.5 ${
-                        portfolioFilter === 'ne_sea'
-                          ? 'bg-[#10B981] text-black font-bold border border-[#10B981] shadow-[0_0_12px_rgba(16,185,129,0.3)]'
-                          : 'bg-[#15130F] text-[#10B981] hover:bg-[#201C15] border border-[#10B981]/40'
-                      }`}
-                      title="Filtrar apenas apostas do jogo de ontem Patriots x Seahawks"
-                    >
-                      <span>🏈 PATRIOTS X SEAHAWKS</span>
-                    </button>
-                    <button
-                      onClick={() => setPortfolioFilter('pending')}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
-                        portfolioFilter === 'pending'
-                          ? 'bg-[#D4AF37] text-black font-bold border border-[#D4AF37]'
-                          : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
-                      }`}
-                    >
-                      PENDENTES ({portfolioSummary?.pending_count || 0})
-                    </button>
-                    <button
-                      onClick={() => setPortfolioFilter('won')}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
-                        portfolioFilter === 'won'
-                          ? 'bg-[#10B981] text-black font-bold border border-[#10B981]'
-                          : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
-                      }`}
-                    >
-                      GREENS ({portfolioSummary?.won_count || 0})
-                    </button>
-                    <button
-                      onClick={() => setPortfolioFilter('lost')}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
-                        portfolioFilter === 'lost'
-                          ? 'bg-rose-500 text-white font-bold'
-                          : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
-                      }`}
-                    >
-                      REDS ({portfolioSummary?.lost_count || 0})
-                    </button>
+                {/* Table Header & Search/Game Filters */}
+                <div className="p-5 border-b border-[#2B261D] flex flex-col gap-4">
+                  <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
+                    {/* Status Filter Tabs */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        onClick={() => setPortfolioFilter('all')}
+                        className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
+                          portfolioFilter === 'all'
+                            ? 'bg-[#FFFFFF] text-[#000000] font-bold border border-[#D4AF37]'
+                            : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
+                        }`}
+                      >
+                        TODAS ({portfolioSummary?.total_bets || 0})
+                      </button>
+                      <button
+                        onClick={() => setPortfolioFilter('pending')}
+                        className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
+                          portfolioFilter === 'pending'
+                            ? 'bg-[#D4AF37] text-black font-bold border border-[#D4AF37]'
+                            : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
+                        }`}
+                      >
+                        PENDENTES ({portfolioSummary?.pending_count || 0})
+                      </button>
+                      <button
+                        onClick={() => setPortfolioFilter('won')}
+                        className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
+                          portfolioFilter === 'won'
+                            ? 'bg-[#10B981] text-black font-bold border border-[#10B981]'
+                            : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
+                        }`}
+                      >
+                        GREENS ({portfolioSummary?.won_count || 0})
+                      </button>
+                      <button
+                        onClick={() => setPortfolioFilter('lost')}
+                        className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
+                          portfolioFilter === 'lost'
+                            ? 'bg-rose-500 text-white font-bold'
+                            : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
+                        }`}
+                      >
+                        REDS ({portfolioSummary?.lost_count || 0})
+                      </button>
+                    </div>
+
+                    {/* Game Filter & Search Input */}
+                    <div className="flex flex-wrap items-center gap-3">
+                      {/* Game Select Dropdown */}
+                      <div className="flex items-center gap-2 flex-1 sm:flex-initial">
+                        <label className="text-[11px] font-mono text-[#C5A880] uppercase tracking-wider hidden sm:inline whitespace-nowrap flex items-center gap-1">
+                          <span>🏈</span> Jogo:
+                        </label>
+                        <div className="relative w-full sm:w-auto">
+                          <select
+                            value={portfolioGameFilter}
+                            onChange={(e) => setPortfolioGameFilter(e.target.value)}
+                            className={`w-full sm:w-auto bg-[#000000] border text-xs font-mono rounded-xl pl-3 pr-8 py-2 focus:outline-none transition-all cursor-pointer ${
+                              portfolioGameFilter !== 'all'
+                                ? 'border-[#10B981] text-[#10B981] font-bold shadow-[0_0_12px_rgba(16,185,129,0.25)]'
+                                : 'border-[#2B261D] text-white hover:border-[#C5A880]/60'
+                            }`}
+                          >
+                            <option value="all">🏈 Todos os Jogos ({portfolioBets.length} apostas)</option>
+                            {portfolioGames.map((g) => (
+                              <option key={g.game_id} value={g.game_id}>
+                                {g.label} ({g.count} {g.count === 1 ? 'aposta' : 'apostas'})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Search Input */}
+                      <div className="relative min-w-[200px] flex-1 sm:flex-initial">
+                        <input
+                          type="text"
+                          placeholder="Filtrar por jogador, time ou jogo..."
+                          value={portfolioSearch}
+                          onChange={(e) => setPortfolioSearch(e.target.value)}
+                          className="w-full bg-[#000000] border border-[#2B261D] text-white text-xs font-mono rounded-xl px-4 py-2 focus:border-[#C5A880] focus:outline-none placeholder:text-zinc-600 transition-colors"
+                        />
+                        {portfolioSearch && (
+                          <button
+                            onClick={() => setPortfolioSearch('')}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white text-xs font-mono"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Search Input */}
-                  <div className="relative min-w-[240px]">
-                    <input
-                      type="text"
-                      placeholder="Filtrar por jogador ou equipe..."
-                      value={portfolioSearch}
-                      onChange={(e) => setPortfolioSearch(e.target.value)}
-                      className="w-full bg-[#000000] border border-[#2B261D] text-white text-xs font-mono rounded-xl px-4 py-2 focus:border-[#C5A880] focus:outline-none placeholder:text-zinc-600 transition-colors"
-                    />
-                    {portfolioSearch && (
+                  {/* Horizontal Quick Game Pills */}
+                  {portfolioGames.length > 0 && (
+                    <div className="pt-2 border-t border-[#2B261D]/60 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                      <span className="text-[10px] font-mono uppercase text-[#C5A880]/80 tracking-wider whitespace-nowrap flex items-center gap-1 shrink-0">
+                        <span>🏈</span> Jogos com Apostas:
+                      </span>
                       <button
-                        onClick={() => setPortfolioSearch('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white text-xs font-mono"
+                        onClick={() => setPortfolioGameFilter('all')}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-mono tracking-wider transition-all whitespace-nowrap shrink-0 ${
+                          portfolioGameFilter === 'all'
+                            ? 'bg-[#FFFFFF] text-black font-bold border border-[#D4AF37]'
+                            : 'bg-black text-zinc-400 hover:text-white border border-[#2B261D]'
+                        }`}
                       >
-                        ✕
+                        Todos ({portfolioBets.length})
                       </button>
-                    )}
-                  </div>
+                      {portfolioGames.map((g) => {
+                        const isSelected = portfolioGameFilter === g.game_id;
+                        return (
+                          <button
+                            key={g.game_id}
+                            onClick={() => setPortfolioGameFilter(isSelected ? 'all' : g.game_id)}
+                            className={`px-2.5 py-1 rounded-lg text-xs font-mono tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 border shrink-0 ${
+                              isSelected
+                                ? 'bg-[#10B981] text-black font-bold border-[#10B981] shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                                : 'bg-[#15130F] text-zinc-300 hover:text-white border-[#2B261D] hover:border-[#C5A880]/40'
+                            }`}
+                            title={`Filtrar apostas de ${g.label}`}
+                          >
+                            <img src={`/logos/${g.away_team}.png`} alt={g.away_team} className="w-3.5 h-3.5 object-contain inline" />
+                            <span>{g.label}</span>
+                            <img src={`/logos/${g.home_team}.png`} alt={g.home_team} className="w-3.5 h-3.5 object-contain inline" />
+                            <span className={`text-[10px] px-1.5 rounded-full font-bold ${
+                              isSelected ? 'bg-black/25 text-black' : 'bg-zinc-800 text-zinc-400'
+                            }`}>
+                              {g.count}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Active Game Filter Notification Banner */}
+                  {portfolioGameFilter !== 'all' && (() => {
+                    const activeGame = portfolioGames.find(g => g.game_id === portfolioGameFilter);
+                    if (!activeGame) return null;
+                    return (
+                      <div className="p-3 px-4 rounded-xl bg-gradient-to-r from-[#1A160F] via-[#15130F] to-[#0C0C0E] border border-[#D4AF37]/40 flex flex-wrap items-center justify-between gap-3 text-xs font-mono shadow-md animate-in fade-in duration-150">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <div className="flex items-center gap-2 bg-black/80 px-3 py-1 rounded-lg border border-[#D4AF37]/50">
+                            <img src={`/logos/${activeGame.away_team}.png`} alt={activeGame.away_team} className="w-4 h-4 object-contain" />
+                            <span className="font-bold text-white text-xs">{activeGame.away_team}</span>
+                            <span className="text-[#C5A880] text-[10px]">@</span>
+                            <span className="font-bold text-white text-xs">{activeGame.home_team}</span>
+                            <img src={`/logos/${activeGame.home_team}.png`} alt={activeGame.home_team} className="w-4 h-4 object-contain" />
+                          </div>
+                          <div className="text-zinc-300 text-xs">
+                            Exibindo <span className="font-bold text-[#D4AF37]">{activeGame.count} apostas</span> deste jogo
+                            {(activeGame.wonCount > 0 || activeGame.lostCount > 0 || activeGame.pendingCount > 0) && (
+                              <span className="text-zinc-400 ml-2">
+                                (<span className="text-emerald-400 font-bold">{activeGame.wonCount} Greens</span> • <span className="text-rose-400 font-bold">{activeGame.lostCount} Reds</span>{activeGame.pendingCount > 0 ? ` • ${activeGame.pendingCount} Pendentes` : ''})
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleOpenBoxScore(activeGame)}
+                            className="px-3 py-1 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 text-[#D4AF37] border border-[#D4AF37]/50 text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-sm"
+                            title="Ver estatísticas completas e box score deste jogo"
+                          >
+                            <svg className="w-3.5 h-3.5 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <span>Ver Box Score</span>
+                          </button>
+                          <button
+                            onClick={() => setPortfolioGameFilter('all')}
+                            className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700 text-xs font-mono transition-colors flex items-center gap-1"
+                            title="Limpar filtro de jogo e mostrar todas as apostas"
+                          >
+                            <span>✕ Limpar Filtro</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* Table */}
@@ -2493,6 +2725,7 @@ export default function Home() {
                     <thead className="bg-[#15130F] text-[#C5A880] uppercase font-mono text-[10px] tracking-wider border-b border-[#2B261D]">
                       <tr>
                         <th className="py-3.5 px-4 font-semibold">Ativo (Jogador)</th>
+                        <th className="py-3.5 px-4 font-semibold">Jogo</th>
                         <th className="py-3.5 px-4 font-semibold">Mercado</th>
                         <th className="py-3.5 px-4 font-semibold">Linha & Lado</th>
                         <th className="py-3.5 px-4 font-semibold">Odd</th>
@@ -2512,11 +2745,30 @@ export default function Home() {
                             if (portfolioFilter === 'won' && b.result !== 'won') return false;
                             if (portfolioFilter === 'lost' && b.result !== 'lost') return false;
                             if (portfolioFilter === 'ne_sea' && b.team !== 'NE' && b.team !== 'SEA' && b.opponent !== 'NE' && b.opponent !== 'SEA') return false;
+
+                            // Filtro por Jogo
+                            if (portfolioGameFilter !== 'all') {
+                              const info = getBetGameInfo(b);
+                              if (info.game_id !== portfolioGameFilter) {
+                                const target = portfolioGames.find(g => g.game_id === portfolioGameFilter);
+                                if (target) {
+                                  const matchTeams = (b.team === target.away_team || b.team === target.home_team || b.opponent === target.away_team || b.opponent === target.home_team);
+                                  if (!matchTeams) return false;
+                                } else {
+                                  return false;
+                                }
+                              }
+                            }
+
+                            // Filtro de busca por texto (jogador, time ou confronto)
                             if (portfolioSearch.trim()) {
                               const q = portfolioSearch.toLowerCase().trim();
                               const matchPlayer = (b.player_name || '').toLowerCase().includes(q);
                               const matchTeam = (b.team || '').toLowerCase().includes(q);
-                              if (!matchPlayer && !matchTeam) return false;
+                              const matchOpp = (b.opponent || '').toLowerCase().includes(q);
+                              const info = getBetGameInfo(b);
+                              const matchGame = info.label.toLowerCase().includes(q);
+                              if (!matchPlayer && !matchTeam && !matchOpp && !matchGame) return false;
                             }
                             return true;
                           })
@@ -2525,7 +2777,7 @@ export default function Home() {
                         if (filteredBets.length === 0) {
                           return (
                             <tr>
-                              <td colSpan={10} className="py-16 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
+                              <td colSpan={11} className="py-16 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
                                 {portfolioBets.length === 0 
                                   ? (portfolioTab === 'safe'
                                       ? 'A carteira conservadora está vazia. Clique em "Sincronizar Recomendações Seguras" para importar apostas (+EV 2.5% a 15%).'
@@ -2543,6 +2795,7 @@ export default function Home() {
                           const isLost = bet.result === 'lost';
                           const isPending = bet.result === 'pending';
                           const isPush = bet.result === 'push';
+                          const gameInfo = getBetGameInfo(bet);
 
                           const marketLabel = 
                             bet.market === 'rushing_yards' ? 'Jardas Terrestres' :
@@ -2582,6 +2835,24 @@ export default function Home() {
                                     </span>
                                   )}
                                 </div>
+                              </td>
+
+                              {/* Jogo */}
+                              <td className="py-3.5 px-4 whitespace-nowrap">
+                                <button
+                                  type="button"
+                                  onClick={() => setPortfolioGameFilter(portfolioGameFilter === gameInfo.game_id ? 'all' : gameInfo.game_id)}
+                                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-mono transition-all ${
+                                    portfolioGameFilter === gameInfo.game_id
+                                      ? 'bg-[#10B981]/20 border-[#10B981] text-[#10B981] font-bold shadow-sm'
+                                      : 'bg-zinc-900/80 hover:bg-[#15130F] border-zinc-800 hover:border-[#D4AF37]/50 text-zinc-300 hover:text-[#D4AF37]'
+                                  }`}
+                                  title={`Filtrar apenas apostas de ${gameInfo.label}`}
+                                >
+                                  <img src={`/logos/${gameInfo.away_team}.png`} alt={gameInfo.away_team} className="w-3.5 h-3.5 object-contain inline" />
+                                  <span>{gameInfo.label}</span>
+                                  <img src={`/logos/${gameInfo.home_team}.png`} alt={gameInfo.home_team} className="w-3.5 h-3.5 object-contain inline" />
+                                </button>
                               </td>
 
                               {/* Mercado */}
