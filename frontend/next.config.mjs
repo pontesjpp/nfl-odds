@@ -1,0 +1,26 @@
+/** @type {import('next').Config} */
+const nextConfig = {
+  devIndicators: false,
+  allowedDevOrigins: ['*.trycloudflare.com', 'localhost:3000'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'a.espncdn.com',
+        pathname: '/combiner/i**',
+      },
+    ],
+  },
+  async rewrites() {
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:8000';
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${backendUrl}/api/:path*`,
+      },
+    ];
+  },
+};
+
+export default nextConfig;
+

@@ -1,0 +1,374 @@
+{
+  "team_abbr": "BAL",
+  "team_name": "Baltimore Ravens",
+  "team_nick": "Ravens",
+  "conference": "AFC",
+  "division": "AFC North",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Lamar Jackson",
+          "jersey_number": 8,
+          "espn_id": "3916387",
+          "gsis_id": "00-0034796",
+          "years_exp": 8,
+          "college": "Louisville",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Tyler Huntley",
+          "jersey_number": 5,
+          "espn_id": "4035671",
+          "gsis_id": "00-0035993",
+          "years_exp": 6,
+          "college": "Utah",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Joe Fagnano",
+          "jersey_number": 12,
+          "espn_id": "4429582",
+          "gsis_id": "00-0040981",
+          "years_exp": 0,
+          "college": "Connecticut; Maine",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Skylar Thompson",
+          "jersey_number": 11,
+          "espn_id": "4036419",
+          "gsis_id": "00-0037327",
+          "years_exp": 4,
+          "college": "Kansas State",
+          "status": "RES"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Derrick Henry",
+          "jersey_number": 22,
+          "espn_id": "3043078",
+          "gsis_id": "00-0032764",
+          "years_exp": 10,
+          "college": "Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Justice Hill",
+          "jersey_number": 43,
+          "espn_id": "4038441",
+          "gsis_id": "00-0034975",
+          "years_exp": 7,
+          "college": "Oklahoma State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Rasheen Ali",
+          "jersey_number": 26,
+          "espn_id": "4690013",
+          "gsis_id": "00-0039796",
+          "years_exp": 2,
+          "college": "Marshall",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Adam Randall",
+          "jersey_number": 23,
+          "espn_id": "4685526",
+          "gsis_id": "00-0040888",
+          "years_exp": 0,
+          "college": "Clemson",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Zay Flowers",
+          "jersey_number": 4,
+          "espn_id": "4429615",
+          "gsis_id": "00-0039064",
+          "years_exp": 3,
+          "college": "Boston College",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Devontez Walker",
+          "jersey_number": 81,
+          "espn_id": "4696882",
+          "gsis_id": "00-0039792",
+          "years_exp": 2,
+          "college": "North Carolina; Kent State; North Carolina Central",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Rashod Bateman",
+          "jersey_number": 7,
+          "espn_id": "4360939",
+          "gsis_id": "00-0036550",
+          "years_exp": 5,
+          "college": "Minnesota",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Elijah Sarratt",
+          "jersey_number": 13,
+          "espn_id": "5088338",
+          "gsis_id": "00-0040876",
+          "years_exp": 0,
+          "college": "Indiana; James Madison; St. Francis PA",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Ja'Kobi Lane",
+          "jersey_number": 6,
+          "espn_id": "4870847",
+          "gsis_id": "00-0040870",
+          "years_exp": 0,
+          "college": "USC",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "LaJohntay Wester",
+          "jersey_number": 10,
+          "espn_id": "4690143",
+          "gsis_id": "00-0040075",
+          "years_exp": 1,
+          "college": "Colorado; Florida Atlantic",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Mark Andrews",
+          "jersey_number": 89,
+          "espn_id": "3116365",
+          "gsis_id": "00-0034753",
+          "years_exp": 8,
+          "college": "Oklahoma",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Durham Smythe",
+          "jersey_number": 80,
+          "espn_id": "3052897",
+          "gsis_id": "00-0034798",
+          "years_exp": 8,
+          "college": "Notre Dame",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Matthew Hibner",
+          "jersey_number": 88,
+          "espn_id": "4432260",
+          "gsis_id": "00-0040879",
+          "years_exp": 0,
+          "college": "SMU; Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Josh Cuevas",
+          "jersey_number": 85,
+          "espn_id": "4876132",
+          "gsis_id": "00-0040887",
+          "years_exp": 0,
+          "college": "Alabama; Washington; Pomona State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Ronnie Stanley",
+          "jersey_number": 79,
+          "espn_id": "2980153",
+          "gsis_id": "00-0032965",
+          "years_exp": 10,
+          "college": "Notre Dame",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Carson Vinson",
+          "jersey_number": 76,
+          "espn_id": "4769895",
+          "gsis_id": "00-0040070",
+          "years_exp": 1,
+          "college": "Alabama A&M",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "John Simpson",
+          "jersey_number": 74,
+          "espn_id": "4035479",
+          "gsis_id": "00-0036369",
+          "years_exp": 6,
+          "college": "Clemson",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Andrew Vorhees",
+          "jersey_number": 72,
+          "espn_id": "4243220",
+          "gsis_id": "00-0038383",
+          "years_exp": 3,
+          "college": "USC",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jovaughn Gwyn",
+          "jersey_number": 54,
+          "espn_id": "4362845",
+          "gsis_id": "00-0038629",
+          "years_exp": 3,
+          "college": "South Carolina",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Ethan Pocic",
+          "jersey_number": 77,
+          "espn_id": "3042738",
+          "gsis_id": "00-0033901",
+          "years_exp": 9,
+          "college": "LSU",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Danny Pinter",
+          "jersey_number": 63,
+          "espn_id": "3915470",
+          "gsis_id": "00-0036215",
+          "years_exp": 6,
+          "college": "Ball State",
+          "status": "RES"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Olaivavega Ioane",
+          "jersey_number": 71,
+          "espn_id": "4832793",
+          "gsis_id": "00-0040866",
+          "years_exp": 0,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Emery Jones Jr.",
+          "jersey_number": 51,
+          "espn_id": "4685736",
+          "gsis_id": "00-0040068",
+          "years_exp": 1,
+          "college": "LSU",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Roger Rosengarten",
+          "jersey_number": 70,
+          "espn_id": "4430876",
+          "gsis_id": "00-0039233",
+          "years_exp": 2,
+          "college": "Washington",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,390 @@
+{
+  "team_abbr": "MIN",
+  "team_name": "Minnesota Vikings",
+  "team_nick": "Vikings",
+  "conference": "NFC",
+  "division": "NFC North",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Kyler Murray",
+          "jersey_number": 1,
+          "espn_id": "3917315",
+          "gsis_id": "00-0035228",
+          "years_exp": 7,
+          "college": "Oklahoma; Texas A&M",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "J.J. McCarthy",
+          "jersey_number": 9,
+          "espn_id": "4433970",
+          "gsis_id": "00-0039923",
+          "years_exp": 2,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Carson Wentz",
+          "jersey_number": 11,
+          "espn_id": "2573079",
+          "gsis_id": "00-0032950",
+          "years_exp": 10,
+          "college": "North Dakota State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Aaron Jones Sr.",
+          "jersey_number": 33,
+          "espn_id": "3042519",
+          "gsis_id": "00-0033293",
+          "years_exp": 9,
+          "college": "Texas-El Paso",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jordan Mason",
+          "jersey_number": 27,
+          "espn_id": "4360569",
+          "gsis_id": "00-0037525",
+          "years_exp": 4,
+          "college": "Georgia Tech",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Demond Claiborne",
+          "jersey_number": 21,
+          "espn_id": "4832846",
+          "gsis_id": "00-0041104",
+          "years_exp": 0,
+          "college": "Wake Forest",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Jermar Jefferson",
+          "jersey_number": 17,
+          "espn_id": "4374033",
+          "gsis_id": "00-0036670",
+          "years_exp": 5,
+          "college": "Oregon State",
+          "status": "RES"
+        }
+      ]
+    },
+    "FB": {
+      "position_title": "Fullback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Max Bredeson",
+          "jersey_number": 45,
+          "espn_id": "4878695",
+          "gsis_id": "00-0041081",
+          "years_exp": 0,
+          "college": "Michigan",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Justin Jefferson",
+          "jersey_number": 18,
+          "espn_id": "4262921",
+          "gsis_id": "00-0036322",
+          "years_exp": 6,
+          "college": "LSU",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Tai Felton",
+          "jersey_number": 13,
+          "espn_id": "4565185",
+          "gsis_id": "00-0040154",
+          "years_exp": 1,
+          "college": "Maryland",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Jordan Addison",
+          "jersey_number": 3,
+          "espn_id": "4429205",
+          "gsis_id": "00-0038994",
+          "years_exp": 3,
+          "college": "USC; Pittsburgh",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Myles Price",
+          "jersey_number": 4,
+          "espn_id": "4430656",
+          "gsis_id": "00-0040506",
+          "years_exp": 1,
+          "college": "Indiana; Texas Tech",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Jauan Jennings",
+          "jersey_number": 14,
+          "espn_id": "3886598",
+          "gsis_id": "00-0036259",
+          "years_exp": 6,
+          "college": "Tennessee",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Jeshaun Jones",
+          "jersey_number": 82,
+          "espn_id": "4360637",
+          "gsis_id": "00-0039710",
+          "years_exp": 2,
+          "college": "Maryland",
+          "status": "RES"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "T.J. Hockenson",
+          "jersey_number": 87,
+          "espn_id": "4036133",
+          "gsis_id": "00-0035229",
+          "years_exp": 7,
+          "college": "Iowa",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Josh Oliver",
+          "jersey_number": 84,
+          "espn_id": "3921690",
+          "gsis_id": "00-0035249",
+          "years_exp": 7,
+          "college": "San Jose State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Ben Yurosek",
+          "jersey_number": 85,
+          "espn_id": "4433959",
+          "gsis_id": "00-0040509",
+          "years_exp": 1,
+          "college": "Georgia; Stanford",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Gavin Bartholomew",
+          "jersey_number": 86,
+          "espn_id": "4708049",
+          "gsis_id": "00-0040215",
+          "years_exp": 1,
+          "college": "Pittsburgh",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Christian Darrisaw",
+          "jersey_number": 71,
+          "espn_id": "4361985",
+          "gsis_id": "00-0036616",
+          "years_exp": 5,
+          "college": "Virginia Tech",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Ryan Van Demark",
+          "jersey_number": 72,
+          "espn_id": "4239140",
+          "gsis_id": "00-0037404",
+          "years_exp": 4,
+          "college": "Connecticut",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Donovan Jackson",
+          "jersey_number": 74,
+          "espn_id": "4431553",
+          "gsis_id": "00-0040661",
+          "years_exp": 1,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Joe Huber",
+          "jersey_number": 60,
+          "espn_id": "4690210",
+          "gsis_id": "00-0040500",
+          "years_exp": 1,
+          "college": "Wisconsin",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Blake Brandel",
+          "jersey_number": 64,
+          "espn_id": "3930270",
+          "gsis_id": "00-0036347",
+          "years_exp": 6,
+          "college": "Oregon State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Nick Samac",
+          "jersey_number": 62,
+          "espn_id": "4428421",
+          "gsis_id": "00-0039237",
+          "years_exp": 2,
+          "college": "Michigan State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Michael Jurgens",
+          "jersey_number": 65,
+          "espn_id": "4362010",
+          "gsis_id": "00-0039419",
+          "years_exp": 2,
+          "college": "Wake Forest",
+          "status": "RES"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Will Fries",
+          "jersey_number": 76,
+          "espn_id": "4045176",
+          "gsis_id": "00-0036483",
+          "years_exp": 5,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Trevor Keegan",
+          "jersey_number": 69,
+          "espn_id": "4427140",
+          "gsis_id": "00-0039310",
+          "years_exp": 2,
+          "college": "Michigan",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Brian O'Neill",
+          "jersey_number": 75,
+          "espn_id": "3123954",
+          "gsis_id": "00-0034158",
+          "years_exp": 8,
+          "college": "Pittsburgh",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Caleb Tiernan",
+          "jersey_number": 78,
+          "espn_id": "4592836",
+          "gsis_id": "00-0041053",
+          "years_exp": 0,
+          "college": "Northwestern",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

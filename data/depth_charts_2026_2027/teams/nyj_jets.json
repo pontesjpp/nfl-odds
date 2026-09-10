@@ -1,0 +1,368 @@
+{
+  "team_abbr": "NYJ",
+  "team_name": "New York Jets",
+  "team_nick": "Jets",
+  "conference": "AFC",
+  "division": "AFC East",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Geno Smith",
+          "jersey_number": 7,
+          "espn_id": "15864",
+          "gsis_id": "00-0030565",
+          "years_exp": 13,
+          "college": "West Virginia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Cade Klubnik",
+          "jersey_number": 10,
+          "espn_id": "4685413",
+          "gsis_id": "00-0041056",
+          "years_exp": 0,
+          "college": "Clemson",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Breece Hall",
+          "jersey_number": 20,
+          "espn_id": "4427366",
+          "gsis_id": "00-0038120",
+          "years_exp": 4,
+          "college": "Iowa State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Braelon Allen",
+          "jersey_number": 0,
+          "espn_id": "4685247",
+          "gsis_id": "00-0039794",
+          "years_exp": 2,
+          "college": "Wisconsin",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Isaiah Davis",
+          "jersey_number": 32,
+          "espn_id": "4695404",
+          "gsis_id": "00-0039798",
+          "years_exp": 2,
+          "college": "South Dakota State",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Kene Nwangwu",
+          "jersey_number": 3,
+          "espn_id": "4035537",
+          "gsis_id": "00-0036842",
+          "years_exp": 5,
+          "college": "Iowa State",
+          "status": "ACT"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Chip Trayanum",
+          "jersey_number": 40,
+          "espn_id": "4430893",
+          "gsis_id": "00-0041239",
+          "years_exp": 0,
+          "college": "Toledo; Kentucky; Ohio State; Arizona State",
+          "status": "RES"
+        }
+      ]
+    },
+    "FB": {
+      "position_title": "Fullback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Andrew Beck",
+          "jersey_number": 47,
+          "espn_id": "3125107",
+          "gsis_id": "00-0034959",
+          "years_exp": 7,
+          "college": "Texas",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Garrett Wilson",
+          "jersey_number": 5,
+          "espn_id": "4569618",
+          "gsis_id": "00-0037740",
+          "years_exp": 4,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Isaiah Williams",
+          "jersey_number": 18,
+          "espn_id": "4569371",
+          "gsis_id": "00-0039451",
+          "years_exp": 2,
+          "college": "Illinois",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Adonai Mitchell",
+          "jersey_number": 15,
+          "espn_id": "4597500",
+          "gsis_id": "00-0039890",
+          "years_exp": 2,
+          "college": "Texas; Georgia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Tim Patrick",
+          "jersey_number": 17,
+          "espn_id": "3134353",
+          "gsis_id": "00-0033375",
+          "years_exp": 9,
+          "college": "Utah; Grossmont",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Omar Cooper Jr.",
+          "jersey_number": 83,
+          "espn_id": "4723820",
+          "gsis_id": "00-0041511",
+          "years_exp": 0,
+          "college": "Indiana",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Arian Smith",
+          "jersey_number": 82,
+          "espn_id": "4429105",
+          "gsis_id": "00-0040582",
+          "years_exp": 1,
+          "college": "Georgia",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Mason Taylor",
+          "jersey_number": 85,
+          "espn_id": "4808766",
+          "gsis_id": "00-0040736",
+          "years_exp": 1,
+          "college": "LSU",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Kenyon Sadiq",
+          "jersey_number": 16,
+          "espn_id": "5083315",
+          "gsis_id": "00-0041032",
+          "years_exp": 0,
+          "college": "Oregon",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Jeremy Ruckert",
+          "jersey_number": 89,
+          "espn_id": "4361372",
+          "gsis_id": "00-0037805",
+          "years_exp": 4,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Jelani Woods",
+          "jersey_number": 86,
+          "espn_id": "4241410",
+          "gsis_id": "00-0037755",
+          "years_exp": 4,
+          "college": "Virginia",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Olu Fashanu",
+          "jersey_number": 74,
+          "espn_id": "4431809",
+          "gsis_id": "00-0039790",
+          "years_exp": 2,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Max Mitchell",
+          "jersey_number": 61,
+          "espn_id": "4373656",
+          "gsis_id": "00-0038114",
+          "years_exp": 4,
+          "college": "Louisiana-Lafayette",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Dylan Parham",
+          "jersey_number": 64,
+          "espn_id": "4243375",
+          "gsis_id": "00-0037255",
+          "years_exp": 4,
+          "college": "Memphis",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Anez Cooper",
+          "jersey_number": 72,
+          "espn_id": "4905597",
+          "gsis_id": "00-0041097",
+          "years_exp": 0,
+          "college": "Miami",
+          "status": "RES"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Josh Myers",
+          "jersey_number": 71,
+          "espn_id": "4242000",
+          "gsis_id": "00-0036622",
+          "years_exp": 5,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jordan Meredith",
+          "jersey_number": 67,
+          "espn_id": "4076803",
+          "gsis_id": "00-0036604",
+          "years_exp": 5,
+          "college": "Western Kentucky",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Joe Tippmann",
+          "jersey_number": 66,
+          "espn_id": "4428681",
+          "gsis_id": "00-0039145",
+          "years_exp": 3,
+          "college": "Wisconsin",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Armand Membou",
+          "jersey_number": 70,
+          "espn_id": "4789907",
+          "gsis_id": "00-0040123",
+          "years_exp": 1,
+          "college": "Missouri",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Chukwuma Okorafor",
+          "jersey_number": 79,
+          "espn_id": "3129473",
+          "gsis_id": "00-0034768",
+          "years_exp": 8,
+          "college": "Western Michigan",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

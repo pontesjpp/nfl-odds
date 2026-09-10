@@ -1,0 +1,423 @@
+{
+  "team_abbr": "SF",
+  "team_name": "San Francisco 49ers",
+  "team_nick": "49ers",
+  "conference": "NFC",
+  "division": "NFC West",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Brock Purdy",
+          "jersey_number": 13,
+          "espn_id": "4361741",
+          "gsis_id": "00-0037834",
+          "years_exp": 4,
+          "college": "Iowa State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Mac Jones",
+          "jersey_number": 10,
+          "espn_id": "4241464",
+          "gsis_id": "00-0036972",
+          "years_exp": 5,
+          "college": "Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Kurtis Rourke",
+          "jersey_number": 14,
+          "espn_id": "4430431",
+          "gsis_id": "00-0040589",
+          "years_exp": 1,
+          "college": "Indiana",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Christian McCaffrey",
+          "jersey_number": 23,
+          "espn_id": "3117251",
+          "gsis_id": "00-0033280",
+          "years_exp": 9,
+          "college": "Stanford",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Kaelon Black",
+          "jersey_number": 26,
+          "espn_id": "4696044",
+          "gsis_id": "00-0041052",
+          "years_exp": 0,
+          "college": "Indiana; James Madison",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Jordan James",
+          "jersey_number": 29,
+          "espn_id": "4685397",
+          "gsis_id": "00-0040177",
+          "years_exp": 1,
+          "college": "Oregon",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Isaac Guerendo",
+          "jersey_number": 31,
+          "espn_id": "4372561",
+          "gsis_id": "00-0039363",
+          "years_exp": 2,
+          "college": "Louisville; Wisconsin",
+          "status": "RES"
+        }
+      ]
+    },
+    "FB": {
+      "position_title": "Fullback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Kyle Juszczyk",
+          "jersey_number": 44,
+          "espn_id": "16002",
+          "gsis_id": "00-0029892",
+          "years_exp": 13,
+          "college": "Harvard",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Mike Evans",
+          "jersey_number": 5,
+          "espn_id": "16737",
+          "gsis_id": "00-0031408",
+          "years_exp": 12,
+          "college": "Texas A&M",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Demarcus Robinson",
+          "jersey_number": 11,
+          "espn_id": "3043116",
+          "gsis_id": "00-0032775",
+          "years_exp": 10,
+          "college": "Florida",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 7,
+          "player_name": "Christian Kirk",
+          "jersey_number": 3,
+          "espn_id": "3895856",
+          "gsis_id": "00-0034775",
+          "years_exp": 8,
+          "college": "Texas A&M",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Deebo Samuel",
+          "jersey_number": 19,
+          "espn_id": "3126486",
+          "gsis_id": "00-0035719",
+          "years_exp": 7,
+          "college": "South Carolina",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Jordan Watkins",
+          "jersey_number": 17,
+          "espn_id": "4431466",
+          "gsis_id": "00-0040172",
+          "years_exp": 1,
+          "college": "Mississippi; Louisville",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 8,
+          "player_name": "Brandon Aiyuk",
+          "jersey_number": null,
+          "espn_id": "4360438",
+          "gsis_id": "00-0036261",
+          "years_exp": null,
+          "college": null,
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "De'Zhaun Stribling",
+          "jersey_number": 7,
+          "espn_id": "4710714",
+          "gsis_id": "00-0041035",
+          "years_exp": 0,
+          "college": "Mississippi; Oklahoma State; Washington State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Jacob Cowing",
+          "jersey_number": 4,
+          "espn_id": "4575665",
+          "gsis_id": "00-0039365",
+          "years_exp": 2,
+          "college": "Arizona; Texas-El Paso",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 9,
+          "player_name": "Ricky Pearsall",
+          "jersey_number": 1,
+          "espn_id": "4428209",
+          "gsis_id": "00-0039916",
+          "years_exp": 2,
+          "college": "Florida; Arizona State",
+          "status": "RES"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "George Kittle",
+          "jersey_number": 85,
+          "espn_id": "3040151",
+          "gsis_id": "00-0033288",
+          "years_exp": 9,
+          "college": "Iowa",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jake Tonges",
+          "jersey_number": 88,
+          "espn_id": "4259147",
+          "gsis_id": "00-0037112",
+          "years_exp": 4,
+          "college": "California",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Luke Farrell",
+          "jersey_number": 89,
+          "espn_id": "4040612",
+          "gsis_id": "00-0036887",
+          "years_exp": 5,
+          "college": "Ohio State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Trent Williams",
+          "jersey_number": 71,
+          "espn_id": "13241",
+          "gsis_id": "00-0027857",
+          "years_exp": 16,
+          "college": "Oklahoma",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Vederian Lowe",
+          "jersey_number": 76,
+          "espn_id": "4240554",
+          "gsis_id": "00-0037287",
+          "years_exp": 4,
+          "college": "Illinois",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Enrique Cruz Jr.",
+          "jersey_number": 69,
+          "espn_id": "4691556",
+          "gsis_id": "00-0041090",
+          "years_exp": 0,
+          "college": "Kansas",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Austen Pleasants",
+          "jersey_number": 62,
+          "espn_id": "3920814",
+          "gsis_id": "00-0035829",
+          "years_exp": 6,
+          "college": "Ohio",
+          "status": "RES"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Connor Colby",
+          "jersey_number": 75,
+          "espn_id": "4431523",
+          "gsis_id": "00-0040245",
+          "years_exp": 1,
+          "college": "Iowa",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Carver Willis",
+          "jersey_number": 74,
+          "espn_id": "4565779",
+          "gsis_id": "00-0041061",
+          "years_exp": 0,
+          "college": "Washington; Kansas State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Nick Zakelj",
+          "jersey_number": 63,
+          "espn_id": "4247590",
+          "gsis_id": "00-0037831",
+          "years_exp": 4,
+          "college": "Fordham",
+          "status": "RES"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jake Brendel",
+          "jersey_number": 64,
+          "espn_id": "2577185",
+          "gsis_id": "00-0032701",
+          "years_exp": 10,
+          "college": "UCLA",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jarrett Patterson",
+          "jersey_number": 58,
+          "espn_id": "4372774",
+          "gsis_id": "00-0038615",
+          "years_exp": 3,
+          "college": "Notre Dame",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Brett Toth",
+          "jersey_number": 78,
+          "espn_id": "3129116",
+          "gsis_id": "00-0035743",
+          "years_exp": 7,
+          "college": "Army",
+          "status": "RES"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Dominick Puni",
+          "jersey_number": 77,
+          "espn_id": "5092959",
+          "gsis_id": "00-0039351",
+          "years_exp": 2,
+          "college": "Kansas; Central Missouri",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Colton McKivitz",
+          "jersey_number": 68,
+          "espn_id": "3916075",
+          "gsis_id": "00-0036256",
+          "years_exp": 6,
+          "college": "West Virginia",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

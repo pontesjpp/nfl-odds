@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 220" width="1100" height="220" fill="none">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&amp;display=swap');
+      .street-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: 64px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        fill: #F4E8D1;
+      }
+      .street-sub {
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: 0.72em;
+        text-transform: uppercase;
+        fill: #C5A880;
+      }
+    </style>
+  </defs>
+
+  <rect width="1100" height="220" fill="#050505"/>
+
+  <text x="550" y="108" text-anchor="middle" class="street-title">BISKATE</text>
+  <line x1="280" y1="128" x2="820" y2="128" stroke="#D4AF37" stroke-width="2"/>
+  <text x="556" y="168" text-anchor="middle" class="street-sub">ANALYTICS</text>
+</svg>

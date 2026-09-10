@@ -1,0 +1,418 @@
+{
+  "team_abbr": "KC",
+  "team_name": "Kansas City Chiefs",
+  "team_nick": "Chiefs",
+  "conference": "AFC",
+  "division": "AFC West",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Patrick Mahomes",
+          "jersey_number": 15,
+          "espn_id": "3139477",
+          "gsis_id": "00-0033873",
+          "years_exp": 9,
+          "college": "Texas Tech",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Justin Fields",
+          "jersey_number": 6,
+          "espn_id": "4362887",
+          "gsis_id": "00-0036945",
+          "years_exp": 5,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Garrett Nussmeier",
+          "jersey_number": 14,
+          "espn_id": "4567747",
+          "gsis_id": "00-0040906",
+          "years_exp": 0,
+          "college": "LSU",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Kenneth Walker III",
+          "jersey_number": 9,
+          "espn_id": "4567048",
+          "gsis_id": "00-0038134",
+          "years_exp": 4,
+          "college": "Michigan State; Wake Forest",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Emmett Johnson",
+          "jersey_number": 10,
+          "espn_id": "4832955",
+          "gsis_id": "00-0041013",
+          "years_exp": 0,
+          "college": "Nebraska",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Brashard Smith",
+          "jersey_number": 24,
+          "espn_id": "4596602",
+          "gsis_id": "00-0040078",
+          "years_exp": 1,
+          "college": "SMU; Miami",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Rashee Rice",
+          "jersey_number": 4,
+          "espn_id": "4428331",
+          "gsis_id": "00-0039067",
+          "years_exp": 3,
+          "college": "SMU",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Jalen Royals",
+          "jersey_number": 11,
+          "espn_id": "5082630",
+          "gsis_id": "00-0040646",
+          "years_exp": 1,
+          "college": "Utah State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 7,
+          "player_name": "Jeff Caldwell",
+          "jersey_number": 8,
+          "espn_id": "4885466",
+          "gsis_id": "00-0040953",
+          "years_exp": 0,
+          "college": "Cincinnati; Lindenwood",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Xavier Worthy",
+          "jersey_number": 1,
+          "espn_id": "4683062",
+          "gsis_id": "00-0039894",
+          "years_exp": 2,
+          "college": "Texas",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Cyrus Allen",
+          "jersey_number": 13,
+          "espn_id": "4912218",
+          "gsis_id": "00-0040890",
+          "years_exp": 0,
+          "college": "Cincinnati; Texas A&M; Louisiana Tech",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 8,
+          "player_name": "Jimmy Holiday",
+          "jersey_number": 82,
+          "espn_id": "4431142",
+          "gsis_id": "00-0040120",
+          "years_exp": 1,
+          "college": "Louisiana Tech; Western Kentucky; Tennessee",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Tyquan Thornton",
+          "jersey_number": 2,
+          "espn_id": "4362921",
+          "gsis_id": "00-0038104",
+          "years_exp": 4,
+          "college": "Baylor",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Nikko Remigio",
+          "jersey_number": 81,
+          "espn_id": "4372716",
+          "gsis_id": "00-0038519",
+          "years_exp": 3,
+          "college": "Fresno State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Travis Kelce",
+          "jersey_number": 87,
+          "espn_id": "15847",
+          "gsis_id": "00-0030506",
+          "years_exp": 13,
+          "college": "Cincinnati",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Noah Gray",
+          "jersey_number": 83,
+          "espn_id": "4240472",
+          "gsis_id": "00-0036637",
+          "years_exp": 5,
+          "college": "Duke",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Jared Wiley",
+          "jersey_number": 12,
+          "espn_id": "4430723",
+          "gsis_id": "00-0039824",
+          "years_exp": 2,
+          "college": "TCU; Texas",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Jake Briningstool",
+          "jersey_number": 88,
+          "espn_id": "4431196",
+          "gsis_id": "00-0040081",
+          "years_exp": 1,
+          "college": "Clemson",
+          "status": "ACT"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "John Michael Gyllenborg",
+          "jersey_number": 84,
+          "espn_id": "4708490",
+          "gsis_id": "00-0040955",
+          "years_exp": 0,
+          "college": "Wyoming",
+          "status": "RES"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Josh Simmons",
+          "jersey_number": 71,
+          "espn_id": "4569659",
+          "gsis_id": "00-0040116",
+          "years_exp": 1,
+          "college": "Ohio State; San Diego State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jaylon Moore",
+          "jersey_number": 77,
+          "espn_id": "4043041",
+          "gsis_id": "00-0036557",
+          "years_exp": 5,
+          "college": "Western Michigan",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Kingsley Suamataia",
+          "jersey_number": 76,
+          "espn_id": "4431595",
+          "gsis_id": "00-0039844",
+          "years_exp": 2,
+          "college": "BYU; Oregon",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Mike Caliendo",
+          "jersey_number": 66,
+          "espn_id": "4043039",
+          "gsis_id": "00-0037207",
+          "years_exp": 4,
+          "college": "Western Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Joshua Ezeudu",
+          "jersey_number": 73,
+          "espn_id": "4373280",
+          "gsis_id": "00-0037807",
+          "years_exp": 4,
+          "college": "North Carolina",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Creed Humphrey",
+          "jersey_number": 52,
+          "espn_id": "4241385",
+          "gsis_id": "00-0036623",
+          "years_exp": 5,
+          "college": "Oklahoma",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Hunter Nourzad",
+          "jersey_number": 64,
+          "espn_id": "4367645",
+          "gsis_id": "00-0039827",
+          "years_exp": 2,
+          "college": "Penn State; Cornell",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Trey Smith",
+          "jersey_number": 65,
+          "espn_id": "4242459",
+          "gsis_id": "00-0036660",
+          "years_exp": 5,
+          "college": "Tennessee",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Mike Caliendo",
+          "jersey_number": 66,
+          "espn_id": "4043039",
+          "gsis_id": "00-0037207",
+          "years_exp": 4,
+          "college": "Western Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Matt Waletzko",
+          "jersey_number": 73,
+          "espn_id": "4370876",
+          "gsis_id": "00-0037266",
+          "years_exp": 4,
+          "college": "North Dakota",
+          "status": "RES"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Kahlil Benson",
+          "jersey_number": 70,
+          "espn_id": "4566190",
+          "gsis_id": "00-0041019",
+          "years_exp": 0,
+          "college": "Indiana; Colorado",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jaylon Moore",
+          "jersey_number": 77,
+          "espn_id": "4043041",
+          "gsis_id": "00-0036557",
+          "years_exp": 5,
+          "college": "Western Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Diego Pounds",
+          "jersey_number": 61,
+          "espn_id": "4602984",
+          "gsis_id": "00-0040987",
+          "years_exp": 0,
+          "college": "Mississippi; North Carolina",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,385 @@
+{
+  "team_abbr": "NO",
+  "team_name": "New Orleans Saints",
+  "team_nick": "Saints",
+  "conference": "NFC",
+  "division": "NFC South",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Tyler Shough",
+          "jersey_number": 6,
+          "espn_id": "4360689",
+          "gsis_id": "00-0040743",
+          "years_exp": 1,
+          "college": "Louisville; Texas Tech; Oregon",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Spencer Rattler",
+          "jersey_number": 2,
+          "espn_id": "4426339",
+          "gsis_id": "00-0039376",
+          "years_exp": 2,
+          "college": "South Carolina; Oklahoma",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Zach Wilson",
+          "jersey_number": 11,
+          "espn_id": "4361259",
+          "gsis_id": "00-0037013",
+          "years_exp": 5,
+          "college": "BYU",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Travis Etienne Jr.",
+          "jersey_number": 3,
+          "espn_id": "4239996",
+          "gsis_id": "00-0036973",
+          "years_exp": 5,
+          "college": "Clemson",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Alvin Kamara",
+          "jersey_number": 41,
+          "espn_id": "3054850",
+          "gsis_id": "00-0033906",
+          "years_exp": 9,
+          "college": "Tennessee; Hutchinson CC; Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Kendre Miller",
+          "jersey_number": 5,
+          "espn_id": "4599739",
+          "gsis_id": "00-0038551",
+          "years_exp": 3,
+          "college": "TCU",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Audric Estime",
+          "jersey_number": 30,
+          "espn_id": "4569682",
+          "gsis_id": "00-0039373",
+          "years_exp": 2,
+          "college": "Notre Dame",
+          "status": "ACT"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Ty Chandler",
+          "jersey_number": 32,
+          "espn_id": "4242431",
+          "gsis_id": "00-0037276",
+          "years_exp": 4,
+          "college": "North Carolina",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Chris Olave",
+          "jersey_number": 12,
+          "espn_id": "4361370",
+          "gsis_id": "00-0037239",
+          "years_exp": 4,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Barion Brown",
+          "jersey_number": 19,
+          "espn_id": "4698597",
+          "gsis_id": "00-0041099",
+          "years_exp": 0,
+          "college": "LSU; Kentucky",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Devaughn Vele",
+          "jersey_number": 14,
+          "espn_id": "4569559",
+          "gsis_id": "00-0039424",
+          "years_exp": 2,
+          "college": "Utah",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Jordyn Tyson",
+          "jersey_number": 0,
+          "espn_id": "4880281",
+          "gsis_id": "00-0041029",
+          "years_exp": 0,
+          "college": "Arizona State; Colorado",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Bryce Lance",
+          "jersey_number": 18,
+          "espn_id": "4879276",
+          "gsis_id": "00-0041067",
+          "years_exp": 0,
+          "college": "North Dakota State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Mason Tipton",
+          "jersey_number": 15,
+          "espn_id": "4573697",
+          "gsis_id": "00-0039623",
+          "years_exp": 2,
+          "college": "Yale",
+          "status": "RES"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Juwan Johnson",
+          "jersey_number": 83,
+          "espn_id": "3929645",
+          "gsis_id": "00-0036040",
+          "years_exp": 6,
+          "college": "Oregon; Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Noah Fant",
+          "jersey_number": 87,
+          "espn_id": "4036131",
+          "gsis_id": "00-0035644",
+          "years_exp": 7,
+          "college": "Iowa",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Oscar Delp",
+          "jersey_number": 4,
+          "espn_id": "4702559",
+          "gsis_id": "00-0041041",
+          "years_exp": 0,
+          "college": "Georgia",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Moliki Matavao",
+          "jersey_number": 80,
+          "espn_id": "4432731",
+          "gsis_id": "00-0040244",
+          "years_exp": 1,
+          "college": "UCLA",
+          "status": "RES"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Kelvin Banks Jr.",
+          "jersey_number": 71,
+          "espn_id": "4685260",
+          "gsis_id": "00-0040125",
+          "years_exp": 1,
+          "college": "Texas",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Asim Richards",
+          "jersey_number": 72,
+          "espn_id": "4430379",
+          "gsis_id": "00-0038601",
+          "years_exp": 3,
+          "college": "North Carolina",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "David Edwards",
+          "jersey_number": 76,
+          "espn_id": "3917660",
+          "gsis_id": "00-0035668",
+          "years_exp": 7,
+          "college": "Wisconsin",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Dillon Radunz",
+          "jersey_number": 77,
+          "espn_id": "4040945",
+          "gsis_id": "00-0036619",
+          "years_exp": 5,
+          "college": "North Dakota State",
+          "status": "RES"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Nick Saldiveri",
+          "jersey_number": 64,
+          "espn_id": "4361600",
+          "gsis_id": "00-0038566",
+          "years_exp": 3,
+          "college": "Old Dominion",
+          "status": "RES"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Erik McCoy",
+          "jersey_number": 78,
+          "espn_id": "3917331",
+          "gsis_id": "00-0035242",
+          "years_exp": 7,
+          "college": "Texas A&M",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Cesar Ruiz",
+          "jersey_number": 51,
+          "espn_id": "4258199",
+          "gsis_id": "00-0036408",
+          "years_exp": 6,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jeremiah Wright",
+          "jersey_number": 65,
+          "espn_id": "4433938",
+          "gsis_id": "00-0041065",
+          "years_exp": 0,
+          "college": "Auburn",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "William Sherman",
+          "jersey_number": 66,
+          "espn_id": "4243186",
+          "gsis_id": "00-0036535",
+          "years_exp": 5,
+          "college": "Colorado",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Taliese Fuaga",
+          "jersey_number": 75,
+          "espn_id": "4606711",
+          "gsis_id": "00-0039339",
+          "years_exp": 2,
+          "college": "Oregon State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Mason Murphy",
+          "jersey_number": 63,
+          "espn_id": "4682479",
+          "gsis_id": "00-0041173",
+          "years_exp": 0,
+          "college": "Auburn; USC",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

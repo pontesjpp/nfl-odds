@@ -1,0 +1,374 @@
+{
+  "team_abbr": "CHI",
+  "team_name": "Chicago Bears",
+  "team_nick": "Bears",
+  "conference": "NFC",
+  "division": "NFC North",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Caleb Williams",
+          "jersey_number": 18,
+          "espn_id": "4431611",
+          "gsis_id": "00-0039918",
+          "years_exp": 2,
+          "college": "USC; Oklahoma",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Tyson Bagent",
+          "jersey_number": 17,
+          "espn_id": "4434153",
+          "gsis_id": "00-0038416",
+          "years_exp": 3,
+          "college": "Shepherd",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Case Keenum",
+          "jersey_number": 11,
+          "espn_id": "15168",
+          "gsis_id": "00-0028986",
+          "years_exp": 14,
+          "college": "Houston",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "D'Andre Swift",
+          "jersey_number": 4,
+          "espn_id": "4259545",
+          "gsis_id": "00-0036275",
+          "years_exp": 6,
+          "college": "Georgia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Kyle Monangai",
+          "jersey_number": 25,
+          "espn_id": "4608686",
+          "gsis_id": "00-0040236",
+          "years_exp": 1,
+          "college": "Rutgers",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Roschon Johnson",
+          "jersey_number": 23,
+          "espn_id": "4426386",
+          "gsis_id": "00-0039021",
+          "years_exp": 3,
+          "college": "Texas",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Brittain Brown",
+          "jersey_number": 38,
+          "espn_id": "4036032",
+          "gsis_id": "00-0037329",
+          "years_exp": 4,
+          "college": "UCLA",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Rome Odunze",
+          "jersey_number": 15,
+          "espn_id": "4431299",
+          "gsis_id": "00-0039919",
+          "years_exp": 2,
+          "college": "Washington",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Zavion Thomas",
+          "jersey_number": 13,
+          "espn_id": "4869748",
+          "gsis_id": "00-0041051",
+          "years_exp": 0,
+          "college": "LSU; Mississippi State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Luther Burden III",
+          "jersey_number": 10,
+          "espn_id": "4685278",
+          "gsis_id": "00-0040735",
+          "years_exp": 1,
+          "college": "Missouri",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Jahdae Walker",
+          "jersey_number": 9,
+          "espn_id": "5160110",
+          "gsis_id": "00-0040277",
+          "years_exp": 1,
+          "college": "Texas A&M; Grand Valley",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Kalif Raymond",
+          "jersey_number": 14,
+          "espn_id": "2973405",
+          "gsis_id": "00-0032464",
+          "years_exp": 10,
+          "college": "Holy Cross",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Colston Loveland",
+          "jersey_number": 84,
+          "espn_id": "4723086",
+          "gsis_id": "00-0040126",
+          "years_exp": 1,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Cole Kmet",
+          "jersey_number": 85,
+          "espn_id": "4258595",
+          "gsis_id": "00-0036290",
+          "years_exp": 6,
+          "college": "Notre Dame",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Sam Roush",
+          "jersey_number": 87,
+          "espn_id": "4685504",
+          "gsis_id": "00-0041558",
+          "years_exp": 0,
+          "college": "Stanford",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Nikola Kalinic",
+          "jersey_number": 86,
+          "espn_id": "4916349",
+          "gsis_id": "00-0037031",
+          "years_exp": 4,
+          "college": "York (Canada)",
+          "status": "RES"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Hayden Large",
+          "jersey_number": 43,
+          "espn_id": "5150662",
+          "gsis_id": "00-0041170",
+          "years_exp": 0,
+          "college": "Iowa",
+          "status": "RES"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Braxton Jones",
+          "jersey_number": 70,
+          "espn_id": "4251007",
+          "gsis_id": "00-0037081",
+          "years_exp": 4,
+          "college": "Southern Utah State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Ozzy Trapilo",
+          "jersey_number": 75,
+          "espn_id": "4432595",
+          "gsis_id": "00-0040740",
+          "years_exp": 1,
+          "college": "Boston College",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Theo Benedet",
+          "jersey_number": 79,
+          "espn_id": "5125873",
+          "gsis_id": "00-0039459",
+          "years_exp": 2,
+          "college": "University of British Columbia",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Joe Thuney",
+          "jersey_number": 62,
+          "espn_id": "2577773",
+          "gsis_id": "00-0032391",
+          "years_exp": 10,
+          "college": "N.C. State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jordan McFadden",
+          "jersey_number": 74,
+          "espn_id": "4360319",
+          "gsis_id": "00-0038595",
+          "years_exp": 3,
+          "college": "Clemson",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Garrett Bradbury",
+          "jersey_number": 67,
+          "espn_id": "3116729",
+          "gsis_id": "00-0035588",
+          "years_exp": 7,
+          "college": "N.C. State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Logan Jones",
+          "jersey_number": 54,
+          "espn_id": "4686907",
+          "gsis_id": "00-0041539",
+          "years_exp": 0,
+          "college": "Iowa",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jonah Jackson",
+          "jersey_number": 73,
+          "espn_id": "3930040",
+          "gsis_id": "00-0036258",
+          "years_exp": 6,
+          "college": "Ohio State; Rutgers",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Luke Newman",
+          "jersey_number": 65,
+          "espn_id": "4695895",
+          "gsis_id": "00-0040210",
+          "years_exp": 1,
+          "college": "Michigan State; Holy Cross",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Darnell Wright",
+          "jersey_number": 58,
+          "espn_id": "4426358",
+          "gsis_id": "00-0038932",
+          "years_exp": 3,
+          "college": "Tennessee",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Theo Benedet",
+          "jersey_number": 79,
+          "espn_id": "5125873",
+          "gsis_id": "00-0039459",
+          "years_exp": 2,
+          "college": "University of British Columbia",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

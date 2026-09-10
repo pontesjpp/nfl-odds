@@ -1,0 +1,357 @@
+{
+  "team_abbr": "NYG",
+  "team_name": "New York Giants",
+  "team_nick": "Giants",
+  "conference": "NFC",
+  "division": "NFC East",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jaxson Dart",
+          "jersey_number": 6,
+          "espn_id": "4689114",
+          "gsis_id": "00-0040691",
+          "years_exp": 1,
+          "college": "Mississippi; USC",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jameis Winston",
+          "jersey_number": 19,
+          "espn_id": "2969939",
+          "gsis_id": "00-0031503",
+          "years_exp": 11,
+          "college": "Florida State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Cam Skattebo",
+          "jersey_number": 44,
+          "espn_id": "4696981",
+          "gsis_id": "00-0040715",
+          "years_exp": 1,
+          "college": "Arizona State; Sacramento State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Tyrone Tracy Jr.",
+          "jersey_number": 29,
+          "espn_id": "4360516",
+          "gsis_id": "00-0039384",
+          "years_exp": 2,
+          "college": "Purdue; Iowa",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Najee Harris",
+          "jersey_number": 23,
+          "espn_id": "4241457",
+          "gsis_id": "00-0036893",
+          "years_exp": 5,
+          "college": "Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Devin Singletary",
+          "jersey_number": 26,
+          "espn_id": "4040761",
+          "gsis_id": "00-0035250",
+          "years_exp": 7,
+          "college": "Florida Atlantic",
+          "status": "ACT"
+        }
+      ]
+    },
+    "FB": {
+      "position_title": "Fullback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Patrick Ricard",
+          "jersey_number": 45,
+          "espn_id": "2975417",
+          "gsis_id": "00-0033376",
+          "years_exp": 9,
+          "college": "Maine",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Malik Nabers",
+          "jersey_number": 1,
+          "espn_id": "4595348",
+          "gsis_id": "00-0039337",
+          "years_exp": 2,
+          "college": "LSU",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Odell Beckham Jr.",
+          "jersey_number": 13,
+          "espn_id": "16733",
+          "gsis_id": "00-0031235",
+          "years_exp": 12,
+          "college": "LSU",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Darnell Mooney",
+          "jersey_number": 17,
+          "espn_id": "4040655",
+          "gsis_id": "00-0036309",
+          "years_exp": 6,
+          "college": "Tulane",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Calvin Austin III",
+          "jersey_number": 82,
+          "espn_id": "4243389",
+          "gsis_id": "00-0037837",
+          "years_exp": 4,
+          "college": "Memphis",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Malachi Fields",
+          "jersey_number": 88,
+          "espn_id": "4682648",
+          "gsis_id": "00-0041042",
+          "years_exp": 0,
+          "college": "Notre Dame; Virginia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Gunner Olszewski",
+          "jersey_number": 80,
+          "espn_id": "4424106",
+          "gsis_id": "00-0035645",
+          "years_exp": 7,
+          "college": "Bemidji State University",
+          "status": "RES"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Isaiah Likely",
+          "jersey_number": 9,
+          "espn_id": "4361050",
+          "gsis_id": "00-0037838",
+          "years_exp": 4,
+          "college": "Coastal Carolina",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Theo Johnson",
+          "jersey_number": 84,
+          "espn_id": "4429148",
+          "gsis_id": "00-0039847",
+          "years_exp": 2,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": NaN,
+          "jersey_number": 85,
+          "espn_id": "2531358",
+          "gsis_id": "",
+          "years_exp": 11,
+          "college": "Canisius College",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Thomas Fidone II",
+          "jersey_number": 86,
+          "espn_id": "4590292",
+          "gsis_id": "00-0040225",
+          "years_exp": 1,
+          "college": "Nebraska",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Andrew Thomas",
+          "jersey_number": 78,
+          "espn_id": "4259566",
+          "gsis_id": "00-0036386",
+          "years_exp": 6,
+          "college": "Georgia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "J.C. Davis",
+          "jersey_number": 74,
+          "espn_id": "5082353",
+          "gsis_id": "00-0041101",
+          "years_exp": 0,
+          "college": "Illinois; New Mexico; Contra Costa",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jon Runyan",
+          "jersey_number": 76,
+          "espn_id": "3929936",
+          "gsis_id": "00-0036246",
+          "years_exp": 6,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Aaron Stinnie",
+          "jersey_number": 64,
+          "espn_id": "3049339",
+          "gsis_id": "00-0034668",
+          "years_exp": 8,
+          "college": "James Madison",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "John Michael Schmitz Jr.",
+          "jersey_number": 61,
+          "espn_id": "4240771",
+          "gsis_id": "00-0039019",
+          "years_exp": 3,
+          "college": "Minnesota",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Bryan Hudson",
+          "jersey_number": 60,
+          "espn_id": "4426489",
+          "gsis_id": "00-0039446",
+          "years_exp": 2,
+          "college": "Louisville",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Francis Mauigoa",
+          "jersey_number": 65,
+          "espn_id": "4870914",
+          "gsis_id": "00-0041505",
+          "years_exp": 0,
+          "college": "Miami",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jermaine Eluemunor",
+          "jersey_number": 72,
+          "espn_id": "3115303",
+          "gsis_id": "00-0033290",
+          "years_exp": 9,
+          "college": "Texas A&M; Lackawanna JC",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Marcus Mbow",
+          "jersey_number": 71,
+          "espn_id": "4686362",
+          "gsis_id": "00-0040181",
+          "years_exp": 1,
+          "college": "Purdue",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

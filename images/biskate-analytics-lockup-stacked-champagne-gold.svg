@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" width="800" height="460" fill="none">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,600..900&amp;family=Plus+Jakarta+Sans:wght@500;700&amp;display=swap');
+      .stack-title {
+        font-family: 'Bodoni Moda', 'Didot', serif;
+        font-weight: 700;
+        font-size: 58px;
+        letter-spacing: 0.38em;
+        text-transform: uppercase;
+        fill: #F4E8D1;
+      }
+      .stack-sub {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        letter-spacing: 0.60em;
+        text-transform: uppercase;
+        fill: #C5A880;
+      }
+    </style>
+  </defs>
+
+  <rect width="800" height="460" fill="#050505"/>
+
+  <!-- Centered Icon (160x160) -->
+  <g transform="translate(320, 40)">
+    <rect width="160" height="160" rx="36" fill="#0C0A08" stroke="#2B261D" stroke-width="1.5"/>
+    <circle cx="80" cy="80" r="68" stroke="#D4AF37" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="3 7"/>
+    
+    <!-- Centered B Monogram inside Stacked -->
+    <g transform="translate(46, 38) scale(0.34)">
+      <path d="M 0 0 L 46 0 L 46 260 L 0 260 Z" fill="#F4E8D1"/>
+      <path d="M 46 0 L 126 0 C 172 0 202 24 202 65 C 202 104 170 125 124 128 L 46 128 Z" fill="#F4E8D1"/>
+      <path d="M 86 36 L 122 36 C 146 36 160 48 160 65 C 160 82 146 94 122 94 L 86 94 Z" fill="#0C0A08"/>
+      <path d="M 46 132 L 136 132 C 188 132 220 156 220 196 C 220 236 186 260 134 260 L 46 260 Z" fill="#F4E8D1"/>
+      <path d="M 86 166 L 132 166 C 158 166 178 178 178 196 C 178 214 158 226 132 226 L 86 226 Z" fill="#0C0A08"/>
+      <line x1="38" y1="130" x2="228" y2="130" stroke="#0C0A08" stroke-width="6"/>
+      <circle cx="132" cy="130" r="4" fill="#D4AF37"/>
+    </g>
+  </g>
+
+  <!-- Typography Block -->
+  <text x="400" y="276" text-anchor="middle" class="stack-title">BISKATE</text>
+  
+  <g transform="translate(400, 304)">
+    <line x1="-120" y1="0" x2="-20" y2="0" stroke="#2B261D" stroke-width="1"/>
+    <polygon points="0,-3 3,0 0,3 -3,0" fill="#D4AF37"/>
+    <line x1="20" y1="0" x2="120" y2="0" stroke="#2B261D" stroke-width="1"/>
+  </g>
+
+  <text x="404" y="342" text-anchor="middle" class="stack-sub">ANALYTICS</text>
+</svg>

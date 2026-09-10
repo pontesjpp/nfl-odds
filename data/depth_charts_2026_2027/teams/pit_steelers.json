@@ -1,0 +1,379 @@
+{
+  "team_abbr": "PIT",
+  "team_name": "Pittsburgh Steelers",
+  "team_nick": "Steelers",
+  "conference": "AFC",
+  "division": "AFC North",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Aaron Rodgers",
+          "jersey_number": 8,
+          "espn_id": "8439",
+          "gsis_id": "00-0023459",
+          "years_exp": 21,
+          "college": "California; Butte College",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Mason Rudolph",
+          "jersey_number": 2,
+          "espn_id": "3116407",
+          "gsis_id": "00-0034771",
+          "years_exp": 8,
+          "college": "Oklahoma State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Will Howard",
+          "jersey_number": 18,
+          "espn_id": "4429955",
+          "gsis_id": "00-0040203",
+          "years_exp": 1,
+          "college": "Ohio State; Kansas State",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Drew Allar",
+          "jersey_number": 16,
+          "espn_id": "4714771",
+          "gsis_id": "00-0041565",
+          "years_exp": 0,
+          "college": "Penn State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jaylen Warren",
+          "jersey_number": 30,
+          "espn_id": "4569987",
+          "gsis_id": "00-0037228",
+          "years_exp": 4,
+          "college": "Oklahoma State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Rico Dowdle",
+          "jersey_number": 13,
+          "espn_id": "4038815",
+          "gsis_id": "00-0036139",
+          "years_exp": 6,
+          "college": "South Carolina",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Eli Heidenreich",
+          "jersey_number": 29,
+          "espn_id": "5081508",
+          "gsis_id": "00-0041490",
+          "years_exp": 0,
+          "college": "Navy",
+          "status": "ACT"
+        }
+      ]
+    },
+    "FB": {
+      "position_title": "Fullback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Riley Nowakowski",
+          "jersey_number": 37,
+          "espn_id": "4693370",
+          "gsis_id": "00-0041398",
+          "years_exp": 0,
+          "college": "Indiana; Wisconsin",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "DK Metcalf",
+          "jersey_number": 4,
+          "espn_id": "4047650",
+          "gsis_id": "00-0035640",
+          "years_exp": 7,
+          "college": "Mississippi",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Germie Bernard",
+          "jersey_number": 17,
+          "espn_id": "4685261",
+          "gsis_id": "00-0041489",
+          "years_exp": 0,
+          "college": "Alabama; Washington; Michigan State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 7,
+          "player_name": "Cole Burgess",
+          "jersey_number": 85,
+          "espn_id": "5192448",
+          "gsis_id": "00-0039626",
+          "years_exp": 2,
+          "college": "Cortland State Of New York",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Michael Pittman Jr.",
+          "jersey_number": 11,
+          "espn_id": "4035687",
+          "gsis_id": "00-0036252",
+          "years_exp": 6,
+          "college": "USC",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Ben Skowronek",
+          "jersey_number": 15,
+          "espn_id": "4035656",
+          "gsis_id": "00-0036862",
+          "years_exp": 5,
+          "college": "Notre Dame; Northwestern",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Roman Wilson",
+          "jersey_number": 14,
+          "espn_id": "4431492",
+          "gsis_id": "00-0039739",
+          "years_exp": 2,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Kaden Wetjen",
+          "jersey_number": 10,
+          "espn_id": "5081338",
+          "gsis_id": "00-0041397",
+          "years_exp": 0,
+          "college": "Iowa; Iowa Western CC",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Pat Freiermuth",
+          "jersey_number": 88,
+          "espn_id": "4361411",
+          "gsis_id": "00-0036894",
+          "years_exp": 5,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Darnell Washington",
+          "jersey_number": 80,
+          "espn_id": "4430802",
+          "gsis_id": "00-0038558",
+          "years_exp": 3,
+          "college": "Georgia",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Robert Tonyan",
+          "jersey_number": 83,
+          "espn_id": "2975674",
+          "gsis_id": "00-0033757",
+          "years_exp": 9,
+          "college": "Indiana State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Troy Fautanu",
+          "jersey_number": 76,
+          "espn_id": "4427170",
+          "gsis_id": "00-0039871",
+          "years_exp": 2,
+          "college": "Washington",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jack Driscoll",
+          "jersey_number": 68,
+          "espn_id": "3932668",
+          "gsis_id": "00-0036396",
+          "years_exp": 6,
+          "college": "Auburn; UMass Amherst",
+          "status": "RES"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Mason McCormick",
+          "jersey_number": 66,
+          "espn_id": "4368304",
+          "gsis_id": "00-0039358",
+          "years_exp": 2,
+          "college": "South Dakota State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Gennings Dunker",
+          "jersey_number": 73,
+          "espn_id": "4431258",
+          "gsis_id": "00-0041396",
+          "years_exp": 0,
+          "college": "Iowa",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Zach Frazier",
+          "jersey_number": 54,
+          "espn_id": "4429775",
+          "gsis_id": "00-0039896",
+          "years_exp": 2,
+          "college": "West Virginia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Ryan McCollum",
+          "jersey_number": 62,
+          "espn_id": "4035253",
+          "gsis_id": "00-0036783",
+          "years_exp": 5,
+          "college": "Texas A&M",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Spencer Anderson",
+          "jersey_number": 74,
+          "espn_id": "4372056",
+          "gsis_id": "00-0038645",
+          "years_exp": 3,
+          "college": "Maryland",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Brock Hoffman",
+          "jersey_number": 67,
+          "espn_id": "4241087",
+          "gsis_id": "00-0037336",
+          "years_exp": 4,
+          "college": "Virginia Tech; Coastal Carolina",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Dylan Cook",
+          "jersey_number": 60,
+          "espn_id": "4570898",
+          "gsis_id": "00-0037480",
+          "years_exp": 4,
+          "college": "Montana; Northern Montana State University",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Max Iheanachor",
+          "jersey_number": 71,
+          "espn_id": "5150136",
+          "gsis_id": "00-0041482",
+          "years_exp": 0,
+          "college": "Arizona State",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

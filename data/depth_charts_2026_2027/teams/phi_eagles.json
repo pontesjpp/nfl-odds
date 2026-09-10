@@ -1,0 +1,407 @@
+{
+  "team_abbr": "PHI",
+  "team_name": "Philadelphia Eagles",
+  "team_nick": "Eagles",
+  "conference": "NFC",
+  "division": "NFC East",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jalen Hurts",
+          "jersey_number": 1,
+          "espn_id": "4040715",
+          "gsis_id": "00-0036389",
+          "years_exp": 6,
+          "college": "Oklahoma; Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Andy Dalton",
+          "jersey_number": 14,
+          "espn_id": "14012",
+          "gsis_id": "00-0027973",
+          "years_exp": 15,
+          "college": "TCU",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Tanner McKee",
+          "jersey_number": 16,
+          "espn_id": "4685201",
+          "gsis_id": "00-0038400",
+          "years_exp": 3,
+          "college": "Stanford",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Cole Payton",
+          "jersey_number": 18,
+          "espn_id": "4879250",
+          "gsis_id": "00-0040891",
+          "years_exp": 0,
+          "college": "North Dakota State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Saquon Barkley",
+          "jersey_number": 26,
+          "espn_id": "3929630",
+          "gsis_id": "00-0034844",
+          "years_exp": 8,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Tank Bigsby",
+          "jersey_number": 8,
+          "espn_id": "4429013",
+          "gsis_id": "00-0038555",
+          "years_exp": 3,
+          "college": "Auburn",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Will Shipley",
+          "jersey_number": 28,
+          "espn_id": "4431545",
+          "gsis_id": "00-0039746",
+          "years_exp": 2,
+          "college": "Clemson",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "DeVonta Smith",
+          "jersey_number": 6,
+          "espn_id": "4241478",
+          "gsis_id": "00-0036912",
+          "years_exp": 5,
+          "college": "Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Hollywood Brown",
+          "jersey_number": 0,
+          "espn_id": "4241372",
+          "gsis_id": "00-0035662",
+          "years_exp": 7,
+          "college": "Oklahoma; College of the Canyons",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 7,
+          "player_name": "Johnny Wilson",
+          "jersey_number": 89,
+          "espn_id": "4686104",
+          "gsis_id": "00-0039236",
+          "years_exp": 2,
+          "college": "Florida State; Arizona State",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Dontayvion Wicks",
+          "jersey_number": 13,
+          "espn_id": "4428850",
+          "gsis_id": "00-0038393",
+          "years_exp": 3,
+          "college": "Virginia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Elijah Moore",
+          "jersey_number": 19,
+          "espn_id": "4372414",
+          "gsis_id": "00-0036980",
+          "years_exp": 5,
+          "college": "Mississippi",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Makai Lemon",
+          "jersey_number": 9,
+          "espn_id": "4870795",
+          "gsis_id": "00-0040867",
+          "years_exp": 0,
+          "college": "USC",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Darius Cooper",
+          "jersey_number": 80,
+          "espn_id": "4715355",
+          "gsis_id": "00-0040024",
+          "years_exp": 1,
+          "college": "Tarleton State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Dallas Goedert",
+          "jersey_number": 88,
+          "espn_id": "3121023",
+          "gsis_id": "00-0034351",
+          "years_exp": 8,
+          "college": "South Dakota State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Johnny Mundt",
+          "jersey_number": 83,
+          "espn_id": "3052096",
+          "gsis_id": "00-0033246",
+          "years_exp": 9,
+          "college": "Oregon",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Eli Stowers",
+          "jersey_number": 87,
+          "espn_id": "4431574",
+          "gsis_id": "00-0041483",
+          "years_exp": 0,
+          "college": "Vanderbilt; New Mexico State; Texas A&M",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "E.J. Jenkins",
+          "jersey_number": 84,
+          "espn_id": "4248557",
+          "gsis_id": "00-0038498",
+          "years_exp": 3,
+          "college": "Georgia Tech; South Carolina; St. Francis PA",
+          "status": "ACT"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Grant Calcaterra",
+          "jersey_number": 81,
+          "espn_id": "4241374",
+          "gsis_id": "00-0037086",
+          "years_exp": 4,
+          "college": "SMU; Oklahoma",
+          "status": "RES"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jordan Mailata",
+          "jersey_number": 68,
+          "espn_id": "4334215",
+          "gsis_id": "00-0034429",
+          "years_exp": 8,
+          "college": "",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Markel Bell",
+          "jersey_number": 72,
+          "espn_id": "5219831",
+          "gsis_id": "00-0041554",
+          "years_exp": 0,
+          "college": "Miami; Holmes County JC",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Landon Dickerson",
+          "jersey_number": 69,
+          "espn_id": "4035624",
+          "gsis_id": "00-0037002",
+          "years_exp": 5,
+          "college": "Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Drew Kendall",
+          "jersey_number": 66,
+          "espn_id": "4567802",
+          "gsis_id": "00-0040587",
+          "years_exp": 1,
+          "college": "Boston College",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Micah Morris",
+          "jersey_number": 76,
+          "espn_id": "4432738",
+          "gsis_id": "00-0040897",
+          "years_exp": 0,
+          "college": "Georgia",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Cam Jurgens",
+          "jersey_number": 51,
+          "espn_id": "4361178",
+          "gsis_id": "00-0038112",
+          "years_exp": 4,
+          "college": "Nebraska",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Drew Kendall",
+          "jersey_number": 66,
+          "espn_id": "4567802",
+          "gsis_id": "00-0040587",
+          "years_exp": 1,
+          "college": "Boston College",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Willie Lampkin",
+          "jersey_number": 61,
+          "espn_id": "4582836",
+          "gsis_id": "00-0040631",
+          "years_exp": 1,
+          "college": "North Carolina; Coastal Carolina",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Tyler Steen",
+          "jersey_number": 56,
+          "espn_id": "4362805",
+          "gsis_id": "00-0039001",
+          "years_exp": 3,
+          "college": "Alabama; Vanderbilt",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Lane Johnson",
+          "jersey_number": 65,
+          "espn_id": "15797",
+          "gsis_id": "00-0030561",
+          "years_exp": 13,
+          "college": "Oklahoma; Kilgore",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Fred Johnson",
+          "jersey_number": 74,
+          "espn_id": "3915106",
+          "gsis_id": "00-0034951",
+          "years_exp": 7,
+          "college": "Florida",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Markel Bell",
+          "jersey_number": 72,
+          "espn_id": "5219831",
+          "gsis_id": "00-0041554",
+          "years_exp": 0,
+          "college": "Miami; Holmes County JC",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

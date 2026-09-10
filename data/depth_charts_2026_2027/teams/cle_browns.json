@@ -1,0 +1,412 @@
+{
+  "team_abbr": "CLE",
+  "team_name": "Cleveland Browns",
+  "team_nick": "Browns",
+  "conference": "AFC",
+  "division": "AFC North",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Deshaun Watson",
+          "jersey_number": 4,
+          "espn_id": "3122840",
+          "gsis_id": "00-0033537",
+          "years_exp": 9,
+          "college": "Clemson",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Shedeur Sanders",
+          "jersey_number": 2,
+          "espn_id": "4432762",
+          "gsis_id": "00-0040668",
+          "years_exp": 1,
+          "college": "Colorado; Jackson State University",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Taylen Green",
+          "jersey_number": 15,
+          "espn_id": "4431325",
+          "gsis_id": "00-0041092",
+          "years_exp": 0,
+          "college": "Arkansas; Boise State",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Dillon Gabriel",
+          "jersey_number": 6,
+          "espn_id": "4427238",
+          "gsis_id": "00-0040704",
+          "years_exp": 1,
+          "college": "Oregon; Oklahoma; UCF",
+          "status": "RES"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Quinshon Judkins",
+          "jersey_number": 10,
+          "espn_id": "4685702",
+          "gsis_id": "00-0040784",
+          "years_exp": 1,
+          "college": "Ohio State; Mississippi",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Dylan Sampson",
+          "jersey_number": 22,
+          "espn_id": "5081397",
+          "gsis_id": "00-0040162",
+          "years_exp": 1,
+          "college": "Tennessee",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Raheim Sanders",
+          "jersey_number": 35,
+          "espn_id": "4601080",
+          "gsis_id": "00-0040466",
+          "years_exp": 1,
+          "college": "South Carolina; Arkansas",
+          "status": "ACT"
+        }
+      ]
+    },
+    "FB": {
+      "position_title": "Fullback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Michael Burton",
+          "jersey_number": 34,
+          "espn_id": "2515270",
+          "gsis_id": "00-0031595",
+          "years_exp": 11,
+          "college": "Rutgers",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jerry Jeudy",
+          "jersey_number": 3,
+          "espn_id": "4241463",
+          "gsis_id": "00-0036407",
+          "years_exp": 6,
+          "college": "Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Isaiah Bond",
+          "jersey_number": 0,
+          "espn_id": "4808839",
+          "gsis_id": "00-0040782",
+          "years_exp": 1,
+          "college": "Texas; Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 7,
+          "player_name": "Jamari Thrash",
+          "jersey_number": 80,
+          "espn_id": "4428678",
+          "gsis_id": "00-0039379",
+          "years_exp": 2,
+          "college": "Louisville; Georgia State",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "KC Concepcion",
+          "jersey_number": 1,
+          "espn_id": "4870653",
+          "gsis_id": "00-0041547",
+          "years_exp": 0,
+          "college": "Texas A&M; N.C. State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Tylan Wallace",
+          "jersey_number": 16,
+          "espn_id": "4241424",
+          "gsis_id": "00-0036630",
+          "years_exp": 5,
+          "college": "Oklahoma State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Denzel Boston",
+          "jersey_number": 12,
+          "espn_id": "4832800",
+          "gsis_id": "00-0041037",
+          "years_exp": 0,
+          "college": "Washington",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Malachi Corley",
+          "jersey_number": 83,
+          "espn_id": "4613104",
+          "gsis_id": "00-0039920",
+          "years_exp": 2,
+          "college": "Western Kentucky",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Harold Fannin Jr.",
+          "jersey_number": 44,
+          "espn_id": "5083076",
+          "gsis_id": "00-0040663",
+          "years_exp": 1,
+          "college": "Bowling Green",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Blake Whiteheart",
+          "jersey_number": 86,
+          "espn_id": "4362018",
+          "gsis_id": "00-0038710",
+          "years_exp": 3,
+          "college": "Wake Forest",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Carsen Ryan",
+          "jersey_number": 48,
+          "espn_id": "4685540",
+          "gsis_id": "00-0041131",
+          "years_exp": 0,
+          "college": "BYU; Utah; UCLA",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Joe Royer",
+          "jersey_number": 18,
+          "espn_id": "4565859",
+          "gsis_id": "00-0041087",
+          "years_exp": 0,
+          "college": "Cincinnati; Ohio State",
+          "status": "RES"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Spencer Fano",
+          "jersey_number": 55,
+          "espn_id": "4870723",
+          "gsis_id": "00-0041030",
+          "years_exp": 0,
+          "college": "Utah",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Dawand Jones",
+          "jersey_number": 79,
+          "espn_id": "4427637",
+          "gsis_id": "00-0039014",
+          "years_exp": 3,
+          "college": "Ohio State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Zion Johnson",
+          "jersey_number": 77,
+          "espn_id": "4247347",
+          "gsis_id": "00-0037818",
+          "years_exp": 4,
+          "college": "Boston College; Davidson",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Zak Zinter",
+          "jersey_number": 70,
+          "espn_id": "4433963",
+          "gsis_id": "00-0039350",
+          "years_exp": 2,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Kendrick Green",
+          "jersey_number": 53,
+          "espn_id": "4240548",
+          "gsis_id": "00-0036983",
+          "years_exp": 5,
+          "college": "Illinois",
+          "status": "RES"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Elgton Jenkins",
+          "jersey_number": 74,
+          "espn_id": "3115485",
+          "gsis_id": "00-0035526",
+          "years_exp": 7,
+          "college": "Mississippi State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Parker Brailsford",
+          "jersey_number": 52,
+          "espn_id": "4816090",
+          "gsis_id": "00-0041073",
+          "years_exp": 0,
+          "college": "Alabama; Washington",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Luke Wypler",
+          "jersey_number": 56,
+          "espn_id": "4430806",
+          "gsis_id": "00-0038609",
+          "years_exp": 3,
+          "college": "Ohio State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Teven Jenkins",
+          "jersey_number": 78,
+          "espn_id": "4038457",
+          "gsis_id": "00-0036953",
+          "years_exp": 5,
+          "college": "Oklahoma State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Austin Barber",
+          "jersey_number": 58,
+          "espn_id": "4597310",
+          "gsis_id": "00-0041049",
+          "years_exp": 0,
+          "college": "Florida",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Tytus Howard",
+          "jersey_number": 71,
+          "espn_id": "3131498",
+          "gsis_id": "00-0035234",
+          "years_exp": 7,
+          "college": "Alabama State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Austin Barber",
+          "jersey_number": 58,
+          "espn_id": "4597310",
+          "gsis_id": "00-0041049",
+          "years_exp": 0,
+          "college": "Florida",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,363 @@
+{
+  "team_abbr": "DET",
+  "team_name": "Detroit Lions",
+  "team_nick": "Lions",
+  "conference": "NFC",
+  "division": "NFC North",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jared Goff",
+          "jersey_number": 16,
+          "espn_id": "3046779",
+          "gsis_id": "00-0033106",
+          "years_exp": 10,
+          "college": "California",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Joshua Dobbs",
+          "jersey_number": 6,
+          "espn_id": "3044720",
+          "gsis_id": "00-0033949",
+          "years_exp": 9,
+          "college": "Tennessee",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jahmyr Gibbs",
+          "jersey_number": 0,
+          "espn_id": "4429795",
+          "gsis_id": "00-0039139",
+          "years_exp": 3,
+          "college": "Alabama; Georgia Tech",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Sione Vaki",
+          "jersey_number": 33,
+          "espn_id": "4912274",
+          "gsis_id": "00-0039364",
+          "years_exp": 2,
+          "college": "Utah",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Jacob Saylors",
+          "jersey_number": 25,
+          "espn_id": "4383429",
+          "gsis_id": "00-0038896",
+          "years_exp": 3,
+          "college": "East Tennessee State",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Isiah Pacheco",
+          "jersey_number": 10,
+          "espn_id": "4361529",
+          "gsis_id": "00-0037197",
+          "years_exp": 4,
+          "college": "Rutgers",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Amon-Ra St. Brown",
+          "jersey_number": 14,
+          "espn_id": "4374302",
+          "gsis_id": "00-0036963",
+          "years_exp": 5,
+          "college": "USC",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Tay Martin",
+          "jersey_number": 17,
+          "espn_id": "4245144",
+          "gsis_id": "00-0037524",
+          "years_exp": 4,
+          "college": "Oklahoma State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Jameson Williams",
+          "jersey_number": 1,
+          "espn_id": "4426388",
+          "gsis_id": "00-0037240",
+          "years_exp": 4,
+          "college": "Alabama; Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Kendrick Law",
+          "jersey_number": 88,
+          "espn_id": "4685441",
+          "gsis_id": "00-0041446",
+          "years_exp": 0,
+          "college": "Kentucky; Alabama",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Isaac TeSlaa",
+          "jersey_number": 18,
+          "espn_id": "5123663",
+          "gsis_id": "00-0040669",
+          "years_exp": 1,
+          "college": "Arkansas; Hillsdale",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Sam LaPorta",
+          "jersey_number": 87,
+          "espn_id": "4430027",
+          "gsis_id": "00-0039065",
+          "years_exp": 3,
+          "college": "Iowa",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Brock Wright",
+          "jersey_number": 89,
+          "espn_id": "4242392",
+          "gsis_id": "00-0036754",
+          "years_exp": 5,
+          "college": "Notre Dame",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Tyler Conklin",
+          "jersey_number": 83,
+          "espn_id": "3915486",
+          "gsis_id": "00-0034270",
+          "years_exp": 8,
+          "college": "Central Michigan; Northwood",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Jackson Meeks",
+          "jersey_number": 13,
+          "espn_id": "4602788",
+          "gsis_id": "00-0040390",
+          "years_exp": 1,
+          "college": "Syracuse",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Penei Sewell",
+          "jersey_number": 58,
+          "espn_id": "4373825",
+          "gsis_id": "00-0036880",
+          "years_exp": 5,
+          "college": "Oregon",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Giovanni Manu",
+          "jersey_number": 59,
+          "espn_id": "5209589",
+          "gsis_id": "00-0039362",
+          "years_exp": 2,
+          "college": "University of British Columbia",
+          "status": "RES"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Christian Mahogany",
+          "jersey_number": 73,
+          "espn_id": "4427864",
+          "gsis_id": "00-0039408",
+          "years_exp": 2,
+          "college": "Boston College",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Juice Scruggs",
+          "jersey_number": 70,
+          "espn_id": "4361425",
+          "gsis_id": "00-0038936",
+          "years_exp": 3,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Miles Frazier",
+          "jersey_number": 71,
+          "espn_id": "4608890",
+          "gsis_id": "00-0040193",
+          "years_exp": 1,
+          "college": "LSU; Florida International",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Juice Scruggs",
+          "jersey_number": 70,
+          "espn_id": "4361425",
+          "gsis_id": "00-0038936",
+          "years_exp": 3,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Cade Mays",
+          "jersey_number": 64,
+          "espn_id": "4361788",
+          "gsis_id": "00-0037297",
+          "years_exp": 4,
+          "college": "Tennessee",
+          "status": "RES"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Michael Niese",
+          "jersey_number": 62,
+          "espn_id": "4051353",
+          "gsis_id": "00-0037385",
+          "years_exp": 4,
+          "college": "Temple",
+          "status": "RES"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Tate Ratledge",
+          "jersey_number": 69,
+          "espn_id": "4429035",
+          "gsis_id": "00-0040728",
+          "years_exp": 1,
+          "college": "Georgia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Ben Bartch",
+          "jersey_number": 78,
+          "espn_id": "4611506",
+          "gsis_id": "00-0036272",
+          "years_exp": 6,
+          "college": "St. John's (MN)",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Blake Miller",
+          "jersey_number": null,
+          "espn_id": "5081450",
+          "gsis_id": "00-0011237",
+          "years_exp": null,
+          "college": null,
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Larry Borom",
+          "jersey_number": 79,
+          "espn_id": "4241217",
+          "gsis_id": "00-0036905",
+          "years_exp": 5,
+          "college": "Missouri",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

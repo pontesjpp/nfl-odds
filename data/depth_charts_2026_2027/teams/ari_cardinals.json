@@ -1,0 +1,396 @@
+{
+  "team_abbr": "ARI",
+  "team_name": "Arizona Cardinals",
+  "team_nick": "Cardinals",
+  "conference": "NFC",
+  "division": "NFC West",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jacoby Brissett",
+          "jersey_number": 7,
+          "espn_id": "2578570",
+          "gsis_id": "00-0033119",
+          "years_exp": 10,
+          "college": "N.C. State; Florida",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Gardner Minshew II",
+          "jersey_number": 15,
+          "espn_id": "4038524",
+          "gsis_id": "00-0035289",
+          "years_exp": 7,
+          "college": "Washington State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Carson Beck",
+          "jersey_number": 19,
+          "espn_id": "4430841",
+          "gsis_id": "00-0041561",
+          "years_exp": 0,
+          "college": "Miami; Georgia",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jeremiyah Love",
+          "jersey_number": 4,
+          "espn_id": "4870808",
+          "gsis_id": "00-0041027",
+          "years_exp": 0,
+          "college": "Notre Dame",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Tyler Allgeier",
+          "jersey_number": 22,
+          "espn_id": "4373626",
+          "gsis_id": "00-0037263",
+          "years_exp": 4,
+          "college": "BYU",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Bam Knight",
+          "jersey_number": 20,
+          "espn_id": "4427728",
+          "gsis_id": "00-0037157",
+          "years_exp": 4,
+          "college": "N.C. State",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "James Conner",
+          "jersey_number": 6,
+          "espn_id": "3045147",
+          "gsis_id": "00-0033553",
+          "years_exp": 9,
+          "college": "Pittsburgh",
+          "status": "RES"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Trey Benson",
+          "jersey_number": 33,
+          "espn_id": "4429275",
+          "gsis_id": "00-0039921",
+          "years_exp": 2,
+          "college": "Florida State; Oregon",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Marvin Harrison Jr.",
+          "jersey_number": 18,
+          "espn_id": "4432708",
+          "gsis_id": "00-0039849",
+          "years_exp": 2,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Jalen Brooks",
+          "jersey_number": 83,
+          "espn_id": "4692835",
+          "gsis_id": "00-0038640",
+          "years_exp": 3,
+          "college": "South Carolina; Tarleton State; Wingate",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 7,
+          "player_name": "Simi Fehoko",
+          "jersey_number": 80,
+          "espn_id": "4360739",
+          "gsis_id": "00-0036646",
+          "years_exp": 5,
+          "college": "Stanford",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Michael Wilson",
+          "jersey_number": 14,
+          "espn_id": "4360761",
+          "gsis_id": "00-0038559",
+          "years_exp": 3,
+          "college": "Stanford",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Reggie Virgil",
+          "jersey_number": 82,
+          "espn_id": "4869132",
+          "gsis_id": "00-0041070",
+          "years_exp": 0,
+          "college": "Texas Tech; Miami (Ohio)",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Kendrick Bourne",
+          "jersey_number": 17,
+          "espn_id": "3045523",
+          "gsis_id": "00-0033307",
+          "years_exp": 9,
+          "college": "Eastern Washington",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Devin Duvernay",
+          "jersey_number": 81,
+          "espn_id": "4039050",
+          "gsis_id": "00-0036331",
+          "years_exp": 6,
+          "college": "Texas",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Trey McBride",
+          "jersey_number": 85,
+          "espn_id": "4361307",
+          "gsis_id": "00-0037744",
+          "years_exp": 4,
+          "college": "Colorado State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Elijah Higgins",
+          "jersey_number": 84,
+          "espn_id": "4426844",
+          "gsis_id": "00-0039041",
+          "years_exp": 3,
+          "college": "Stanford",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Hunter Long",
+          "jersey_number": 89,
+          "espn_id": "4239944",
+          "gsis_id": "00-0037004",
+          "years_exp": 5,
+          "college": "Boston College",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Tip Reiman",
+          "jersey_number": 87,
+          "espn_id": "4696700",
+          "gsis_id": "00-0039737",
+          "years_exp": 2,
+          "college": "Illinois",
+          "status": "RES"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Jameson Geers",
+          "jersey_number": 46,
+          "espn_id": "4588298",
+          "gsis_id": "00-0041366",
+          "years_exp": 0,
+          "college": "Minnesota",
+          "status": "RES"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Paris Johnson Jr.",
+          "jersey_number": 70,
+          "espn_id": "4428991",
+          "gsis_id": "00-0038540",
+          "years_exp": 3,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Josh Fryar",
+          "jersey_number": 78,
+          "espn_id": "4429782",
+          "gsis_id": "00-0040382",
+          "years_exp": 1,
+          "college": "Ohio State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Isaac Seumalo",
+          "jersey_number": 73,
+          "espn_id": "2978247",
+          "gsis_id": "00-0032954",
+          "years_exp": 10,
+          "college": "Oregon State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Hayden Conner",
+          "jersey_number": 58,
+          "espn_id": "4431214",
+          "gsis_id": "00-0040219",
+          "years_exp": 1,
+          "college": "Texas",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Hjalte Froholdt",
+          "jersey_number": 72,
+          "espn_id": "3886633",
+          "gsis_id": "00-0035258",
+          "years_exp": 7,
+          "college": "Arkansas",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jon Gaines II",
+          "jersey_number": 71,
+          "espn_id": "4367199",
+          "gsis_id": "00-0038571",
+          "years_exp": 3,
+          "college": "UCLA",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Isaiah Adams",
+          "jersey_number": 74,
+          "espn_id": "5084939",
+          "gsis_id": "00-0039808",
+          "years_exp": 2,
+          "college": "Illinois; Garden City CC",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Chase Bisontis",
+          "jersey_number": 57,
+          "espn_id": "4870596",
+          "gsis_id": "00-0041468",
+          "years_exp": 0,
+          "college": "Texas A&M",
+          "status": "RES"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Elijah Wilkinson",
+          "jersey_number": 65,
+          "espn_id": "3059839",
+          "gsis_id": "00-0033676",
+          "years_exp": 9,
+          "college": "UMass Amherst",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jayden Williams",
+          "jersey_number": 66,
+          "espn_id": "4709718",
+          "gsis_id": "00-0041113",
+          "years_exp": 0,
+          "college": "Mississippi",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,423 @@
+{
+  "team_abbr": "LAC",
+  "team_name": "Los Angeles Chargers",
+  "team_nick": "Chargers",
+  "conference": "AFC",
+  "division": "AFC West",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Justin Herbert",
+          "jersey_number": 10,
+          "espn_id": "4038941",
+          "gsis_id": "00-0036355",
+          "years_exp": 6,
+          "college": "Oregon",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Trey Lance",
+          "jersey_number": 5,
+          "espn_id": "4383351",
+          "gsis_id": "00-0037012",
+          "years_exp": 5,
+          "college": "North Dakota State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Omarion Hampton",
+          "jersey_number": 8,
+          "espn_id": "4685382",
+          "gsis_id": "00-0040666",
+          "years_exp": 1,
+          "college": "North Carolina",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Keaton Mitchell",
+          "jersey_number": 34,
+          "espn_id": "4596334",
+          "gsis_id": "00-0038454",
+          "years_exp": 3,
+          "college": "East Carolina",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Kimani Vidal",
+          "jersey_number": 28,
+          "espn_id": "4430968",
+          "gsis_id": "00-0039391",
+          "years_exp": 2,
+          "college": "Troy",
+          "status": "ACT"
+        }
+      ]
+    },
+    "FB": {
+      "position_title": "Fullback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Alec Ingold",
+          "jersey_number": 30,
+          "espn_id": "3917668",
+          "gsis_id": "00-0035125",
+          "years_exp": 7,
+          "college": "Wisconsin",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Scott Matlock",
+          "jersey_number": 44,
+          "espn_id": "4373684",
+          "gsis_id": "00-0038614",
+          "years_exp": 3,
+          "college": "Boise State",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Ladd McConkey",
+          "jersey_number": 15,
+          "espn_id": "4612826",
+          "gsis_id": "00-0039915",
+          "years_exp": 2,
+          "college": "Georgia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Brenen Thompson",
+          "jersey_number": 89,
+          "espn_id": "4685553",
+          "gsis_id": "00-0041550",
+          "years_exp": 0,
+          "college": "Mississippi State; Texas",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 7,
+          "player_name": "Dalevon Campbell",
+          "jersey_number": 81,
+          "espn_id": "4569372",
+          "gsis_id": "00-0040629",
+          "years_exp": 1,
+          "college": "South Carolina",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Quentin Johnston",
+          "jersey_number": 1,
+          "espn_id": "4429025",
+          "gsis_id": "00-0038544",
+          "years_exp": 3,
+          "college": "TCU",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "KeAndre Lambert-Smith",
+          "jersey_number": 84,
+          "espn_id": "4430870",
+          "gsis_id": "00-0040184",
+          "years_exp": 1,
+          "college": "Auburn; Penn State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Tre' Harris",
+          "jersey_number": 9,
+          "espn_id": "4686612",
+          "gsis_id": "00-0040727",
+          "years_exp": 1,
+          "college": "Mississippi; Louisiana Tech",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Derius Davis",
+          "jersey_number": 12,
+          "espn_id": "4362477",
+          "gsis_id": "00-0038573",
+          "years_exp": 3,
+          "college": "TCU",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Charlie Kolar",
+          "jersey_number": 88,
+          "espn_id": "4241263",
+          "gsis_id": "00-0038046",
+          "years_exp": 4,
+          "college": "Iowa State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "David Njoku",
+          "jersey_number": 83,
+          "espn_id": "3123076",
+          "gsis_id": "00-0033885",
+          "years_exp": 9,
+          "college": "Miami",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Oronde Gadsden",
+          "jersey_number": 86,
+          "espn_id": "4595342",
+          "gsis_id": "00-0040189",
+          "years_exp": 1,
+          "college": "Syracuse",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Rashawn Slater",
+          "jersey_number": 70,
+          "espn_id": "4242283",
+          "gsis_id": "00-0037009",
+          "years_exp": 5,
+          "college": "Northwestern",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Trey Pipkins III",
+          "jersey_number": 79,
+          "espn_id": "4411189",
+          "gsis_id": "00-0035688",
+          "years_exp": 7,
+          "college": "Sioux Falls",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Logan Taylor",
+          "jersey_number": 65,
+          "espn_id": "4682789",
+          "gsis_id": "00-0041105",
+          "years_exp": 0,
+          "college": "Boston College; Virginia",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Branson Taylor",
+          "jersey_number": 71,
+          "espn_id": "4433914",
+          "gsis_id": "00-0040212",
+          "years_exp": 1,
+          "college": "Pittsburgh",
+          "status": "RES"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Isaiah World",
+          "jersey_number": 67,
+          "espn_id": "5084965",
+          "gsis_id": "00-0041387",
+          "years_exp": 0,
+          "college": "Oregon; Nevada",
+          "status": "RES"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Kayode Awosika",
+          "jersey_number": 74,
+          "espn_id": "4040842",
+          "gsis_id": "00-0036736",
+          "years_exp": 5,
+          "college": "Buffalo",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Trey Pipkins III",
+          "jersey_number": 79,
+          "espn_id": "4411189",
+          "gsis_id": "00-0035688",
+          "years_exp": 7,
+          "college": "Sioux Falls",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Alex Harkey",
+          "jersey_number": 73,
+          "espn_id": "5082660",
+          "gsis_id": "00-0041107",
+          "years_exp": 0,
+          "college": "Oregon; Texas State-San Marcos; Colorado; Tyler JC",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jake Slaughter",
+          "jersey_number": 66,
+          "espn_id": "4682506",
+          "gsis_id": "00-0041392",
+          "years_exp": 0,
+          "college": "Florida",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jacob Spomer",
+          "jersey_number": 60,
+          "espn_id": "5082312",
+          "gsis_id": "00-0041383",
+          "years_exp": 0,
+          "college": "Fresno State; Diablo Valley College",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Tyler Biadasz",
+          "jersey_number": 63,
+          "espn_id": "4035788",
+          "gsis_id": "00-0036376",
+          "years_exp": 6,
+          "college": "Wisconsin",
+          "status": "RES"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Cole Strange",
+          "jersey_number": 69,
+          "espn_id": "4051001",
+          "gsis_id": "00-0038103",
+          "years_exp": 4,
+          "college": "Tennessee-Chattanooga",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Trevor Penning",
+          "jersey_number": 75,
+          "espn_id": "4248627",
+          "gsis_id": "00-0037241",
+          "years_exp": 4,
+          "college": "Northern Iowa",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Joe Alt",
+          "jersey_number": 76,
+          "espn_id": "4683487",
+          "gsis_id": "00-0039897",
+          "years_exp": 2,
+          "college": "Notre Dame",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Travis Burke",
+          "jersey_number": 77,
+          "espn_id": "4876658",
+          "gsis_id": "00-0041058",
+          "years_exp": 0,
+          "college": "Memphis; Florida International; Gardner-Webb",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

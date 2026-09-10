@@ -1,0 +1,418 @@
+{
+  "team_abbr": "HOU",
+  "team_name": "Houston Texans",
+  "team_nick": "Texans",
+  "conference": "AFC",
+  "division": "AFC South",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "C.J. Stroud",
+          "jersey_number": 7,
+          "espn_id": "4432577",
+          "gsis_id": "00-0039163",
+          "years_exp": 3,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Davis Mills",
+          "jersey_number": 10,
+          "espn_id": "4242546",
+          "gsis_id": "00-0036898",
+          "years_exp": 5,
+          "college": "Stanford",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Graham Mertz",
+          "jersey_number": 18,
+          "espn_id": "4426335",
+          "gsis_id": "00-0040211",
+          "years_exp": 1,
+          "college": "Florida; Wisconsin",
+          "status": "RES"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "David Montgomery",
+          "jersey_number": 32,
+          "espn_id": "4035538",
+          "gsis_id": "00-0035685",
+          "years_exp": 7,
+          "college": "Iowa State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Woody Marks",
+          "jersey_number": 4,
+          "espn_id": "4429059",
+          "gsis_id": "00-0040583",
+          "years_exp": 1,
+          "college": "USC; Mississippi State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "British Brooks",
+          "jersey_number": 44,
+          "espn_id": "4373273",
+          "gsis_id": "00-0039603",
+          "years_exp": 2,
+          "college": "North Carolina",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Nico Collins",
+          "jersey_number": 12,
+          "espn_id": "4258173",
+          "gsis_id": "00-0036554",
+          "years_exp": 5,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Kayshon Boutte",
+          "jersey_number": 14,
+          "espn_id": "4429022",
+          "gsis_id": "00-0038608",
+          "years_exp": 3,
+          "college": "LSU",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 7,
+          "player_name": "Jayden Higgins",
+          "jersey_number": 81,
+          "espn_id": "4877706",
+          "gsis_id": "00-0040130",
+          "years_exp": 1,
+          "college": "Iowa State; Eastern Kentucky",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Xavier Hutchinson",
+          "jersey_number": 19,
+          "espn_id": "4686422",
+          "gsis_id": "00-0038618",
+          "years_exp": 3,
+          "college": "Iowa State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Jared Wayne",
+          "jersey_number": 89,
+          "espn_id": "4430681",
+          "gsis_id": "00-0038728",
+          "years_exp": 3,
+          "college": "Pittsburgh",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Jaylin Noel",
+          "jersey_number": 13,
+          "espn_id": "4586312",
+          "gsis_id": "00-0040138",
+          "years_exp": 1,
+          "college": "Iowa State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Tank Dell",
+          "jersey_number": 1,
+          "espn_id": "4366031",
+          "gsis_id": "00-0038977",
+          "years_exp": 3,
+          "college": "Houston; Independence Comm. College; Alabama A&M",
+          "status": "RES"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Dalton Schultz",
+          "jersey_number": 86,
+          "espn_id": "3117256",
+          "gsis_id": "00-0034383",
+          "years_exp": 8,
+          "college": "Stanford",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Foster Moreau",
+          "jersey_number": 87,
+          "espn_id": "3843945",
+          "gsis_id": "00-0034981",
+          "years_exp": 7,
+          "college": "LSU",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Cade Stover",
+          "jersey_number": 8,
+          "espn_id": "4426496",
+          "gsis_id": "00-0039359",
+          "years_exp": 2,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Marlin Klein",
+          "jersey_number": 83,
+          "espn_id": "4695705",
+          "gsis_id": "00-0041472",
+          "years_exp": 0,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Brevin Jordan",
+          "jersey_number": 9,
+          "espn_id": "4362504",
+          "gsis_id": "00-0036556",
+          "years_exp": 5,
+          "college": "Miami",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Aireontae Ersery",
+          "jersey_number": 79,
+          "espn_id": "4429693",
+          "gsis_id": "00-0040745",
+          "years_exp": 1,
+          "college": "Minnesota",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Blake Fisher",
+          "jersey_number": 57,
+          "espn_id": "4432699",
+          "gsis_id": "00-0039857",
+          "years_exp": 2,
+          "college": "Notre Dame",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Keylan Rutledge",
+          "jersey_number": 66,
+          "espn_id": "4839498",
+          "gsis_id": "00-0041532",
+          "years_exp": 0,
+          "college": "Georgia Tech; Middle Tennessee State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Wyatt Teller",
+          "jersey_number": 75,
+          "espn_id": "3045474",
+          "gsis_id": "00-0034399",
+          "years_exp": 8,
+          "college": "Virginia Tech",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Evan Brown",
+          "jersey_number": 67,
+          "espn_id": "3128412",
+          "gsis_id": "00-0034495",
+          "years_exp": 8,
+          "college": "SMU",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Evan Brown",
+          "jersey_number": 67,
+          "espn_id": "3128412",
+          "gsis_id": "00-0034495",
+          "years_exp": 8,
+          "college": "SMU",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Keylan Rutledge",
+          "jersey_number": 66,
+          "espn_id": "4839498",
+          "gsis_id": "00-0041532",
+          "years_exp": 0,
+          "college": "Georgia Tech; Middle Tennessee State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Jake Andrews",
+          "jersey_number": 60,
+          "espn_id": "4362732",
+          "gsis_id": "00-0039030",
+          "years_exp": 3,
+          "college": "Troy",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Ed Ingram",
+          "jersey_number": 69,
+          "espn_id": "4242227",
+          "gsis_id": "00-0038131",
+          "years_exp": 4,
+          "college": "LSU",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Febechi Nwaiwu",
+          "jersey_number": 64,
+          "espn_id": "4880873",
+          "gsis_id": "00-0041559",
+          "years_exp": 0,
+          "college": "Oklahoma; North Texas",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Trent Brown",
+          "jersey_number": 77,
+          "espn_id": "3043109",
+          "gsis_id": "00-0032071",
+          "years_exp": 11,
+          "college": "Florida; Georgia Military",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Nate Thomas",
+          "jersey_number": 78,
+          "espn_id": "4428656",
+          "gsis_id": "00-0039422",
+          "years_exp": 2,
+          "college": "Louisiana-Lafayette",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Braden Smith",
+          "jersey_number": 71,
+          "espn_id": "3121595",
+          "gsis_id": "00-0034836",
+          "years_exp": 8,
+          "college": "Auburn",
+          "status": "RES"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Sam Hagen",
+          "jersey_number": 76,
+          "espn_id": "4879242",
+          "gsis_id": "00-0041303",
+          "years_exp": 0,
+          "college": "South Dakota State; North Dakota",
+          "status": "RES"
+        }
+      ]
+    }
+  }
+}

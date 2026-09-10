@@ -1,0 +1,363 @@
+{
+  "team_abbr": "TB",
+  "team_name": "Tampa Bay Buccaneers",
+  "team_nick": "Buccaneers",
+  "conference": "NFC",
+  "division": "NFC South",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Baker Mayfield",
+          "jersey_number": 6,
+          "espn_id": "3052587",
+          "gsis_id": "00-0034855",
+          "years_exp": 8,
+          "college": "Oklahoma; Texas Tech",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jalon Daniels",
+          "jersey_number": 10,
+          "espn_id": "4596472",
+          "gsis_id": "00-0041251",
+          "years_exp": 0,
+          "college": "Kansas",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Bucky Irving",
+          "jersey_number": 7,
+          "espn_id": "4596448",
+          "gsis_id": "00-0039361",
+          "years_exp": 2,
+          "college": "Oregon; Minnesota",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Kenny Gainwell",
+          "jersey_number": 1,
+          "espn_id": "4371733",
+          "gsis_id": "00-0036919",
+          "years_exp": 5,
+          "college": "Memphis",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Sean Tucker",
+          "jersey_number": 44,
+          "espn_id": "4430871",
+          "gsis_id": "00-0038951",
+          "years_exp": 3,
+          "college": "Syracuse",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Emeka Egbuka",
+          "jersey_number": 2,
+          "espn_id": "4567750",
+          "gsis_id": "00-0040129",
+          "years_exp": 1,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Ted Hurst III",
+          "jersey_number": 17,
+          "espn_id": "5220680",
+          "gsis_id": "00-0041048",
+          "years_exp": 0,
+          "college": "Georgia State; Valdosta State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 7,
+          "player_name": "David Sills V",
+          "jersey_number": 80,
+          "espn_id": "3871102",
+          "gsis_id": "00-0035359",
+          "years_exp": 7,
+          "college": "West Virginia",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Chris Godwin Jr.",
+          "jersey_number": 14,
+          "espn_id": "3116165",
+          "gsis_id": "00-0033921",
+          "years_exp": 9,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Tez Johnson",
+          "jersey_number": 15,
+          "espn_id": "4608810",
+          "gsis_id": "00-0040237",
+          "years_exp": 1,
+          "college": "Oregon; Troy",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Jalen McMillan",
+          "jersey_number": 11,
+          "espn_id": "4430834",
+          "gsis_id": "00-0039855",
+          "years_exp": 2,
+          "college": "Washington",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Kameron Johnson",
+          "jersey_number": 19,
+          "espn_id": "5097554",
+          "gsis_id": "00-0039589",
+          "years_exp": 2,
+          "college": "Barton College",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Cade Otton",
+          "jersey_number": 88,
+          "espn_id": "4243331",
+          "gsis_id": "00-0038129",
+          "years_exp": 4,
+          "college": "Washington",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Payne Durham",
+          "jersey_number": 87,
+          "espn_id": "4372505",
+          "gsis_id": "00-0039050",
+          "years_exp": 3,
+          "college": "Purdue",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Ko Kieft",
+          "jersey_number": 41,
+          "espn_id": "4034779",
+          "gsis_id": "00-0037311",
+          "years_exp": 4,
+          "college": "Minnesota",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Bauer Sharp",
+          "jersey_number": 84,
+          "espn_id": "4890373",
+          "gsis_id": "00-0041094",
+          "years_exp": 0,
+          "college": "LSU; Oklahoma; Southeastern Louisiana",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Tristan Wirfs",
+          "jersey_number": 78,
+          "espn_id": "4240589",
+          "gsis_id": "00-0036406",
+          "years_exp": 6,
+          "college": "Iowa",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Benjamin Chukwuma",
+          "jersey_number": 70,
+          "espn_id": "4690787",
+          "gsis_id": "00-0040417",
+          "years_exp": 1,
+          "college": "Georgia State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Ben Bredeson",
+          "jersey_number": 68,
+          "espn_id": "4046551",
+          "gsis_id": "00-0036132",
+          "years_exp": 6,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Billy Schrauth",
+          "jersey_number": 75,
+          "espn_id": "4685549",
+          "gsis_id": "00-0041082",
+          "years_exp": 0,
+          "college": "Notre Dame",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Graham Barton",
+          "jersey_number": 62,
+          "espn_id": "4429251",
+          "gsis_id": "00-0039905",
+          "years_exp": 2,
+          "college": "Duke",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Dan Feeney",
+          "jersey_number": 65,
+          "espn_id": "2979482",
+          "gsis_id": "00-0033910",
+          "years_exp": 9,
+          "college": "Indiana",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Cody Mauch",
+          "jersey_number": 69,
+          "espn_id": "4248545",
+          "gsis_id": "00-0039157",
+          "years_exp": 3,
+          "college": "North Dakota State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Dan Feeney",
+          "jersey_number": 65,
+          "espn_id": "2979482",
+          "gsis_id": "00-0033910",
+          "years_exp": 9,
+          "college": "Indiana",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Luke Haggard",
+          "jersey_number": 72,
+          "espn_id": "4686884",
+          "gsis_id": "00-0038818",
+          "years_exp": 3,
+          "college": "Indiana",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Luke Goedeke",
+          "jersey_number": 67,
+          "espn_id": "4380507",
+          "gsis_id": "00-0037835",
+          "years_exp": 4,
+          "college": "Central Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Justin Skule",
+          "jersey_number": 77,
+          "espn_id": "3915777",
+          "gsis_id": "00-0034989",
+          "years_exp": 7,
+          "college": "Vanderbilt",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

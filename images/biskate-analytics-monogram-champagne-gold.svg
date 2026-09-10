@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <!-- Pitch Black Solid Backdrop -->
+  <rect width="512" height="512" fill="#050505"/>
+  
+  <!-- Architectural Geometric Monogram (Stussy attitude × Swiss grid) -->
+  <g transform="translate(136, 120)">
+    <!-- Outer Heavy Silhouette with 45-degree chamfers -->
+    <path d="M 0 0 L 140 0 C 196 0 240 32 240 78 C 240 108 220 126 186 136 C 228 148 248 172 248 210 C 248 256 200 272 144 272 L 0 272 L 0 0 Z" fill="#F4E8D1"/>
+    
+    <!-- Tactical Negative Space Insets -->
+    <!-- Upper Negative Cut -->
+    <path d="M 52 46 L 132 46 C 164 46 184 56 184 76 C 184 96 164 104 132 104 L 52 104 Z" fill="#050505"/>
+    <!-- Lower Negative Cut -->
+    <path d="M 52 148 L 136 148 C 172 148 192 160 192 184 C 192 208 172 226 136 226 L 52 226 Z" fill="#050505"/>
+    
+    <!-- Speed Slash / High-performance Razor Slot -->
+    <polygon points="0,126 244,126 236,138 0,138" fill="#050505"/>
+    <polygon points="210,128 246,128 238,136 202,136" fill="#D4AF37"/>
+  </g>
+  
+  <!-- Minimalist Corner Coordinate Calibration -->
+  <text x="36" y="52" fill="#C5A880" font-family="monospace" font-size="14" letter-spacing="2">01 // BSK</text>
+  <text x="390" y="476" fill="#C5A880" font-family="monospace" font-size="14" letter-spacing="2">NFL.XP</text>
+</svg>

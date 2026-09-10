@@ -1,0 +1,939 @@
+season,snapshot_date,team,team_name,conference,division,position_group,position_code,position_title,depth_string,pos_rank,player_name,jersey_number,espn_id,years_exp,college
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,QB,Quarterback,1,1,Jacoby Brissett,7.0,2578570,10.0,N.C. State; Florida
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,QB,Quarterback,2,2,Gardner Minshew II,15.0,4038524,7.0,Washington State
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,QB,Quarterback,3,3,Carson Beck,19.0,4430841,0.0,Miami; Georgia
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,RB,Running Back,1,1,Jeremiyah Love,4.0,4870808,0.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,RB,Running Back,2,2,Tyler Allgeier,22.0,4373626,4.0,BYU
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,RB,Running Back,3,3,Bam Knight,20.0,4427728,4.0,N.C. State
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,RB,Running Back,4,4,James Conner,6.0,3045147,9.0,Pittsburgh
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,RB,Running Back,5,5,Trey Benson,33.0,4429275,2.0,Florida State; Oregon
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,WR1,Wide Receiver (X),1,1,Marvin Harrison Jr.,18.0,4432708,2.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,WR1,Wide Receiver (X),2,4,Jalen Brooks,83.0,4692835,3.0,South Carolina; Tarleton State; Wingate
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,WR1,Wide Receiver (X),3,7,Simi Fehoko,80.0,4360739,5.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,WR2,Wide Receiver (Z),1,2,Michael Wilson,14.0,4360761,3.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,WR2,Wide Receiver (Z),2,5,Reggie Virgil,82.0,4869132,0.0,Texas Tech; Miami (Ohio)
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,WR3,Wide Receiver (Slot),1,3,Kendrick Bourne,17.0,3045523,9.0,Eastern Washington
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,WR3,Wide Receiver (Slot),2,6,Devin Duvernay,81.0,4039050,6.0,Texas
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,TE,Tight End,1,1,Trey McBride,85.0,4361307,4.0,Colorado State
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,TE,Tight End,2,2,Elijah Higgins,84.0,4426844,3.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,TE,Tight End,3,3,Hunter Long,89.0,4239944,5.0,Boston College
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,TE,Tight End,4,4,Tip Reiman,87.0,4696700,2.0,Illinois
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,TE,Tight End,5,5,Jameson Geers,46.0,4588298,0.0,Minnesota
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,LT,Left Tackle,1,1,Paris Johnson Jr.,70.0,4428991,3.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,LT,Left Tackle,2,2,Josh Fryar,78.0,4429782,1.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,LG,Left Guard,1,1,Isaac Seumalo,73.0,2978247,10.0,Oregon State
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,LG,Left Guard,2,2,Hayden Conner,58.0,4431214,1.0,Texas
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,C,Center,1,1,Hjalte Froholdt,72.0,3886633,7.0,Arkansas
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,C,Center,2,2,Jon Gaines II,71.0,4367199,3.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,RG,Right Guard,1,1,Isaiah Adams,74.0,5084939,2.0,Illinois; Garden City CC
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,RG,Right Guard,2,2,Chase Bisontis,57.0,4870596,0.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,RT,Right Tackle,1,1,Elijah Wilkinson,65.0,3059839,9.0,UMass Amherst
+2026-2027,2026-09-08T11:56:57Z,ARI,Arizona Cardinals,NFC,NFC West,Offense,RT,Right Tackle,2,2,Jayden Williams,66.0,4709718,0.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,QB,Quarterback,1,1,Tua Tagovailoa,1.0,4241479,6.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,QB,Quarterback,2,2,Michael Penix Jr.,9.0,4360423,2.0,Washington; Indiana
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,QB,Quarterback,3,3,Cooper Rush,13.0,2972515,9.0,Central Michigan; Tarrant County JC
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,QB,Quarterback,4,4,Jack Strand,18.0,5344782,0.0,Minnesota State
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,RB,Running Back,1,1,Bijan Robinson,7.0,4430807,3.0,Texas
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,RB,Running Back,2,2,Brian Robinson Jr.,15.0,4241474,4.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,RB,Running Back,3,3,Trey Sermon,44.0,4241401,5.0,Ohio State; Oklahoma
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,WR1,Wide Receiver (X),1,1,Drake London,5.0,4426502,4.0,USC
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,WR1,Wide Receiver (X),2,4,Zachariah Branch,17.0,4870612,0.0,Georgia; USC
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,WR2,Wide Receiver (Z),1,2,Jahan Dotson,4.0,4361409,4.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,WR2,Wide Receiver (Z),2,5,Chris Blair,19.0,4369886,6.0,Alcorn State
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,WR3,Wide Receiver (Slot),1,3,Olamide Zaccheaus,14.0,3917914,7.0,Virginia
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,WR3,Wide Receiver (Slot),2,6,Beaux Collins,88.0,4431210,1.0,Notre Dame; Clemson
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,TE,Tight End,1,1,Kyle Pitts Sr.,8.0,4360248,5.0,Florida
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,TE,Tight End,2,2,Charlie Woerner,89.0,4035020,6.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,TE,Tight End,3,3,Austin Hooper,81.0,3043275,10.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,LT,Left Tackle,1,1,Jake Matthews,70.0,16713,12.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,LT,Left Tackle,2,2,Michael Jerrell,72.0,5209093,2.0,Findlay
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,LG,Left Guard,1,1,Matthew Bergeron,65.0,4568510,3.0,Syracuse
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,LG,Left Guard,2,2,Kyle Hinton,68.0,4682831,6.0,Washburn
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,C,Center,1,1,Ryan Neuzil,64.0,4036444,5.0,Appalachian State
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,C,Center,2,2,Corey Levin,62.0,2973637,9.0,Tennessee-Chattanooga
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,RG,Right Guard,1,1,Chris Lindstrom,63.0,3672833,7.0,Boston College
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,RT,Right Tackle,1,1,Jawaan Taylor,71.0,4034961,7.0,Florida
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,RT,Right Tackle,2,2,Michael Jerrell,72.0,5209093,2.0,Findlay
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,RT,Right Tackle,3,3,Ethan Onianwa,75.0,4683194,0.0,Ohio State; Rice
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,RT,Right Tackle,4,4,Cameron Williams,73.0,4685590,1.0,Texas
+2026-2027,2026-09-08T11:56:57Z,ATL,Atlanta Falcons,NFC,NFC South,Offense,RT,Right Tackle,5,5,Storm Norton,77.0,2973014,9.0,Toledo
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,QB,Quarterback,1,1,Lamar Jackson,8.0,3916387,8.0,Louisville
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,QB,Quarterback,2,2,Tyler Huntley,5.0,4035671,6.0,Utah
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,QB,Quarterback,3,3,Joe Fagnano,12.0,4429582,0.0,Connecticut; Maine
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,QB,Quarterback,4,4,Skylar Thompson,11.0,4036419,4.0,Kansas State
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,RB,Running Back,1,1,Derrick Henry,22.0,3043078,10.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,RB,Running Back,2,2,Justice Hill,43.0,4038441,7.0,Oklahoma State
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,RB,Running Back,3,3,Rasheen Ali,26.0,4690013,2.0,Marshall
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,RB,Running Back,4,4,Adam Randall,23.0,4685526,0.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,WR1,Wide Receiver (X),1,1,Zay Flowers,4.0,4429615,3.0,Boston College
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,WR1,Wide Receiver (X),2,4,Devontez Walker,81.0,4696882,2.0,North Carolina; Kent State; North Carolina Central
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,WR2,Wide Receiver (Z),1,2,Rashod Bateman,7.0,4360939,5.0,Minnesota
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,WR2,Wide Receiver (Z),2,5,Elijah Sarratt,13.0,5088338,0.0,Indiana; James Madison; St. Francis PA
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,WR3,Wide Receiver (Slot),1,3,Ja'Kobi Lane,6.0,4870847,0.0,USC
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,WR3,Wide Receiver (Slot),2,6,LaJohntay Wester,10.0,4690143,1.0,Colorado; Florida Atlantic
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,TE,Tight End,1,1,Mark Andrews,89.0,3116365,8.0,Oklahoma
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,TE,Tight End,2,2,Durham Smythe,80.0,3052897,8.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,TE,Tight End,3,3,Matthew Hibner,88.0,4432260,0.0,SMU; Michigan
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,TE,Tight End,4,4,Josh Cuevas,85.0,4876132,0.0,Alabama; Washington; Pomona State
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,LT,Left Tackle,1,1,Ronnie Stanley,79.0,2980153,10.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,LT,Left Tackle,2,2,Carson Vinson,76.0,4769895,1.0,Alabama A&M
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,LG,Left Guard,1,1,John Simpson,74.0,4035479,6.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,LG,Left Guard,2,2,Andrew Vorhees,72.0,4243220,3.0,USC
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,C,Center,1,1,Jovaughn Gwyn,54.0,4362845,3.0,South Carolina
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,C,Center,2,2,Ethan Pocic,77.0,3042738,9.0,LSU
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,C,Center,3,3,Danny Pinter,63.0,3915470,6.0,Ball State
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,RG,Right Guard,1,1,Olaivavega Ioane,71.0,4832793,0.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,RG,Right Guard,2,2,Emery Jones Jr.,51.0,4685736,1.0,LSU
+2026-2027,2026-09-08T11:56:57Z,BAL,Baltimore Ravens,AFC,AFC North,Offense,RT,Right Tackle,1,1,Roger Rosengarten,70.0,4430876,2.0,Washington
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,QB,Quarterback,1,1,Josh Allen,17.0,3918298,8.0,Wyoming; Reedley
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,QB,Quarterback,2,2,Kyle Allen,11.0,3115293,8.0,Houston; Texas A&M
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,RB,Running Back,1,1,James Cook III,4.0,4379399,4.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,RB,Running Back,2,2,Ray Davis,7.0,4429501,2.0,Kentucky; Vanderbilt; Temple
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,RB,Running Back,3,3,Ty Johnson,26.0,3915411,7.0,Maryland
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,WR1,Wide Receiver (X),1,1,DJ Moore,2.0,3915416,8.0,Maryland
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,WR1,Wide Receiver (X),2,4,Joshua Palmer,5.0,4242433,5.0,Tennessee
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,WR2,Wide Receiver (Z),1,2,Khalil Shakir,10.0,4373678,4.0,Boise State
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,WR2,Wide Receiver (Z),2,5,Skyler Bell,13.0,4683153,0.0,Connecticut; Wisconsin
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,WR3,Wide Receiver (Slot),1,3,Keon Coleman,0.0,4635008,2.0,Florida State; Michigan State
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,WR3,Wide Receiver (Slot),2,6,Tyrell Shavers,14.0,4241476,3.0,San Diego State; Mississippi State; Alabama
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,TE,Tight End,1,1,Dalton Kincaid,86.0,4385690,3.0,Utah; Univ of California-San Diego
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,TE,Tight End,2,2,Dawson Knox,88.0,3930086,7.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,TE,Tight End,3,3,Jackson Hawes,85.0,4573699,1.0,Georgia Tech; Yale
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,TE,Tight End,4,4,Keleki Latu,83.0,4688552,1.0,Washington; Nevada
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,LT,Left Tackle,1,1,Dion Dawkins,73.0,3051324,9.0,Temple
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,LT,Left Tackle,2,2,Tylan Grable,68.0,4368828,2.0,UCF; Jacksonville State
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,LT,Left Tackle,3,3,Jude Bowry,74.0,4869533,0.0,Boston College
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,LG,Left Guard,1,1,Alec Anderson,70.0,4367203,4.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,LG,Left Guard,2,2,Austin Corbett,63.0,3056608,8.0,Nevada
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,C,Center,1,1,Connor McGovern,66.0,4033748,7.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,C,Center,2,2,Lloyd Cushenberry III,53.0,4035448,6.0,LSU
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,RG,Right Guard,1,1,O'Cyrus Torrence,64.0,4428696,3.0,Florida; Louisiana-Lafayette
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,RG,Right Guard,2,2,Austin Corbett,63.0,3056608,8.0,Nevada
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,RG,Right Guard,3,3,Ar'maj Reed-Adams,60.0,4606712,0.0,Texas A&M; Kansas
+2026-2027,2026-09-08T11:56:57Z,BUF,Buffalo Bills,AFC,AFC East,Offense,RT,Right Tackle,1,1,Spencer Brown,79.0,4030899,5.0,Northern Iowa
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,QB,Quarterback,1,1,Bryce Young,9.0,4685720,3.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,QB,Quarterback,2,2,Kenny Pickett,12.0,4240703,4.0,Pittsburgh
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,QB,Quarterback,3,3,Haynes King,16.0,4428993,0.0,Georgia Tech; Texas A&M
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,RB,Running Back,1,1,Chuba Hubbard,30.0,4241416,5.0,Oklahoma State
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,RB,Running Back,2,2,Jonathon Brooks,25.0,4678008,2.0,Texas
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,RB,Running Back,3,3,AJ Dillon,28.0,4239934,6.0,Boston College
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,RB,Running Back,4,4,Trevor Etienne,23.0,4685350,1.0,Georgia; Florida
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,WR1,Wide Receiver (X),1,1,Tetairoa McMillan,4.0,4685472,1.0,Arizona
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,WR1,Wide Receiver (X),2,4,John Metchie III,13.0,4567096,4.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,WR1,Wide Receiver (X),3,7,Chris Brazzell II,19.0,5091739,0.0,Tennessee; Tulane
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,WR2,Wide Receiver (Z),1,2,Jalen Coker,18.0,4695883,2.0,Holy Cross
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,WR2,Wide Receiver (Z),2,5,Jimmy Horn Jr.,15.0,4708486,1.0,Colorado; University of South Florida
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,WR3,Wide Receiver (Slot),1,3,Xavier Legette,17.0,4430034,2.0,South Carolina
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,WR3,Wide Receiver (Slot),2,6,Brycen Tremayne,87.0,4360763,3.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,TE,Tight End,1,1,Tommy Tremble,82.0,4372780,5.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,TE,Tight End,2,2,Mitchell Evans,84.0,4683243,1.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,TE,Tight End,3,3,Darren Waller,35.0,2576925,11.0,Georgia Tech
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,TE,Tight End,4,4,Ja'Tavion Sanders,0.0,4431588,2.0,Texas
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,TE,Tight End,5,5,Feleipe Franks,81.0,4034948,5.0,Arkansas
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,LT,Left Tackle,1,1,Rasheed Walker,63.0,4361429,4.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,LT,Left Tackle,2,2,Stone Forsythe,73.0,4034962,5.0,Florida
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,LT,Left Tackle,3,3,Ikem Ekwonu,79.0,4427132,4.0,N.C. State
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,LT,Left Tackle,4,4,Brady Christensen,70.0,4256062,5.0,BYU
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,LG,Left Guard,1,1,Damien Lewis,68.0,4362647,6.0,LSU; Northwest Mississippi CC
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,LG,Left Guard,2,2,Corey Bullock,67.0,4576075,2.0,Maryland; North Carolina Central
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,C,Center,1,1,Luke Fortner,77.0,4035048,4.0,Kentucky
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,C,Center,2,2,Sam Hecht,75.0,4874515,0.0,Kansas State
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,RG,Right Guard,1,1,Robert Hunt,50.0,3917592,6.0,Louisiana-Lafayette
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,RG,Right Guard,2,2,Brady Christensen,70.0,4256062,5.0,BYU
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,RT,Right Tackle,1,1,Monroe Freeling,57.0,4870694,0.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,RT,Right Tackle,2,2,Albert Reese IV,76.0,4683506,0.0,Mississippi State
+2026-2027,2026-09-08T11:56:57Z,CAR,Carolina Panthers,NFC,NFC South,Offense,RT,Right Tackle,3,3,Taylor Moton,72.0,2973051,9.0,Western Michigan
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,QB,Quarterback,1,1,Caleb Williams,18.0,4431611,2.0,USC; Oklahoma
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,QB,Quarterback,2,2,Tyson Bagent,17.0,4434153,3.0,Shepherd
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,QB,Quarterback,3,3,Case Keenum,11.0,15168,14.0,Houston
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,RB,Running Back,1,1,D'Andre Swift,4.0,4259545,6.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,RB,Running Back,2,2,Kyle Monangai,25.0,4608686,1.0,Rutgers
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,RB,Running Back,3,3,Roschon Johnson,23.0,4426386,3.0,Texas
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,RB,Running Back,4,4,Brittain Brown,38.0,4036032,4.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,WR1,Wide Receiver (X),1,1,Rome Odunze,15.0,4431299,2.0,Washington
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,WR1,Wide Receiver (X),2,4,Zavion Thomas,13.0,4869748,0.0,LSU; Mississippi State
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,WR2,Wide Receiver (Z),1,2,Luther Burden III,10.0,4685278,1.0,Missouri
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,WR2,Wide Receiver (Z),2,5,Jahdae Walker,9.0,5160110,1.0,Texas A&M; Grand Valley
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,WR3,Wide Receiver (Slot),1,3,Kalif Raymond,14.0,2973405,10.0,Holy Cross
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,TE,Tight End,1,1,Colston Loveland,84.0,4723086,1.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,TE,Tight End,2,2,Cole Kmet,85.0,4258595,6.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,TE,Tight End,3,3,Sam Roush,87.0,4685504,0.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,TE,Tight End,4,4,Nikola Kalinic,86.0,4916349,4.0,York (Canada)
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,TE,Tight End,5,5,Hayden Large,43.0,5150662,0.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,LT,Left Tackle,1,1,Braxton Jones,70.0,4251007,4.0,Southern Utah State
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,LT,Left Tackle,2,2,Ozzy Trapilo,75.0,4432595,1.0,Boston College
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,LT,Left Tackle,3,3,Theo Benedet,79.0,5125873,2.0,University of British Columbia
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,LG,Left Guard,1,1,Joe Thuney,62.0,2577773,10.0,N.C. State
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,LG,Left Guard,2,2,Jordan McFadden,74.0,4360319,3.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,C,Center,1,1,Garrett Bradbury,67.0,3116729,7.0,N.C. State
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,C,Center,2,2,Logan Jones,54.0,4686907,0.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,RG,Right Guard,1,1,Jonah Jackson,73.0,3930040,6.0,Ohio State; Rutgers
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,RG,Right Guard,2,2,Luke Newman,65.0,4695895,1.0,Michigan State; Holy Cross
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,RT,Right Tackle,1,1,Darnell Wright,58.0,4426358,3.0,Tennessee
+2026-2027,2026-09-08T11:56:57Z,CHI,Chicago Bears,NFC,NFC North,Offense,RT,Right Tackle,2,2,Theo Benedet,79.0,5125873,2.0,University of British Columbia
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,QB,Quarterback,1,1,Joe Burrow,9.0,3915511,6.0,LSU; Ohio State
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,QB,Quarterback,2,2,Joe Flacco,16.0,11252,18.0,Delaware; Pittsburgh
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,RB,Running Back,1,1,Chase Brown,30.0,4362238,3.0,Illinois; Western Michigan
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,RB,Running Back,2,2,Samaje Perine,34.0,3116389,9.0,Oklahoma
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,RB,Running Back,3,3,Tahj Brooks,25.0,4429299,1.0,Texas Tech
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,WR1,Wide Receiver (X),1,1,Ja'Marr Chase,1.0,4362628,5.0,LSU
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,WR1,Wide Receiver (X),2,4,Colbie Young,86.0,5092508,0.0,Georgia; Miami; Lackawanna JC
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,WR2,Wide Receiver (Z),1,2,Tee Higgins,5.0,4239993,6.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,WR2,Wide Receiver (Z),2,5,Dohnte Meyers,81.0,4384852,0.0,Delta State University; Presbyterian College
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,WR3,Wide Receiver (Slot),1,3,Andrei Iosivas,80.0,4368003,3.0,Princeton
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,WR3,Wide Receiver (Slot),2,6,Ke'Shawn Williams,12.0,4570738,1.0,Indiana; Wake Forest
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,TE,Tight End,1,1,Mike Gesicki,88.0,3116164,8.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,TE,Tight End,2,2,Drew Sample,89.0,3127310,7.0,Washington
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,TE,Tight End,3,3,Erick All Jr.,83.0,4427834,2.0,Iowa; Michigan
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,TE,Tight End,4,4,Jack Endries,84.0,5085189,0.0,Texas; California
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,LT,Left Tackle,1,1,Orlando Brown Jr.,75.0,3116370,8.0,Oklahoma
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,LT,Left Tackle,2,2,Javon Foster,73.0,4362769,2.0,Missouri
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,LT,Left Tackle,3,3,Myles Hinton,77.0,4429000,1.0,Michigan; Stanford
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,LG,Left Guard,1,1,Dylan Fairchild,63.0,4646773,1.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,LG,Left Guard,2,2,Brian Parker II,62.0,4689117,0.0,Duke
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,C,Center,1,1,Ted Karras,64.0,2576188,10.0,Illinois
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,C,Center,2,2,Connor Lew,65.0,4870866,0.0,Auburn
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,C,Center,3,3,Jacob Bayer,69.0,4879478,1.0,Arkansas State; Lamar
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,RG,Right Guard,1,1,Dalton Risner,66.0,3125082,7.0,Kansas State
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,RG,Right Guard,2,2,Jalen Rivers,74.0,4429010,1.0,Miami
+2026-2027,2026-09-08T11:56:57Z,CIN,Cincinnati Bengals,AFC,AFC North,Offense,RT,Right Tackle,1,1,Amarius Mims,71.0,4431571,2.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,QB,Quarterback,1,1,Deshaun Watson,4.0,3122840,9.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,QB,Quarterback,2,2,Shedeur Sanders,2.0,4432762,1.0,Colorado; Jackson State University
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,QB,Quarterback,3,3,Taylen Green,15.0,4431325,0.0,Arkansas; Boise State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,QB,Quarterback,4,4,Dillon Gabriel,6.0,4427238,1.0,Oregon; Oklahoma; UCF
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,RB,Running Back,1,1,Quinshon Judkins,10.0,4685702,1.0,Ohio State; Mississippi
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,RB,Running Back,2,2,Dylan Sampson,22.0,5081397,1.0,Tennessee
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,RB,Running Back,3,3,Raheim Sanders,35.0,4601080,1.0,South Carolina; Arkansas
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,FB,Fullback,1,1,Michael Burton,34.0,2515270,11.0,Rutgers
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,WR1,Wide Receiver (X),1,1,Jerry Jeudy,3.0,4241463,6.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,WR1,Wide Receiver (X),2,4,Isaiah Bond,0.0,4808839,1.0,Texas; Alabama
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,WR1,Wide Receiver (X),3,7,Jamari Thrash,80.0,4428678,2.0,Louisville; Georgia State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,WR2,Wide Receiver (Z),1,2,KC Concepcion,1.0,4870653,0.0,Texas A&M; N.C. State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,WR2,Wide Receiver (Z),2,5,Tylan Wallace,16.0,4241424,5.0,Oklahoma State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,WR3,Wide Receiver (Slot),1,3,Denzel Boston,12.0,4832800,0.0,Washington
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,WR3,Wide Receiver (Slot),2,6,Malachi Corley,83.0,4613104,2.0,Western Kentucky
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,TE,Tight End,1,1,Harold Fannin Jr.,44.0,5083076,1.0,Bowling Green
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,TE,Tight End,2,2,Blake Whiteheart,86.0,4362018,3.0,Wake Forest
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,TE,Tight End,3,3,Carsen Ryan,48.0,4685540,0.0,BYU; Utah; UCLA
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,TE,Tight End,4,4,Joe Royer,18.0,4565859,0.0,Cincinnati; Ohio State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,LT,Left Tackle,1,1,Spencer Fano,55.0,4870723,0.0,Utah
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,LT,Left Tackle,2,2,Dawand Jones,79.0,4427637,3.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,LG,Left Guard,1,1,Zion Johnson,77.0,4247347,4.0,Boston College; Davidson
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,LG,Left Guard,2,2,Zak Zinter,70.0,4433963,2.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,LG,Left Guard,3,3,Kendrick Green,53.0,4240548,5.0,Illinois
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,C,Center,1,1,Elgton Jenkins,74.0,3115485,7.0,Mississippi State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,C,Center,2,2,Parker Brailsford,52.0,4816090,0.0,Alabama; Washington
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,C,Center,3,3,Luke Wypler,56.0,4430806,3.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,RG,Right Guard,1,1,Teven Jenkins,78.0,4038457,5.0,Oklahoma State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,RG,Right Guard,2,2,Austin Barber,58.0,4597310,0.0,Florida
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,RT,Right Tackle,1,1,Tytus Howard,71.0,3131498,7.0,Alabama State
+2026-2027,2026-09-08T11:56:57Z,CLE,Cleveland Browns,AFC,AFC North,Offense,RT,Right Tackle,2,2,Austin Barber,58.0,4597310,0.0,Florida
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,QB,Quarterback,1,1,Dak Prescott,4.0,2577417,10.0,Mississippi State
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,QB,Quarterback,2,2,Sam Howell,16.0,4426875,4.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,RB,Running Back,1,1,Javonte Williams,33.0,4361579,5.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,RB,Running Back,2,2,Malik Davis,20.0,4240603,4.0,Florida
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,RB,Running Back,3,3,Emari Demercado,31.0,4362478,3.0,TCU
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,FB,Fullback,1,1,Hunter Luepke,40.0,4383396,3.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,WR1,Wide Receiver (X),1,1,CeeDee Lamb,88.0,4241389,6.0,Oklahoma
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,WR1,Wide Receiver (X),2,4,KaVontae Turpin,9.0,3676833,7.0,TCU
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,WR2,Wide Receiver (Z),1,2,George Pickens,3.0,4426354,4.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,WR2,Wide Receiver (Z),2,5,Jonathan Mingo,81.0,4426485,3.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,WR3,Wide Receiver (Slot),1,3,Ryan Flournoy,19.0,5083754,2.0,Southeast Missouri State; Iowa Western CC
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,WR3,Wide Receiver (Slot),2,6,Camden Brown,80.0,4808759,0.0,Georgia Southern; Auburn
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,TE,Tight End,1,1,Jake Ferguson,87.0,4242355,4.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,TE,Tight End,2,2,Brevyn Spann-Ford,89.0,4360967,2.0,Minnesota
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,TE,Tight End,3,3,Luke Schoonmaker,86.0,4372096,3.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,TE,Tight End,4,4,Princeton Fant,85.0,4242442,3.0,Tennessee
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,TE,Tight End,5,5,DJ Rogers,49.0,4710711,0.0,TCU
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,LT,Left Tackle,1,1,Tyler Guyton,60.0,4609048,2.0,Oklahoma; TCU
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,LT,Left Tackle,2,2,Broderick Jones,77.0,4428990,3.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,LG,Left Guard,1,1,T.J. Bass,66.0,4685120,3.0,Oregon; Butte College
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,LG,Left Guard,2,2,Tyler Smith,73.0,4568652,4.0,Tulsa
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,C,Center,1,1,Cooper Beebe,56.0,4426663,2.0,Kansas State
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,C,Center,2,2,Matt Hennessy,72.0,4044138,6.0,Temple
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,RG,Right Guard,1,1,Tyler Booker,52.0,4685263,1.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,RT,Right Tackle,1,1,Terence Steele,78.0,3915834,6.0,Texas Tech
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,RT,Right Tackle,2,2,Drew Shelton,67.0,4685554,0.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,DAL,Dallas Cowboys,NFC,NFC East,Offense,RT,Right Tackle,3,3,Ajani Cornelius,65.0,4696203,1.0,Oregon; Rhode Island
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,QB,Quarterback,1,1,Bo Nix,10.0,4426338,2.0,Oregon; Auburn
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,QB,Quarterback,2,2,Jarrett Stidham,8.0,3892775,7.0,Auburn; McLennan CC; Baylor
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,QB,Quarterback,3,3,Sam Ehlinger,4.0,4241820,5.0,Texas
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,RB,Running Back,1,1,J.K. Dobbins,27.0,4241985,6.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,RB,Running Back,2,2,RJ Harvey,12.0,4568490,1.0,UCF; Virginia
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,RB,Running Back,3,3,Jonah Coleman,20.0,4702555,0.0,Washington; Arizona
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,RB,Running Back,4,4,Tyler Badie,28.0,4362748,4.0,Missouri
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,WR1,Wide Receiver (X),1,1,Jaylen Waddle,17.0,4372016,5.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,WR1,Wide Receiver (X),2,4,Marvin Mims Jr.,19.0,4686472,3.0,Oklahoma
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,WR2,Wide Receiver (Z),1,2,Courtland Sutton,14.0,3128429,8.0,SMU
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,WR2,Wide Receiver (Z),2,5,Pat Bryant,13.0,4600981,1.0,Illinois
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,WR3,Wide Receiver (Slot),1,3,Troy Franklin,11.0,4431280,2.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,WR3,Wide Receiver (Slot),2,6,Lil'Jordan Humphrey,5.0,4039057,7.0,Texas
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,TE,Tight End,1,1,Evan Engram,1.0,3051876,9.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,TE,Tight End,2,2,Adam Trautman,82.0,3911853,6.0,Dayton
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,TE,Tight End,3,3,Nate Adkins,45.0,4383440,3.0,South Carolina
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,TE,Tight End,4,4,Dallen Bentley,89.0,5159802,0.0,Utah; Snow
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,TE,Tight End,5,5,Caleb Lohner,84.0,4432208,1.0,Utah; Baylor
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,LT,Left Tackle,1,1,Garett Bolles,72.0,4035662,9.0,Utah; Snow
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,LT,Left Tackle,2,2,Matt Peart,79.0,3921936,6.0,Connecticut
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,LT,Left Tackle,3,3,Frank Crum,73.0,4361691,2.0,Wyoming
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,LG,Left Guard,1,1,Ben Powers,74.0,4037650,7.0,Oklahoma; Butler County JC
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,LG,Left Guard,2,2,Nick Gargiulo,66.0,4368033,2.0,South Carolina; Yale
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,C,Center,1,1,Luke Wattenberg,60.0,4039018,4.0,Washington
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,C,Center,2,2,Alex Forsyth,54.0,4242503,3.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,C,Center,3,3,Michael Deiter,67.0,3121541,7.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,RG,Right Guard,1,1,Quinn Meinerz,77.0,4608138,5.0,Wisconsin-Whitewater
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,RG,Right Guard,2,2,Kage Casey,78.0,4868598,0.0,Boise State
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,RT,Right Tackle,1,1,Mike McGlinchey,69.0,3052885,8.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,DEN,Denver Broncos,AFC,AFC West,Offense,RT,Right Tackle,2,2,Alex Palczewski,63.0,4240551,3.0,Illinois
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,QB,Quarterback,1,1,Jared Goff,16.0,3046779,10.0,California
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,QB,Quarterback,2,2,Joshua Dobbs,6.0,3044720,9.0,Tennessee
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,RB,Running Back,1,1,Jahmyr Gibbs,0.0,4429795,3.0,Alabama; Georgia Tech
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,RB,Running Back,2,2,Sione Vaki,33.0,4912274,2.0,Utah
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,RB,Running Back,3,3,Jacob Saylors,25.0,4383429,3.0,East Tennessee State
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,RB,Running Back,4,4,Isiah Pacheco,10.0,4361529,4.0,Rutgers
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,WR1,Wide Receiver (X),1,1,Amon-Ra St. Brown,14.0,4374302,5.0,USC
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,WR1,Wide Receiver (X),2,4,Tay Martin,17.0,4245144,4.0,Oklahoma State
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,WR2,Wide Receiver (Z),1,2,Jameson Williams,1.0,4426388,4.0,Alabama; Ohio State
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,WR2,Wide Receiver (Z),2,5,Kendrick Law,88.0,4685441,0.0,Kentucky; Alabama
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,WR3,Wide Receiver (Slot),1,3,Isaac TeSlaa,18.0,5123663,1.0,Arkansas; Hillsdale
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,TE,Tight End,1,1,Sam LaPorta,87.0,4430027,3.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,TE,Tight End,2,2,Brock Wright,89.0,4242392,5.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,TE,Tight End,3,3,Tyler Conklin,83.0,3915486,8.0,Central Michigan; Northwood
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,TE,Tight End,4,4,Jackson Meeks,13.0,4602788,1.0,Syracuse
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,LT,Left Tackle,1,1,Penei Sewell,58.0,4373825,5.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,LT,Left Tackle,2,2,Giovanni Manu,59.0,5209589,2.0,University of British Columbia
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,LG,Left Guard,1,1,Christian Mahogany,73.0,4427864,2.0,Boston College
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,LG,Left Guard,2,2,Juice Scruggs,70.0,4361425,3.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,LG,Left Guard,3,3,Miles Frazier,71.0,4608890,1.0,LSU; Florida International
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,C,Center,1,1,Juice Scruggs,70.0,4361425,3.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,C,Center,2,2,Cade Mays,64.0,4361788,4.0,Tennessee
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,C,Center,3,3,Michael Niese,62.0,4051353,4.0,Temple
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,RG,Right Guard,1,1,Tate Ratledge,69.0,4429035,1.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,RG,Right Guard,2,2,Ben Bartch,78.0,4611506,6.0,St. John's (MN)
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,RT,Right Tackle,1,1,Blake Miller,,5081450,,
+2026-2027,2026-09-08T11:56:57Z,DET,Detroit Lions,NFC,NFC North,Offense,RT,Right Tackle,2,2,Larry Borom,79.0,4241217,5.0,Missouri
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,QB,Quarterback,1,1,Jordan Love,10.0,4036378,6.0,Utah State
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,QB,Quarterback,2,2,Tyrod Taylor,6.0,14163,15.0,Virginia Tech
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RB,Running Back,1,1,MarShawn Lloyd,32.0,4429023,2.0,USC; South Carolina
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RB,Running Back,2,2,Chris Brooks,30.0,3149687,3.0,BYU; California
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RB,Running Back,3,3,Kaleb Johnson,20.0,4819231,1.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RB,Running Back,4,4,Josh Jacobs,8.0,4047365,7.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,WR1,Wide Receiver (X),1,1,Christian Watson,9.0,4248528,4.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,WR1,Wide Receiver (X),2,4,Bo Melton,16.0,4259305,4.0,Rutgers
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,WR1,Wide Receiver (X),3,7,Savion Williams,83.0,4431487,1.0,TCU
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,WR2,Wide Receiver (Z),1,2,Jayden Reed,11.0,4362249,3.0,Michigan State; Western Michigan
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,WR2,Wide Receiver (Z),2,5,Skyy Moore,23.0,4430191,4.0,Western Michigan
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,WR3,Wide Receiver (Slot),1,3,Matthew Golden,0.0,4701936,1.0,Texas; Houston
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,WR3,Wide Receiver (Slot),2,6,J. Michael Sturdivant,87.0,4635009,0.0,Florida; UCLA; California
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,TE,Tight End,1,1,Tucker Kraft,85.0,4572680,3.0,South Dakota State
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,TE,Tight End,2,2,Jonnu Smith,81.0,3054212,9.0,Florida International
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,TE,Tight End,3,3,Josh Whyle,81.0,4360086,3.0,Cincinnati
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,TE,Tight End,4,4,Mark Redman,83.0,4431346,1.0,Louisville; San Diego State
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,TE,Tight End,5,5,Luke Musgrave,88.0,4428085,3.0,Oregon State
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,TE,Tight End,6,6,Thomas Yassmin,84.0,4361027,2.0,Utah
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,LT,Left Tackle,1,1,Jordan Morgan,77.0,3821571,2.0,Arizona
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,LT,Left Tackle,2,2,John Williams,73.0,2312707,1.0,Cincinnati
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,LG,Left Guard,1,1,Aaron Banks,65.0,4242390,5.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,LG,Left Guard,2,2,Jager Burton,52.0,4569661,0.0,Kentucky
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,C,Center,1,1,Sean Rhyan,75.0,4426411,4.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,C,Center,2,2,Jager Burton,52.0,4569661,0.0,Kentucky
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RG,Right Guard,1,1,Jacob Monk,62.0,4428037,2.0,Duke
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RG,Right Guard,2,2,Donovan Jennings,67.0,4360887,2.0,University of South Florida
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RG,Right Guard,3,3,Anthony Belton,71.0,4873706,1.0,N.C. State; Georgia Military
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RT,Right Tackle,1,1,Zach Bako-Bewele,50.0,4240435,4.0,Wake Forest
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RT,Right Tackle,2,2,Anthony Belton,71.0,4873706,1.0,N.C. State; Georgia Military
+2026-2027,2026-09-08T11:56:57Z,GB,Green Bay Packers,NFC,NFC North,Offense,RT,Right Tackle,3,3,Travis Glover,79.0,4361904,2.0,Georgia State
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,QB,Quarterback,1,1,C.J. Stroud,7.0,4432577,3.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,QB,Quarterback,2,2,Davis Mills,10.0,4242546,5.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,QB,Quarterback,3,3,Graham Mertz,18.0,4426335,1.0,Florida; Wisconsin
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,RB,Running Back,1,1,David Montgomery,32.0,4035538,7.0,Iowa State
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,RB,Running Back,2,2,Woody Marks,4.0,4429059,1.0,USC; Mississippi State
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,RB,Running Back,3,3,British Brooks,44.0,4373273,2.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,WR1,Wide Receiver (X),1,1,Nico Collins,12.0,4258173,5.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,WR1,Wide Receiver (X),2,4,Kayshon Boutte,14.0,4429022,3.0,LSU
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,WR1,Wide Receiver (X),3,7,Jayden Higgins,81.0,4877706,1.0,Iowa State; Eastern Kentucky
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,WR2,Wide Receiver (Z),1,2,Xavier Hutchinson,19.0,4686422,3.0,Iowa State
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,WR2,Wide Receiver (Z),2,5,Jared Wayne,89.0,4430681,3.0,Pittsburgh
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,WR3,Wide Receiver (Slot),1,3,Jaylin Noel,13.0,4586312,1.0,Iowa State
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,WR3,Wide Receiver (Slot),2,6,Tank Dell,1.0,4366031,3.0,Houston; Independence Comm. College; Alabama A&M
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,TE,Tight End,1,1,Dalton Schultz,86.0,3117256,8.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,TE,Tight End,2,2,Foster Moreau,87.0,3843945,7.0,LSU
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,TE,Tight End,3,3,Cade Stover,8.0,4426496,2.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,TE,Tight End,4,4,Marlin Klein,83.0,4695705,0.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,TE,Tight End,5,5,Brevin Jordan,9.0,4362504,5.0,Miami
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,LT,Left Tackle,1,1,Aireontae Ersery,79.0,4429693,1.0,Minnesota
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,LT,Left Tackle,2,2,Blake Fisher,57.0,4432699,2.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,LG,Left Guard,1,1,Keylan Rutledge,66.0,4839498,0.0,Georgia Tech; Middle Tennessee State
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,LG,Left Guard,2,2,Wyatt Teller,75.0,3045474,8.0,Virginia Tech
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,LG,Left Guard,3,3,Evan Brown,67.0,3128412,8.0,SMU
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,C,Center,1,1,Evan Brown,67.0,3128412,8.0,SMU
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,C,Center,2,2,Keylan Rutledge,66.0,4839498,0.0,Georgia Tech; Middle Tennessee State
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,C,Center,3,3,Jake Andrews,60.0,4362732,3.0,Troy
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,RG,Right Guard,1,1,Ed Ingram,69.0,4242227,4.0,LSU
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,RG,Right Guard,2,2,Febechi Nwaiwu,64.0,4880873,0.0,Oklahoma; North Texas
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,RT,Right Tackle,1,1,Trent Brown,77.0,3043109,11.0,Florida; Georgia Military
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,RT,Right Tackle,2,2,Nate Thomas,78.0,4428656,2.0,Louisiana-Lafayette
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,RT,Right Tackle,3,3,Braden Smith,71.0,3121595,8.0,Auburn
+2026-2027,2026-09-08T11:56:57Z,HOU,Houston Texans,AFC,AFC South,Offense,RT,Right Tackle,4,4,Sam Hagen,76.0,4879242,0.0,South Dakota State; North Dakota
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,QB,Quarterback,1,1,Daniel Jones,17.0,3917792,7.0,Duke
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,QB,Quarterback,2,2,Anthony Richardson Sr.,5.0,4429084,3.0,Florida
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,QB,Quarterback,3,3,Riley Leonard,15.0,4683423,1.0,Notre Dame; Duke
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,RB,Running Back,1,1,Jonathan Taylor,28.0,4242335,6.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,RB,Running Back,2,2,Seth McGowan,20.0,4686468,0.0,Kentucky; New Mexico State; Butler University; Oklahoma
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,RB,Running Back,3,3,DJ Giddens,21.0,4874509,1.0,Kansas State
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,WR1,Wide Receiver (X),1,1,Alec Pierce,14.0,4360078,4.0,Cincinnati
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,WR1,Wide Receiver (X),2,4,Ashton Dulin,16.0,4061956,7.0,Malone
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,WR1,Wide Receiver (X),3,7,Coleman Owen,9.0,4578436,1.0,Ohio; Northern Arizona
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,WR2,Wide Receiver (Z),1,2,Josh Downs,2.0,4688813,3.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,WR2,Wide Receiver (Z),2,5,Laquon Treadwell,13.0,3051889,10.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,WR2,Wide Receiver (Z),3,8,D.J. Montgomery,3.0,4249030,7.0,Austin Peay; Holmes County JC
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,WR3,Wide Receiver (Slot),1,3,Keenan Allen,10.0,15818,13.0,California
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,WR3,Wide Receiver (Slot),2,6,Deion Burks,80.0,4683151,0.0,Oklahoma; Purdue
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,TE,Tight End,1,1,Tyler Warren,84.0,4431459,1.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,TE,Tight End,2,2,Mo Alie-Cox,81.0,2998565,9.0,Virginia Commonwealth Univ.
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,TE,Tight End,3,3,Drew Ogletree,85.0,4722908,4.0,Youngstown State
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,TE,Tight End,4,4,Will Mallory,86.0,4362523,3.0,Miami
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,TE,Tight End,5,5,Carson Towt,45.0,4702120,0.0,Notre Dame; Northern Arizona
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,LT,Left Tackle,1,1,Bernhard Raimann,79.0,4362580,4.0,Central Michigan
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,LG,Left Guard,1,1,Quenton Nelson,56.0,3129308,8.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,LG,Left Guard,2,2,Dalton Tucker,68.0,4370363,2.0,Marshall
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,C,Center,1,1,Tanor Bortolini,60.0,4430957,2.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,C,Center,2,2,Sedrick Van Pran-Granger,63.0,4430815,2.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,RG,Right Guard,1,1,Matt Goncalves,71.0,4427298,2.0,Pittsburgh
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,RG,Right Guard,2,2,Jalen Farmer,62.0,4838270,0.0,Kentucky
+2026-2027,2026-09-08T11:56:57Z,IND,Indianapolis Colts,AFC,AFC South,Offense,RT,Right Tackle,1,1,Jalen Travis,75.0,4892240,1.0,Iowa State; Princeton
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,QB,Quarterback,1,1,Trevor Lawrence,16.0,4360310,5.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,QB,Quarterback,2,2,Quinn Ewers,10.0,4889929,1.0,Texas; Ohio State
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,QB,Quarterback,3,3,Carter Bradley,10.0,4362260,2.0,South Alabama; Toledo
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RB,Running Back,1,1,Bhayshul Tuten,33.0,4882093,1.0,Virginia Tech; North Carolina A&T
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RB,Running Back,2,2,Chris Rodriguez Jr.,24.0,4362619,3.0,Kentucky
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RB,Running Back,3,3,LeQuint Allen Jr.,5.0,4911851,1.0,Syracuse
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RB,Running Back,4,4,Ameer Abdullah,20.0,2576336,11.0,Nebraska
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,WR1,Wide Receiver (X),1,1,Brian Thomas Jr.,7.0,4432773,2.0,LSU
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,WR1,Wide Receiver (X),2,4,Travis Hunter,12.0,4685415,1.0,Colorado; Jackson State University
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,WR2,Wide Receiver (Z),1,2,Parker Washington,11.0,4432620,3.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,WR2,Wide Receiver (Z),2,5,Josh Cameron,19.0,4879194,0.0,Baylor
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,WR3,Wide Receiver (Slot),1,3,Jakobi Meyers,3.0,3916433,7.0,N.C. State
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,WR3,Wide Receiver (Slot),2,6,CJ Williams,18.0,5085024,0.0,Stanford; Wisconsin
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,TE,Tight End,1,1,Brenton Strange,85.0,4430539,3.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,TE,Tight End,2,2,Nate Boerkircher,87.0,4686248,0.0,Texas A&M; Nebraska
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,TE,Tight End,3,3,Tanner Koziol,88.0,4917427,0.0,Houston; Ball State
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,TE,Tight End,4,4,Quintin Morris,80.0,4244049,5.0,Bowling Green
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,LT,Left Tackle,1,1,Anton Harrison,77.0,4692525,3.0,Oklahoma
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,LT,Left Tackle,2,2,Cole Van Lanen,70.0,4035791,5.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,LG,Left Guard,1,1,Emmanuel Pregnon,75.0,4608929,0.0,Oregon; USC; Wyoming
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,LG,Left Guard,2,2,Ezra Cleveland,76.0,4048231,6.0,Boise State
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,LG,Left Guard,3,3,Garrett DiGiorgio,74.0,4684542,0.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,C,Center,1,1,Robert Hainsey,73.0,4242391,5.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,C,Center,2,2,Jonah Monheim,60.0,4430481,1.0,USC
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,C,Center,3,3,Sam Mustipher,69.0,3129307,7.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RG,Right Guard,1,1,Ezra Cleveland,76.0,4048231,6.0,Boise State
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RG,Right Guard,2,2,Daniel Faalele,68.0,4360964,4.0,Minnesota
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RG,Right Guard,3,3,Wyatt Milum,64.0,4431463,1.0,West Virginia
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RG,Right Guard,4,4,Patrick Mekari,65.0,3863820,7.0,California
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RT,Right Tackle,1,1,Walker Little,72.0,4242554,5.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,JAX,Jacksonville Jaguars,AFC,AFC South,Offense,RT,Right Tackle,2,2,Jimto Obidegwu,,4684970,,
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,QB,Quarterback,1,1,Patrick Mahomes,15.0,3139477,9.0,Texas Tech
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,QB,Quarterback,2,2,Justin Fields,6.0,4362887,5.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,QB,Quarterback,3,3,Garrett Nussmeier,14.0,4567747,0.0,LSU
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,RB,Running Back,1,1,Kenneth Walker III,9.0,4567048,4.0,Michigan State; Wake Forest
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,RB,Running Back,2,2,Emmett Johnson,10.0,4832955,0.0,Nebraska
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,RB,Running Back,3,3,Brashard Smith,24.0,4596602,1.0,SMU; Miami
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,WR1,Wide Receiver (X),1,1,Rashee Rice,4.0,4428331,3.0,SMU
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,WR1,Wide Receiver (X),2,4,Jalen Royals,11.0,5082630,1.0,Utah State
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,WR1,Wide Receiver (X),3,7,Jeff Caldwell,8.0,4885466,0.0,Cincinnati; Lindenwood
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,WR2,Wide Receiver (Z),1,2,Xavier Worthy,1.0,4683062,2.0,Texas
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,WR2,Wide Receiver (Z),2,5,Cyrus Allen,13.0,4912218,0.0,Cincinnati; Texas A&M; Louisiana Tech
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,WR2,Wide Receiver (Z),3,8,Jimmy Holiday,82.0,4431142,1.0,Louisiana Tech; Western Kentucky; Tennessee
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,WR3,Wide Receiver (Slot),1,3,Tyquan Thornton,2.0,4362921,4.0,Baylor
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,WR3,Wide Receiver (Slot),2,6,Nikko Remigio,81.0,4372716,3.0,Fresno State
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,TE,Tight End,1,1,Travis Kelce,87.0,15847,13.0,Cincinnati
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,TE,Tight End,2,2,Noah Gray,83.0,4240472,5.0,Duke
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,TE,Tight End,3,3,Jared Wiley,12.0,4430723,2.0,TCU; Texas
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,TE,Tight End,4,4,Jake Briningstool,88.0,4431196,1.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,TE,Tight End,5,5,John Michael Gyllenborg,84.0,4708490,0.0,Wyoming
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,LT,Left Tackle,1,1,Josh Simmons,71.0,4569659,1.0,Ohio State; San Diego State
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,LT,Left Tackle,2,2,Jaylon Moore,77.0,4043041,5.0,Western Michigan
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,LG,Left Guard,1,1,Kingsley Suamataia,76.0,4431595,2.0,BYU; Oregon
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,LG,Left Guard,2,2,Mike Caliendo,66.0,4043039,4.0,Western Michigan
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,LG,Left Guard,3,3,Joshua Ezeudu,73.0,4373280,4.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,C,Center,1,1,Creed Humphrey,52.0,4241385,5.0,Oklahoma
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,C,Center,2,2,Hunter Nourzad,64.0,4367645,2.0,Penn State; Cornell
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,RG,Right Guard,1,1,Trey Smith,65.0,4242459,5.0,Tennessee
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,RG,Right Guard,2,2,Mike Caliendo,66.0,4043039,4.0,Western Michigan
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,RG,Right Guard,3,3,Matt Waletzko,73.0,4370876,4.0,North Dakota
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,RT,Right Tackle,1,1,Kahlil Benson,70.0,4566190,0.0,Indiana; Colorado
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,RT,Right Tackle,2,2,Jaylon Moore,77.0,4043041,5.0,Western Michigan
+2026-2027,2026-09-08T11:56:57Z,KC,Kansas City Chiefs,AFC,AFC West,Offense,RT,Right Tackle,3,3,Diego Pounds,61.0,4602984,0.0,Mississippi; North Carolina
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,QB,Quarterback,1,1,Matthew Stafford,9.0,12483,17.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,QB,Quarterback,2,2,Stetson Bennett IV,13.0,4259553,3.0,Georgia; Jones County JC
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,QB,Quarterback,3,3,Ty Simpson,15.0,4685522,0.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,QB,Quarterback,4,4,Matthew Caldwell,16.0,4877717,0.0,Texas; Troy; Gardner-Webb; Jacksonville State
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,RB,Running Back,1,1,Kyren Williams,23.0,4430737,4.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,RB,Running Back,2,2,Blake Corum,24.0,4429096,2.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,RB,Running Back,3,3,Ronnie Rivers,20.0,4243003,4.0,Fresno State
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,WR1,Wide Receiver (X),1,1,Puka Nacua,12.0,4426515,3.0,BYU; Washington
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,WR1,Wide Receiver (X),2,4,Konata Mumpfield,4.0,4710855,1.0,Pittsburgh; Akron
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,WR1,Wide Receiver (X),3,7,CJ Daniels,6.0,4605951,0.0,Miami; LSU; Liberty
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,WR2,Wide Receiver (Z),1,2,Davante Adams,17.0,16800,12.0,Fresno State
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,WR2,Wide Receiver (Z),2,5,Tutu Atwell,8.0,4360797,5.0,Louisville
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,WR3,Wide Receiver (Slot),1,3,Jordan Whittington,88.0,4569382,2.0,Texas
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,WR3,Wide Receiver (Slot),2,6,Xavier Smith,19.0,4386544,3.0,Florida A&M
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,TE,Tight End,1,1,Colby Parkinson,84.0,4242557,6.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,TE,Tight End,2,2,Tyler Higbee,89.0,2573401,10.0,Western Kentucky
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,TE,Tight End,3,3,Terrance Ferguson,18.0,4570037,1.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,TE,Tight End,4,4,Max Klare,86.0,4833029,0.0,Ohio State; Purdue
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,TE,Tight End,5,5,Davis Allen,87.0,4426553,3.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,LT,Left Tackle,1,1,Alaric Jackson,77.0,4036135,5.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,LT,Left Tackle,2,2,David Quessenberry,68.0,15946,13.0,San Jose State
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,LG,Left Guard,1,1,Steve Avila,73.0,4362474,3.0,TCU
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,LG,Left Guard,2,2,Beaux Limmer,50.0,4567175,2.0,Arkansas
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,LG,Left Guard,3,3,Bill Murray,66.0,3912189,6.0,William & Mary
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,C,Center,1,1,Coleman Shelton,65.0,3052180,8.0,Washington
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,C,Center,2,2,Dylan McMahon,63.0,4430155,2.0,N.C. State
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,RG,Right Guard,1,1,Kevin Dotson,69.0,3917599,6.0,Louisiana-Lafayette
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,RG,Right Guard,2,2,Justin Dedich,67.0,4360859,2.0,USC
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,RT,Right Tackle,1,1,Warren McClendon Jr.,71.0,4426512,3.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,LA,Los Angeles Rams,NFC,NFC West,Offense,RT,Right Tackle,2,2,Keagen Trost,79.0,4575003,0.0,Missouri; Wake Forest
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,QB,Quarterback,1,1,Justin Herbert,10.0,4038941,6.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,QB,Quarterback,2,2,Trey Lance,5.0,4383351,5.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,RB,Running Back,1,1,Omarion Hampton,8.0,4685382,1.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,RB,Running Back,2,2,Keaton Mitchell,34.0,4596334,3.0,East Carolina
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,RB,Running Back,3,3,Kimani Vidal,28.0,4430968,2.0,Troy
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,FB,Fullback,1,1,Alec Ingold,30.0,3917668,7.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,FB,Fullback,2,2,Scott Matlock,44.0,4373684,3.0,Boise State
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,WR1,Wide Receiver (X),1,1,Ladd McConkey,15.0,4612826,2.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,WR1,Wide Receiver (X),2,4,Brenen Thompson,89.0,4685553,0.0,Mississippi State; Texas
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,WR1,Wide Receiver (X),3,7,Dalevon Campbell,81.0,4569372,1.0,South Carolina
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,WR2,Wide Receiver (Z),1,2,Quentin Johnston,1.0,4429025,3.0,TCU
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,WR2,Wide Receiver (Z),2,5,KeAndre Lambert-Smith,84.0,4430870,1.0,Auburn; Penn State
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,WR3,Wide Receiver (Slot),1,3,Tre' Harris,9.0,4686612,1.0,Mississippi; Louisiana Tech
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,WR3,Wide Receiver (Slot),2,6,Derius Davis,12.0,4362477,3.0,TCU
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,TE,Tight End,1,1,Charlie Kolar,88.0,4241263,4.0,Iowa State
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,TE,Tight End,2,2,David Njoku,83.0,3123076,9.0,Miami
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,TE,Tight End,3,3,Oronde Gadsden,86.0,4595342,1.0,Syracuse
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,LT,Left Tackle,1,1,Rashawn Slater,70.0,4242283,5.0,Northwestern
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,LT,Left Tackle,2,2,Trey Pipkins III,79.0,4411189,7.0,Sioux Falls
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,LT,Left Tackle,3,3,Logan Taylor,65.0,4682789,0.0,Boston College; Virginia
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,LT,Left Tackle,4,4,Branson Taylor,71.0,4433914,1.0,Pittsburgh
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,LT,Left Tackle,5,5,Isaiah World,67.0,5084965,0.0,Oregon; Nevada
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,LG,Left Guard,1,1,Kayode Awosika,74.0,4040842,5.0,Buffalo
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,LG,Left Guard,2,2,Trey Pipkins III,79.0,4411189,7.0,Sioux Falls
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,LG,Left Guard,3,3,Alex Harkey,73.0,5082660,0.0,Oregon; Texas State-San Marcos; Colorado; Tyler JC
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,C,Center,1,1,Jake Slaughter,66.0,4682506,0.0,Florida
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,C,Center,2,2,Jacob Spomer,60.0,5082312,0.0,Fresno State; Diablo Valley College
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,C,Center,3,3,Tyler Biadasz,63.0,4035788,6.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,RG,Right Guard,1,1,Cole Strange,69.0,4051001,4.0,Tennessee-Chattanooga
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,RG,Right Guard,2,2,Trevor Penning,75.0,4248627,4.0,Northern Iowa
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,RT,Right Tackle,1,1,Joe Alt,76.0,4683487,2.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,LAC,Los Angeles Chargers,AFC,AFC West,Offense,RT,Right Tackle,2,2,Travis Burke,77.0,4876658,0.0,Memphis; Florida International; Gardner-Webb
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,QB,Quarterback,1,1,Kirk Cousins,8.0,14880,14.0,Michigan State
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,QB,Quarterback,2,2,Fernando Mendoza,15.0,4837248,0.0,Indiana; California
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,QB,Quarterback,3,3,Aidan O'Connell,12.0,4260394,3.0,Purdue
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RB,Running Back,1,1,Ashton Jeanty,2.0,4890973,1.0,Boise State
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RB,Running Back,2,2,Mike Washington Jr.,,4686658,,
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RB,Running Back,3,3,Dylan Laube,23.0,4366963,2.0,New Hampshire
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RB,Running Back,4,4,Chris Collier,33.0,4698191,2.0,University of Lock Haven
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,FB,Fullback,1,1,Connor Heyward,34.0,4241961,4.0,Michigan State
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,WR1,Wide Receiver (X),1,1,Tre Tucker,1.0,4428718,3.0,Cincinnati
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,WR1,Wide Receiver (X),2,4,Malik Benson,19.0,5150247,0.0,Oregon; Florida State; Alabama; Hutchinson CC
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,WR1,Wide Receiver (X),3,7,Justin Shorter,88.0,4361426,3.0,Florida; Penn State
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,WR2,Wide Receiver (Z),1,2,Jalen Nailor,9.0,4382466,4.0,Michigan State
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,WR2,Wide Receiver (Z),2,5,Dareke Young,81.0,4401805,4.0,Lenoir Rhyne
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,WR2,Wide Receiver (Z),3,8,Corey Rucker,32.0,4433901,0.0,Arkansas State
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,WR3,Wide Receiver (Slot),1,3,Jack Bech,18.0,4603186,1.0,TCU; LSU
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,WR3,Wide Receiver (Slot),2,6,Dont'e Thornton Jr.,10.0,4432775,1.0,Tennessee; Oregon
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,TE,Tight End,1,1,Brock Bowers,89.0,4432665,2.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,TE,Tight End,2,2,Michael Mayer,87.0,4429086,3.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,TE,Tight End,3,3,Ian Thomas,80.0,4045305,8.0,Indiana; Nassau CC
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,TE,Tight End,4,4,Carter Runyon,84.0,5155825,1.0,Towson; Shenandoah University
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,LT,Left Tackle,1,1,Kolton Miller,74.0,3134312,8.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,LT,Left Tackle,2,2,Charles Grant,60.0,4694505,1.0,William & Mary
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,LG,Left Guard,1,1,Spencer Burford,70.0,4362999,4.0,Texas-San Antonio
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,LG,Left Guard,2,2,Caleb Rogers,76.0,4433889,1.0,Texas Tech
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,C,Center,1,1,Tyler Linderbaum,65.0,4360499,4.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RG,Right Guard,1,1,Jackson Powers-Johnson,58.0,4875295,2.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RG,Right Guard,2,2,Atonio Mafi,56.0,4367202,3.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RG,Right Guard,3,3,Justin Pickett,77.0,4688538,0.0,Duke
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RT,Right Tackle,1,1,DJ Glaze,71.0,4606683,2.0,Maryland
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RT,Right Tackle,2,2,Trey Zuhn III,66.0,4431623,0.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,LV,Las Vegas Raiders,AFC,AFC West,Offense,RT,Right Tackle,3,3,Dalton Wagner,78.0,4242177,3.0,Arkansas
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,QB,Quarterback,1,1,Malik Willis,2.0,4242512,4.0,Liberty; Auburn
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,QB,Quarterback,2,2,Kyle McCord,14.0,4433971,1.0,Syracuse; Ohio State
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,QB,Quarterback,3,3,Brady Cook,15.0,4429435,1.0,Missouri
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,RB,Running Back,1,1,De'Von Achane,28.0,4429160,3.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,RB,Running Back,2,2,Jaylen Wright,5.0,4682745,2.0,Tennessee
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,RB,Running Back,3,3,Ollie Gordon II,0.0,4711533,1.0,Oklahoma State
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,FB,Fullback,1,1,DJ Herman,34.0,4685116,0.0,San Diego State
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,WR1,Wide Receiver (X),1,1,Malik Washington,6.0,4569603,2.0,Virginia; Northwestern
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,WR1,Wide Receiver (X),2,4,Chris Bell,18.0,4869961,0.0,Louisville
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,WR2,Wide Receiver (Z),1,2,Jalen Tolbert,1.0,4249417,4.0,South Alabama
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,WR2,Wide Receiver (Z),2,5,Kevin Coleman Jr.,21.0,4685307,0.0,Missouri; Mississippi State; Louisville; Jackson State University
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,WR3,Wide Receiver (Slot),1,3,Caleb Douglas,7.0,4869645,0.0,Texas Tech; Florida
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,WR3,Wide Receiver (Slot),2,6,Ryan Miller,84.0,4369466,3.0,Furman
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,TE,Tight End,1,1,Greg Dulcich,85.0,4367209,4.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,TE,Tight End,2,2,Will Kacmarek,82.0,4880236,0.0,Ohio State; Ohio
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,TE,Tight End,3,3,Seydou Traore,89.0,4714379,0.0,Mississippi State; Arkansas State
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,TE,Tight End,4,4,Justin Joly,80.0,4912052,0.0,N.C. State; Connecticut
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,TE,Tight End,5,5,Cole Turner,87.0,4361438,4.0,Nevada
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,TE,Tight End,6,6,Ben Sims,89.0,4373030,3.0,Baylor
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,LT,Left Tackle,1,1,Patrick Paul,52.0,4567493,2.0,Houston
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,LG,Left Guard,1,1,Kadyn Proctor,74.0,4870976,0.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,LG,Left Guard,2,2,Jarrett Kingston,62.0,4373474,2.0,USC; Washington State
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,C,Center,1,1,Aaron Brewer,55.0,4040537,6.0,Texas State-San Marcos
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,C,Center,2,2,Andrew Meyer,60.0,4362064,2.0,Texas-El Paso
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,RG,Right Guard,1,1,Jonah Savaiinaea,71.0,4819257,1.0,Arizona
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,RG,Right Guard,2,2,DJ Campbell,63.0,5081977,0.0,Texas
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,RT,Right Tackle,1,1,Austin Jackson,73.0,4271632,6.0,USC
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,RT,Right Tackle,2,2,Caedan Wallace,77.0,4426446,2.0,Penn State; West Virginia
+2026-2027,2026-09-08T11:56:57Z,MIA,Miami Dolphins,AFC,AFC East,Offense,RT,Right Tackle,3,3,Chukwuebuka Godrick,79.0,5144457,3.0,
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,QB,Quarterback,1,1,Kyler Murray,1.0,3917315,7.0,Oklahoma; Texas A&M
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,QB,Quarterback,2,2,J.J. McCarthy,9.0,4433970,2.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,QB,Quarterback,3,3,Carson Wentz,11.0,2573079,10.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,RB,Running Back,1,1,Aaron Jones Sr.,33.0,3042519,9.0,Texas-El Paso
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,RB,Running Back,2,2,Jordan Mason,27.0,4360569,4.0,Georgia Tech
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,RB,Running Back,3,3,Demond Claiborne,21.0,4832846,0.0,Wake Forest
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,RB,Running Back,4,4,Jermar Jefferson,17.0,4374033,5.0,Oregon State
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,FB,Fullback,1,1,Max Bredeson,45.0,4878695,0.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,WR1,Wide Receiver (X),1,1,Justin Jefferson,18.0,4262921,6.0,LSU
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,WR1,Wide Receiver (X),2,4,Tai Felton,13.0,4565185,1.0,Maryland
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,WR2,Wide Receiver (Z),1,2,Jordan Addison,3.0,4429205,3.0,USC; Pittsburgh
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,WR2,Wide Receiver (Z),2,5,Myles Price,4.0,4430656,1.0,Indiana; Texas Tech
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,WR3,Wide Receiver (Slot),1,3,Jauan Jennings,14.0,3886598,6.0,Tennessee
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,WR3,Wide Receiver (Slot),2,6,Jeshaun Jones,82.0,4360637,2.0,Maryland
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,TE,Tight End,1,1,T.J. Hockenson,87.0,4036133,7.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,TE,Tight End,2,2,Josh Oliver,84.0,3921690,7.0,San Jose State
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,TE,Tight End,3,3,Ben Yurosek,85.0,4433959,1.0,Georgia; Stanford
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,TE,Tight End,4,4,Gavin Bartholomew,86.0,4708049,1.0,Pittsburgh
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,LT,Left Tackle,1,1,Christian Darrisaw,71.0,4361985,5.0,Virginia Tech
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,LT,Left Tackle,2,2,Ryan Van Demark,72.0,4239140,4.0,Connecticut
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,LG,Left Guard,1,1,Donovan Jackson,74.0,4431553,1.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,LG,Left Guard,2,2,Joe Huber,60.0,4690210,1.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,C,Center,1,1,Blake Brandel,64.0,3930270,6.0,Oregon State
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,C,Center,2,2,Nick Samac,62.0,4428421,2.0,Michigan State
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,C,Center,3,3,Michael Jurgens,65.0,4362010,2.0,Wake Forest
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,RG,Right Guard,1,1,Will Fries,76.0,4045176,5.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,RG,Right Guard,2,2,Trevor Keegan,69.0,4427140,2.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,RT,Right Tackle,1,1,Brian O'Neill,75.0,3123954,8.0,Pittsburgh
+2026-2027,2026-09-08T11:56:57Z,MIN,Minnesota Vikings,NFC,NFC North,Offense,RT,Right Tackle,2,2,Caleb Tiernan,78.0,4592836,0.0,Northwestern
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,QB,Quarterback,1,1,Drake Maye,10.0,4431452,2.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,QB,Quarterback,2,2,Tommy DeVito,16.0,4240391,3.0,Illinois; Syracuse
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,QB,Quarterback,3,3,Behren Morton,15.0,4431465,0.0,Texas Tech
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,RB,Running Back,1,1,Rhamondre Stevenson,38.0,4569173,5.0,Oklahoma; Cerritos College
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,RB,Running Back,2,2,TreVeyon Henderson,32.0,4432710,1.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,RB,Running Back,3,3,Corey Kiner,37.0,4431431,1.0,Cincinnati; LSU
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,RB,Running Back,4,4,Myles Montgomery,39.0,4676889,0.0,UCF; Cincinnati
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,FB,Fullback,1,1,Reggie Gilliam,44.0,4039505,6.0,Toledo
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,WR1,Wide Receiver (X),1,1,A.J. Brown,1.0,4047646,7.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,WR1,Wide Receiver (X),2,4,Mack Hollins,13.0,2991662,9.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,WR1,Wide Receiver (X),3,7,Jeremiah Webb,29.0,4572655,1.0,South Alabama; South Dakota
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,WR2,Wide Receiver (Z),1,2,Romeo Doubs,87.0,4361432,4.0,Nevada
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,WR2,Wide Receiver (Z),2,5,Kyle Williams,18.0,4613202,1.0,Washington State
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,WR3,Wide Receiver (Slot),1,3,DeMario Douglas,3.0,4427095,3.0,Liberty
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,WR3,Wide Receiver (Slot),2,6,Efton Chism III,86.0,4695193,1.0,Eastern Washington
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,TE,Tight End,1,1,Hunter Henry,85.0,3046439,10.0,Arkansas
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,TE,Tight End,2,2,Eli Raridon,82.0,4831959,0.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,TE,Tight End,3,3,Tanner Arkin,84.0,4683308,0.0,Illinois; Colorado State
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,TE,Tight End,4,4,Cameron Latu,36.0,4372026,3.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,TE,Tight End,5,5,Julian Hill,89.0,4365395,3.0,Campbell University
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,LT,Left Tackle,1,1,Will Campbell,66.0,4685298,1.0,LSU
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,LT,Left Tackle,2,2,Dametrious Crownover,68.0,4431526,0.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,LG,Left Guard,1,1,Alijah Vera-Tucker,75.0,4259646,5.0,USC
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,LG,Left Guard,2,2,Greg Van Roten,70.0,15718,14.0,Penn
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,C,Center,1,1,Jared Wilson,55.0,4599198,1.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,C,Center,2,2,Ben Brown,77.0,4362890,4.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,RG,Right Guard,1,1,Mike Onwenu,71.0,4046545,6.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,RG,Right Guard,2,2,Walter Rouse,73.0,4428394,2.0,Oklahoma; Stanford
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,RT,Right Tackle,1,1,Morgan Moses,76.0,16771,12.0,Virginia
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,RT,Right Tackle,2,2,Caleb Lomu,74.0,4921438,0.0,Utah
+2026-2027,2026-09-08T11:56:57Z,NE,New England Patriots,AFC,AFC East,Offense,RT,Right Tackle,3,3,Marcus Bryant,52.0,4565293,1.0,Missouri; SMU
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,QB,Quarterback,1,1,Tyler Shough,6.0,4360689,1.0,Louisville; Texas Tech; Oregon
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,QB,Quarterback,2,2,Spencer Rattler,2.0,4426339,2.0,South Carolina; Oklahoma
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,QB,Quarterback,3,3,Zach Wilson,11.0,4361259,5.0,BYU
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RB,Running Back,1,1,Travis Etienne Jr.,3.0,4239996,5.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RB,Running Back,2,2,Alvin Kamara,41.0,3054850,9.0,Tennessee; Hutchinson CC; Alabama
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RB,Running Back,3,3,Kendre Miller,5.0,4599739,3.0,TCU
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RB,Running Back,4,4,Audric Estime,30.0,4569682,2.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RB,Running Back,5,5,Ty Chandler,32.0,4242431,4.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,WR1,Wide Receiver (X),1,1,Chris Olave,12.0,4361370,4.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,WR1,Wide Receiver (X),2,4,Barion Brown,19.0,4698597,0.0,LSU; Kentucky
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,WR2,Wide Receiver (Z),1,2,Devaughn Vele,14.0,4569559,2.0,Utah
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,WR2,Wide Receiver (Z),2,5,Jordyn Tyson,0.0,4880281,0.0,Arizona State; Colorado
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,WR3,Wide Receiver (Slot),1,3,Bryce Lance,18.0,4879276,0.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,WR3,Wide Receiver (Slot),2,6,Mason Tipton,15.0,4573697,2.0,Yale
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,TE,Tight End,1,1,Juwan Johnson,83.0,3929645,6.0,Oregon; Penn State
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,TE,Tight End,2,2,Noah Fant,87.0,4036131,7.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,TE,Tight End,3,3,Oscar Delp,4.0,4702559,0.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,TE,Tight End,4,4,Moliki Matavao,80.0,4432731,1.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,LT,Left Tackle,1,1,Kelvin Banks Jr.,71.0,4685260,1.0,Texas
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,LT,Left Tackle,2,2,Asim Richards,72.0,4430379,3.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,LG,Left Guard,1,1,David Edwards,76.0,3917660,7.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,LG,Left Guard,2,2,Dillon Radunz,77.0,4040945,5.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,LG,Left Guard,3,3,Nick Saldiveri,64.0,4361600,3.0,Old Dominion
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,C,Center,1,1,Erik McCoy,78.0,3917331,7.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RG,Right Guard,1,1,Cesar Ruiz,51.0,4258199,6.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RG,Right Guard,2,2,Jeremiah Wright,65.0,4433938,0.0,Auburn
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RG,Right Guard,3,3,William Sherman,66.0,4243186,5.0,Colorado
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RT,Right Tackle,1,1,Taliese Fuaga,75.0,4606711,2.0,Oregon State
+2026-2027,2026-09-08T11:56:57Z,NO,New Orleans Saints,NFC,NFC South,Offense,RT,Right Tackle,2,2,Mason Murphy,63.0,4682479,0.0,Auburn; USC
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,QB,Quarterback,1,1,Jaxson Dart,6.0,4689114,1.0,Mississippi; USC
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,QB,Quarterback,2,2,Jameis Winston,19.0,2969939,11.0,Florida State
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,RB,Running Back,1,1,Cam Skattebo,44.0,4696981,1.0,Arizona State; Sacramento State
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,RB,Running Back,2,2,Tyrone Tracy Jr.,29.0,4360516,2.0,Purdue; Iowa
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,RB,Running Back,3,3,Najee Harris,23.0,4241457,5.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,RB,Running Back,4,4,Devin Singletary,26.0,4040761,7.0,Florida Atlantic
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,FB,Fullback,1,1,Patrick Ricard,45.0,2975417,9.0,Maine
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,WR1,Wide Receiver (X),1,1,Malik Nabers,1.0,4595348,2.0,LSU
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,WR1,Wide Receiver (X),2,4,Odell Beckham Jr.,13.0,16733,12.0,LSU
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,WR2,Wide Receiver (Z),1,2,Darnell Mooney,17.0,4040655,6.0,Tulane
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,WR2,Wide Receiver (Z),2,5,Calvin Austin III,82.0,4243389,4.0,Memphis
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,WR3,Wide Receiver (Slot),1,3,Malachi Fields,88.0,4682648,0.0,Notre Dame; Virginia
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,WR3,Wide Receiver (Slot),2,6,Gunner Olszewski,80.0,4424106,7.0,Bemidji State University
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,TE,Tight End,1,1,Isaiah Likely,9.0,4361050,4.0,Coastal Carolina
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,TE,Tight End,2,2,Theo Johnson,84.0,4429148,2.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,TE,Tight End,3,3,,85.0,2531358,11.0,Canisius College
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,TE,Tight End,4,4,Thomas Fidone II,86.0,4590292,1.0,Nebraska
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,LT,Left Tackle,1,1,Andrew Thomas,78.0,4259566,6.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,LT,Left Tackle,2,2,J.C. Davis,74.0,5082353,0.0,Illinois; New Mexico; Contra Costa
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,LG,Left Guard,1,1,Jon Runyan,76.0,3929936,6.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,LG,Left Guard,2,2,Aaron Stinnie,64.0,3049339,8.0,James Madison
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,C,Center,1,1,John Michael Schmitz Jr.,61.0,4240771,3.0,Minnesota
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,C,Center,2,2,Bryan Hudson,60.0,4426489,2.0,Louisville
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,RG,Right Guard,1,1,Francis Mauigoa,65.0,4870914,0.0,Miami
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,RT,Right Tackle,1,1,Jermaine Eluemunor,72.0,3115303,9.0,Texas A&M; Lackawanna JC
+2026-2027,2026-09-08T11:56:57Z,NYG,New York Giants,NFC,NFC East,Offense,RT,Right Tackle,2,2,Marcus Mbow,71.0,4686362,1.0,Purdue
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,QB,Quarterback,1,1,Geno Smith,7.0,15864,13.0,West Virginia
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,QB,Quarterback,2,2,Cade Klubnik,10.0,4685413,0.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,RB,Running Back,1,1,Breece Hall,20.0,4427366,4.0,Iowa State
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,RB,Running Back,2,2,Braelon Allen,0.0,4685247,2.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,RB,Running Back,3,3,Isaiah Davis,32.0,4695404,2.0,South Dakota State
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,RB,Running Back,4,4,Kene Nwangwu,3.0,4035537,5.0,Iowa State
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,RB,Running Back,5,5,Chip Trayanum,40.0,4430893,0.0,Toledo; Kentucky; Ohio State; Arizona State
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,FB,Fullback,1,1,Andrew Beck,47.0,3125107,7.0,Texas
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,WR1,Wide Receiver (X),1,1,Garrett Wilson,5.0,4569618,4.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,WR1,Wide Receiver (X),2,4,Isaiah Williams,18.0,4569371,2.0,Illinois
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,WR2,Wide Receiver (Z),1,2,Adonai Mitchell,15.0,4597500,2.0,Texas; Georgia
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,WR2,Wide Receiver (Z),2,5,Tim Patrick,17.0,3134353,9.0,Utah; Grossmont
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,WR3,Wide Receiver (Slot),1,3,Omar Cooper Jr.,83.0,4723820,0.0,Indiana
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,WR3,Wide Receiver (Slot),2,6,Arian Smith,82.0,4429105,1.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,TE,Tight End,1,1,Mason Taylor,85.0,4808766,1.0,LSU
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,TE,Tight End,2,2,Kenyon Sadiq,16.0,5083315,0.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,TE,Tight End,3,3,Jeremy Ruckert,89.0,4361372,4.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,TE,Tight End,4,4,Jelani Woods,86.0,4241410,4.0,Virginia
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,LT,Left Tackle,1,1,Olu Fashanu,74.0,4431809,2.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,LT,Left Tackle,2,2,Max Mitchell,61.0,4373656,4.0,Louisiana-Lafayette
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,LG,Left Guard,1,1,Dylan Parham,64.0,4243375,4.0,Memphis
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,LG,Left Guard,2,2,Anez Cooper,72.0,4905597,0.0,Miami
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,C,Center,1,1,Josh Myers,71.0,4242000,5.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,C,Center,2,2,Jordan Meredith,67.0,4076803,5.0,Western Kentucky
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,RG,Right Guard,1,1,Joe Tippmann,66.0,4428681,3.0,Wisconsin
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,RT,Right Tackle,1,1,Armand Membou,70.0,4789907,1.0,Missouri
+2026-2027,2026-09-08T11:56:57Z,NYJ,New York Jets,AFC,AFC East,Offense,RT,Right Tackle,2,2,Chukwuma Okorafor,79.0,3129473,8.0,Western Michigan
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,QB,Quarterback,1,1,Jalen Hurts,1.0,4040715,6.0,Oklahoma; Alabama
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,QB,Quarterback,2,2,Andy Dalton,14.0,14012,15.0,TCU
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,QB,Quarterback,3,3,Tanner McKee,16.0,4685201,3.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,QB,Quarterback,4,4,Cole Payton,18.0,4879250,0.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,RB,Running Back,1,1,Saquon Barkley,26.0,3929630,8.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,RB,Running Back,2,2,Tank Bigsby,8.0,4429013,3.0,Auburn
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,RB,Running Back,3,3,Will Shipley,28.0,4431545,2.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,WR1,Wide Receiver (X),1,1,DeVonta Smith,6.0,4241478,5.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,WR1,Wide Receiver (X),2,4,Hollywood Brown,0.0,4241372,7.0,Oklahoma; College of the Canyons
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,WR1,Wide Receiver (X),3,7,Johnny Wilson,89.0,4686104,2.0,Florida State; Arizona State
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,WR2,Wide Receiver (Z),1,2,Dontayvion Wicks,13.0,4428850,3.0,Virginia
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,WR2,Wide Receiver (Z),2,5,Elijah Moore,19.0,4372414,5.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,WR3,Wide Receiver (Slot),1,3,Makai Lemon,9.0,4870795,0.0,USC
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,WR3,Wide Receiver (Slot),2,6,Darius Cooper,80.0,4715355,1.0,Tarleton State
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,TE,Tight End,1,1,Dallas Goedert,88.0,3121023,8.0,South Dakota State
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,TE,Tight End,2,2,Johnny Mundt,83.0,3052096,9.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,TE,Tight End,3,3,Eli Stowers,87.0,4431574,0.0,Vanderbilt; New Mexico State; Texas A&M
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,TE,Tight End,4,4,E.J. Jenkins,84.0,4248557,3.0,Georgia Tech; South Carolina; St. Francis PA
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,TE,Tight End,5,5,Grant Calcaterra,81.0,4241374,4.0,SMU; Oklahoma
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,LT,Left Tackle,1,1,Jordan Mailata,68.0,4334215,8.0,
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,LT,Left Tackle,2,2,Markel Bell,72.0,5219831,0.0,Miami; Holmes County JC
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,LG,Left Guard,1,1,Landon Dickerson,69.0,4035624,5.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,LG,Left Guard,2,2,Drew Kendall,66.0,4567802,1.0,Boston College
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,LG,Left Guard,3,3,Micah Morris,76.0,4432738,0.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,C,Center,1,1,Cam Jurgens,51.0,4361178,4.0,Nebraska
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,C,Center,2,2,Drew Kendall,66.0,4567802,1.0,Boston College
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,C,Center,3,3,Willie Lampkin,61.0,4582836,1.0,North Carolina; Coastal Carolina
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,RG,Right Guard,1,1,Tyler Steen,56.0,4362805,3.0,Alabama; Vanderbilt
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,RT,Right Tackle,1,1,Lane Johnson,65.0,15797,13.0,Oklahoma; Kilgore
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,RT,Right Tackle,2,2,Fred Johnson,74.0,3915106,7.0,Florida
+2026-2027,2026-09-08T11:56:57Z,PHI,Philadelphia Eagles,NFC,NFC East,Offense,RT,Right Tackle,3,3,Markel Bell,72.0,5219831,0.0,Miami; Holmes County JC
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,QB,Quarterback,1,1,Aaron Rodgers,8.0,8439,21.0,California; Butte College
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,QB,Quarterback,2,2,Mason Rudolph,2.0,3116407,8.0,Oklahoma State
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,QB,Quarterback,3,3,Will Howard,18.0,4429955,1.0,Ohio State; Kansas State
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,QB,Quarterback,4,4,Drew Allar,16.0,4714771,0.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,RB,Running Back,1,1,Jaylen Warren,30.0,4569987,4.0,Oklahoma State
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,RB,Running Back,2,2,Rico Dowdle,13.0,4038815,6.0,South Carolina
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,RB,Running Back,3,3,Eli Heidenreich,29.0,5081508,0.0,Navy
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,FB,Fullback,1,1,Riley Nowakowski,37.0,4693370,0.0,Indiana; Wisconsin
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,WR1,Wide Receiver (X),1,1,DK Metcalf,4.0,4047650,7.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,WR1,Wide Receiver (X),2,4,Germie Bernard,17.0,4685261,0.0,Alabama; Washington; Michigan State
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,WR1,Wide Receiver (X),3,7,Cole Burgess,85.0,5192448,2.0,Cortland State Of New York
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,WR2,Wide Receiver (Z),1,2,Michael Pittman Jr.,11.0,4035687,6.0,USC
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,WR2,Wide Receiver (Z),2,5,Ben Skowronek,15.0,4035656,5.0,Notre Dame; Northwestern
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,WR3,Wide Receiver (Slot),1,3,Roman Wilson,14.0,4431492,2.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,WR3,Wide Receiver (Slot),2,6,Kaden Wetjen,10.0,5081338,0.0,Iowa; Iowa Western CC
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,TE,Tight End,1,1,Pat Freiermuth,88.0,4361411,5.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,TE,Tight End,2,2,Darnell Washington,80.0,4430802,3.0,Georgia
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,TE,Tight End,3,3,Robert Tonyan,83.0,2975674,9.0,Indiana State
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,LT,Left Tackle,1,1,Troy Fautanu,76.0,4427170,2.0,Washington
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,LT,Left Tackle,2,2,Jack Driscoll,68.0,3932668,6.0,Auburn; UMass Amherst
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,LG,Left Guard,1,1,Mason McCormick,66.0,4368304,2.0,South Dakota State
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,LG,Left Guard,2,2,Gennings Dunker,73.0,4431258,0.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,C,Center,1,1,Zach Frazier,54.0,4429775,2.0,West Virginia
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,C,Center,2,2,Ryan McCollum,62.0,4035253,5.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,RG,Right Guard,1,1,Spencer Anderson,74.0,4372056,3.0,Maryland
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,RG,Right Guard,2,2,Brock Hoffman,67.0,4241087,4.0,Virginia Tech; Coastal Carolina
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,RT,Right Tackle,1,1,Dylan Cook,60.0,4570898,4.0,Montana; Northern Montana State University
+2026-2027,2026-09-08T11:56:57Z,PIT,Pittsburgh Steelers,AFC,AFC North,Offense,RT,Right Tackle,2,2,Max Iheanachor,71.0,5150136,0.0,Arizona State
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,QB,Quarterback,1,1,Sam Darnold,14.0,3912547,8.0,USC
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,QB,Quarterback,2,2,Drew Lock,2.0,3924327,7.0,Missouri
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,QB,Quarterback,3,3,Jalen Milroe,6.0,4432734,1.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,RB,Running Back,1,1,Jadarian Price,8.0,4685512,0.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,RB,Running Back,2,2,George Holani,36.0,4429835,2.0,Boise State
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,RB,Running Back,3,3,Emanuel Wilson,27.0,4887558,3.0,Fort Valley State College
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,RB,Running Back,4,4,Zach Charbonnet,26.0,4426385,3.0,UCLA; Michigan
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,FB,Fullback,1,1,Brady Russell,38.0,4243176,3.0,Colorado
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,FB,Fullback,2,2,Robbie Ouzts,40.0,4691688,1.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,WR1,Wide Receiver (X),1,1,Jaxon Smith-Njigba,11.0,4430878,3.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,WR1,Wide Receiver (X),2,4,Tory Horton,15.0,4597703,1.0,Colorado State; Nevada
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,WR1,Wide Receiver (X),3,7,Jake Bobo,19.0,4360405,3.0,UCLA; Duke
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,WR2,Wide Receiver (Z),1,2,Rashid Shaheed,22.0,4032473,4.0,Weber State
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,WR2,Wide Receiver (Z),2,5,Montorie Foster Jr.,87.0,4600597,1.0,Michigan State
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,WR3,Wide Receiver (Slot),1,3,Cooper Kupp,10.0,2977187,9.0,Eastern Washington
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,WR3,Wide Receiver (Slot),2,6,Irv Charles,85.0,3929636,4.0,"Indiana PA,  University of; Penn State"
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,TE,Tight End,1,1,AJ Barner,88.0,4576297,2.0,Michigan; Indiana
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,TE,Tight End,2,2,Eric Saubert,81.0,2975863,9.0,Drake
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,TE,Tight End,3,3,Elijah Arroyo,18.0,4678006,1.0,Miami
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,TE,Tight End,4,4,Nick Kallerup,89.0,4569547,1.0,Minnesota
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,LT,Left Tackle,1,1,Charles Cross,67.0,4426376,4.0,Mississippi State
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,LT,Left Tackle,2,2,Josh Jones,74.0,3914630,6.0,Houston
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,LG,Left Guard,1,1,Grey Zabel,76.0,4693346,1.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,LG,Left Guard,2,2,Beau Stephens,60.0,4592823,0.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,LG,Left Guard,3,3,Mason Richman,78.0,4432525,1.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,C,Center,1,1,Jalen Sundell,61.0,4383409,2.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,C,Center,2,2,Olu Oluwatimi,55.0,4370807,3.0,Michigan; Virginia
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,RG,Right Guard,1,1,Anthony Bradford,75.0,4429211,3.0,LSU
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,RG,Right Guard,2,2,Christian Haynes,64.0,4362135,2.0,Connecticut
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,RG,Right Guard,3,3,Bryce Cabeldue,77.0,4612077,1.0,Kansas
+2026-2027,2026-09-08T11:56:57Z,SEA,Seattle Seahawks,NFC,NFC West,Offense,RT,Right Tackle,1,1,Abraham Lucas,72.0,4245171,4.0,Washington State
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,QB,Quarterback,1,1,Brock Purdy,13.0,4361741,4.0,Iowa State
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,QB,Quarterback,2,2,Mac Jones,10.0,4241464,5.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,QB,Quarterback,3,3,Kurtis Rourke,14.0,4430431,1.0,Indiana
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,RB,Running Back,1,1,Christian McCaffrey,23.0,3117251,9.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,RB,Running Back,2,2,Kaelon Black,26.0,4696044,0.0,Indiana; James Madison
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,RB,Running Back,3,3,Jordan James,29.0,4685397,1.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,RB,Running Back,4,4,Isaac Guerendo,31.0,4372561,2.0,Louisville; Wisconsin
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,FB,Fullback,1,1,Kyle Juszczyk,44.0,16002,13.0,Harvard
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,WR1,Wide Receiver (X),1,1,Mike Evans,5.0,16737,12.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,WR1,Wide Receiver (X),2,4,Demarcus Robinson,11.0,3043116,10.0,Florida
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,WR1,Wide Receiver (X),3,7,Christian Kirk,3.0,3895856,8.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,WR2,Wide Receiver (Z),1,2,Deebo Samuel,19.0,3126486,7.0,South Carolina
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,WR2,Wide Receiver (Z),2,5,Jordan Watkins,17.0,4431466,1.0,Mississippi; Louisville
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,WR2,Wide Receiver (Z),3,8,Brandon Aiyuk,,4360438,,
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,WR3,Wide Receiver (Slot),1,3,De'Zhaun Stribling,7.0,4710714,0.0,Mississippi; Oklahoma State; Washington State
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,WR3,Wide Receiver (Slot),2,6,Jacob Cowing,4.0,4575665,2.0,Arizona; Texas-El Paso
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,WR3,Wide Receiver (Slot),3,9,Ricky Pearsall,1.0,4428209,2.0,Florida; Arizona State
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,TE,Tight End,1,1,George Kittle,85.0,3040151,9.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,TE,Tight End,2,2,Jake Tonges,88.0,4259147,4.0,California
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,TE,Tight End,3,3,Luke Farrell,89.0,4040612,5.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,LT,Left Tackle,1,1,Trent Williams,71.0,13241,16.0,Oklahoma
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,LT,Left Tackle,2,2,Vederian Lowe,76.0,4240554,4.0,Illinois
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,LT,Left Tackle,3,3,Enrique Cruz Jr.,69.0,4691556,0.0,Kansas
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,LT,Left Tackle,4,4,Austen Pleasants,62.0,3920814,6.0,Ohio
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,LG,Left Guard,1,1,Connor Colby,75.0,4431523,1.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,LG,Left Guard,2,2,Carver Willis,74.0,4565779,0.0,Washington; Kansas State
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,LG,Left Guard,3,3,Nick Zakelj,63.0,4247590,4.0,Fordham
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,C,Center,1,1,Jake Brendel,64.0,2577185,10.0,UCLA
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,C,Center,2,2,Jarrett Patterson,58.0,4372774,3.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,C,Center,3,3,Brett Toth,78.0,3129116,7.0,Army
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,RG,Right Guard,1,1,Dominick Puni,77.0,5092959,2.0,Kansas; Central Missouri
+2026-2027,2026-09-08T11:56:57Z,SF,San Francisco 49ers,NFC,NFC West,Offense,RT,Right Tackle,1,1,Colton McKivitz,68.0,3916075,6.0,West Virginia
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,QB,Quarterback,1,1,Baker Mayfield,6.0,3052587,8.0,Oklahoma; Texas Tech
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,QB,Quarterback,2,2,Jalon Daniels,10.0,4596472,0.0,Kansas
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,RB,Running Back,1,1,Bucky Irving,7.0,4596448,2.0,Oregon; Minnesota
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,RB,Running Back,2,2,Kenny Gainwell,1.0,4371733,5.0,Memphis
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,RB,Running Back,3,3,Sean Tucker,44.0,4430871,3.0,Syracuse
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,WR1,Wide Receiver (X),1,1,Emeka Egbuka,2.0,4567750,1.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,WR1,Wide Receiver (X),2,4,Ted Hurst III,17.0,5220680,0.0,Georgia State; Valdosta State
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,WR1,Wide Receiver (X),3,7,David Sills V,80.0,3871102,7.0,West Virginia
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,WR2,Wide Receiver (Z),1,2,Chris Godwin Jr.,14.0,3116165,9.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,WR2,Wide Receiver (Z),2,5,Tez Johnson,15.0,4608810,1.0,Oregon; Troy
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,WR3,Wide Receiver (Slot),1,3,Jalen McMillan,11.0,4430834,2.0,Washington
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,WR3,Wide Receiver (Slot),2,6,Kameron Johnson,19.0,5097554,2.0,Barton College
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,TE,Tight End,1,1,Cade Otton,88.0,4243331,4.0,Washington
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,TE,Tight End,2,2,Payne Durham,87.0,4372505,3.0,Purdue
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,TE,Tight End,3,3,Ko Kieft,41.0,4034779,4.0,Minnesota
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,TE,Tight End,4,4,Bauer Sharp,84.0,4890373,0.0,LSU; Oklahoma; Southeastern Louisiana
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,LT,Left Tackle,1,1,Tristan Wirfs,78.0,4240589,6.0,Iowa
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,LT,Left Tackle,2,2,Benjamin Chukwuma,70.0,4690787,1.0,Georgia State
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,LG,Left Guard,1,1,Ben Bredeson,68.0,4046551,6.0,Michigan
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,LG,Left Guard,2,2,Billy Schrauth,75.0,4685549,0.0,Notre Dame
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,C,Center,1,1,Graham Barton,62.0,4429251,2.0,Duke
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,C,Center,2,2,Dan Feeney,65.0,2979482,9.0,Indiana
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,RG,Right Guard,1,1,Cody Mauch,69.0,4248545,3.0,North Dakota State
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,RG,Right Guard,2,2,Dan Feeney,65.0,2979482,9.0,Indiana
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,RG,Right Guard,3,3,Luke Haggard,72.0,4686884,3.0,Indiana
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,RT,Right Tackle,1,1,Luke Goedeke,67.0,4380507,4.0,Central Michigan
+2026-2027,2026-09-08T11:56:57Z,TB,Tampa Bay Buccaneers,NFC,NFC South,Offense,RT,Right Tackle,2,2,Justin Skule,77.0,3915777,7.0,Vanderbilt
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,QB,Quarterback,1,1,Cam Ward,1.0,4688380,1.0,Miami; Washington State; Incarnate Word
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,QB,Quarterback,2,2,Mitchell Trubisky,10.0,3039707,9.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,RB,Running Back,1,1,Tony Pollard,20.0,3916148,7.0,Memphis
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,RB,Running Back,2,2,Tyjae Spears,2.0,4428557,3.0,Tulane
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,RB,Running Back,3,3,Nicholas Singleton,32.0,4685555,0.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,RB,Running Back,4,4,Julius Chestnut,36.0,4367567,4.0,Sacred Heart University
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,WR1,Wide Receiver (X),1,1,Carnell Tate,14.0,4871023,0.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,WR1,Wide Receiver (X),2,4,Chimere Dike,17.0,4431268,1.0,Florida; Wisconsin
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,WR2,Wide Receiver (Z),1,2,Wan'Dale Robinson,4.0,4569587,4.0,Kentucky
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,WR2,Wide Receiver (Z),2,5,Elic Ayomanor,5.0,4883647,1.0,Stanford
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,WR3,Wide Receiver (Slot),1,3,Calvin Ridley,0.0,3925357,8.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,TE,Tight End,1,1,Gunnar Helm,84.0,4686728,1.0,Texas
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,TE,Tight End,2,2,Daniel Bellinger,82.0,4361516,4.0,San Diego State
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,TE,Tight End,3,3,Kylen Granson,86.0,4039160,5.0,SMU
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,TE,Tight End,4,4,David Martin-Robinson,88.0,4360978,2.0,Temple
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,TE,Tight End,5,5,Jaren Kanak,81.0,4877034,0.0,Oklahoma
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,LT,Left Tackle,1,1,Dan Moore Jr.,75.0,4240920,5.0,Texas A&M
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,LT,Left Tackle,2,2,James Hudson III,51.0,4258181,5.0,Cincinnati
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,LG,Left Guard,1,1,Peter Skoronski,77.0,4429100,3.0,Northwestern
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,LG,Left Guard,2,2,Fernando Carmona,66.0,4710000,0.0,Arkansas; San Jose State
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,C,Center,1,1,Austin Schlottmann,51.0,4038544,8.0,TCU
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,C,Center,2,2,Pat Coogan,79.0,4596542,0.0,Indiana; Notre Dame
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,RG,Right Guard,1,1,Fernando Carmona,66.0,4710000,0.0,Arkansas; San Jose State
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,RG,Right Guard,2,2,Jackson Slater,64.0,4876319,1.0,Sacramento State
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,RG,Right Guard,3,3,Garrett Dellinger,71.0,4431252,1.0,LSU
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,RT,Right Tackle,1,1,JC Latham,55.0,4431437,2.0,Alabama
+2026-2027,2026-09-08T11:56:57Z,TEN,Tennessee Titans,AFC,AFC South,Offense,RT,Right Tackle,2,2,Brandon Crenshaw-Dickson,78.0,4426987,1.0,Florida; San Diego State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,QB,Quarterback,1,1,Jayden Daniels,5.0,4426348,2.0,LSU; Arizona State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,QB,Quarterback,2,2,Marcus Mariota,8.0,2576980,11.0,Oregon
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,QB,Quarterback,3,3,Athan Kaliakmanis,16.0,4432722,0.0,Rutgers; Minnesota
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,RB,Running Back,1,1,Jacory Croskey-Merritt,22.0,4575131,1.0,Arizona; New Mexico; Alabama State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,RB,Running Back,2,2,Rachaad White,1.0,4697815,4.0,Arizona State; Mt. San Antonio; Kearney State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,RB,Running Back,3,3,Kaytron Allen,31.0,4685246,0.0,Penn State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,RB,Running Back,4,4,Jeremy McNichols,26.0,3127586,9.0,Boise State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,WR1,Wide Receiver (X),1,1,Terry McLaurin,17.0,3121422,7.0,Ohio State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,WR1,Wide Receiver (X),2,4,Luke McCaffrey,11.0,4426948,2.0,Rice; Nebraska
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,WR1,Wide Receiver (X),3,7,Jaylin Lane,83.0,4602667,1.0,Virginia Tech; Middle Tennessee State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,WR2,Wide Receiver (Z),1,2,Stefon Diggs,3.0,2976212,11.0,Maryland
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,WR2,Wide Receiver (Z),2,5,Treylon Burks,13.0,4567156,4.0,Arkansas
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,WR2,Wide Receiver (Z),3,8,Jacoby Jones,84.0,5083297,1.0,UCF; Ohio
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,WR3,Wide Receiver (Slot),1,3,Antonio Williams,14.0,5081432,0.0,Clemson
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,WR3,Wide Receiver (Slot),2,6,Dyami Brown,6.0,4361577,5.0,North Carolina
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,TE,Tight End,1,1,Chig Okonkwo,85.0,4360635,4.0,Maryland
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,TE,Tight End,2,2,John Bates,87.0,4048228,5.0,Boise State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,TE,Tight End,3,3,Ben Sinnott,82.0,4690923,2.0,Kansas State
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,TE,Tight End,4,4,Colson Yankoff,80.0,4361088,2.0,UCLA; Washington
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,TE,Tight End,5,5,Quentin Moore,40.0,4875350,0.0,Washington; Independence Comm. College
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,LT,Left Tackle,1,1,Brandon Coleman,74.0,4685030,2.0,TCU; Trinity Valley CC
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,LT,Left Tackle,2,2,D.J. Humphries,79.0,2971048,11.0,Florida
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,LT,Left Tackle,3,3,Andrew Wylie,71.0,3042702,9.0,Eastern Michigan
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,LT,Left Tackle,4,4,Laremy Tunsil,78.0,3051890,10.0,Mississippi
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,LG,Left Guard,1,1,Chris Paul,75.0,4244615,4.0,Tulsa
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,LG,Left Guard,2,2,Brandon Coleman,74.0,4685030,2.0,TCU; Trinity Valley CC
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,C,Center,1,1,Nick Allegretti,67.0,3115922,7.0,Illinois
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,C,Center,2,2,Matt Gulbin,66.0,4683463,0.0,Michigan State; Wake Forest
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,RG,Right Guard,1,1,Sam Cosmi,76.0,4262199,5.0,Texas
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,RG,Right Guard,2,2,Andrew Wylie,71.0,3042702,9.0,Eastern Michigan
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,RG,Right Guard,3,3,Tanoa Togiai,62.0,4605488,0.0,Utah
+2026-2027,2026-09-08T11:56:57Z,WAS,Washington Commanders,NFC,NFC East,Offense,RT,Right Tackle,1,1,Josh Conerly Jr.,72.0,4685326,1.0,Oregon

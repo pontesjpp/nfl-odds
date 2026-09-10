@@ -1,0 +1,363 @@
+{
+  "team_abbr": "TEN",
+  "team_name": "Tennessee Titans",
+  "team_nick": "Titans",
+  "conference": "AFC",
+  "division": "AFC South",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Cam Ward",
+          "jersey_number": 1,
+          "espn_id": "4688380",
+          "gsis_id": "00-0040676",
+          "years_exp": 1,
+          "college": "Miami; Washington State; Incarnate Word",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Mitchell Trubisky",
+          "jersey_number": 10,
+          "espn_id": "3039707",
+          "gsis_id": "00-0033869",
+          "years_exp": 9,
+          "college": "North Carolina",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Tony Pollard",
+          "jersey_number": 20,
+          "espn_id": "3916148",
+          "gsis_id": "00-0035261",
+          "years_exp": 7,
+          "college": "Memphis",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Tyjae Spears",
+          "jersey_number": 2,
+          "espn_id": "4428557",
+          "gsis_id": "00-0039032",
+          "years_exp": 3,
+          "college": "Tulane",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Nicholas Singleton",
+          "jersey_number": 32,
+          "espn_id": "4685555",
+          "gsis_id": "00-0040886",
+          "years_exp": 0,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Julius Chestnut",
+          "jersey_number": 36,
+          "espn_id": "4367567",
+          "gsis_id": "00-0037594",
+          "years_exp": 4,
+          "college": "Sacred Heart University",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Carnell Tate",
+          "jersey_number": 14,
+          "espn_id": "4871023",
+          "gsis_id": "00-0041438",
+          "years_exp": 0,
+          "college": "Ohio State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Chimere Dike",
+          "jersey_number": 17,
+          "espn_id": "4431268",
+          "gsis_id": "00-0040705",
+          "years_exp": 1,
+          "college": "Florida; Wisconsin",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Wan'Dale Robinson",
+          "jersey_number": 4,
+          "espn_id": "4569587",
+          "gsis_id": "00-0038117",
+          "years_exp": 4,
+          "college": "Kentucky",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Elic Ayomanor",
+          "jersey_number": 5,
+          "espn_id": "4883647",
+          "gsis_id": "00-0040170",
+          "years_exp": 1,
+          "college": "Stanford",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Calvin Ridley",
+          "jersey_number": 0,
+          "espn_id": "3925357",
+          "gsis_id": "00-0034837",
+          "years_exp": 8,
+          "college": "Alabama",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Gunnar Helm",
+          "jersey_number": 84,
+          "espn_id": "4686728",
+          "gsis_id": "00-0040584",
+          "years_exp": 1,
+          "college": "Texas",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Daniel Bellinger",
+          "jersey_number": 82,
+          "espn_id": "4361516",
+          "gsis_id": "00-0038115",
+          "years_exp": 4,
+          "college": "San Diego State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Kylen Granson",
+          "jersey_number": 86,
+          "espn_id": "4039160",
+          "gsis_id": "00-0036876",
+          "years_exp": 5,
+          "college": "SMU",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "David Martin-Robinson",
+          "jersey_number": 88,
+          "espn_id": "4360978",
+          "gsis_id": "00-0039648",
+          "years_exp": 2,
+          "college": "Temple",
+          "status": "ACT"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Jaren Kanak",
+          "jersey_number": 81,
+          "espn_id": "4877034",
+          "gsis_id": "00-0040901",
+          "years_exp": 0,
+          "college": "Oklahoma",
+          "status": "RES"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Dan Moore Jr.",
+          "jersey_number": 75,
+          "espn_id": "4240920",
+          "gsis_id": "00-0036869",
+          "years_exp": 5,
+          "college": "Texas A&M",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "James Hudson III",
+          "jersey_number": 51,
+          "espn_id": "4258181",
+          "gsis_id": "00-0036866",
+          "years_exp": 5,
+          "college": "Cincinnati",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Peter Skoronski",
+          "jersey_number": 77,
+          "espn_id": "4429100",
+          "gsis_id": "00-0039034",
+          "years_exp": 3,
+          "college": "Northwestern",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Fernando Carmona",
+          "jersey_number": 66,
+          "espn_id": "4710000",
+          "gsis_id": "00-0040881",
+          "years_exp": 0,
+          "college": "Arkansas; San Jose State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Austin Schlottmann",
+          "jersey_number": 51,
+          "espn_id": "4038544",
+          "gsis_id": "00-0034112",
+          "years_exp": 8,
+          "college": "TCU",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Pat Coogan",
+          "jersey_number": 79,
+          "espn_id": "4596542",
+          "gsis_id": "00-0040893",
+          "years_exp": 0,
+          "college": "Indiana; Notre Dame",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Fernando Carmona",
+          "jersey_number": 66,
+          "espn_id": "4710000",
+          "gsis_id": "00-0040881",
+          "years_exp": 0,
+          "college": "Arkansas; San Jose State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Jackson Slater",
+          "jersey_number": 64,
+          "espn_id": "4876319",
+          "gsis_id": "00-0040190",
+          "years_exp": 1,
+          "college": "Sacramento State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Garrett Dellinger",
+          "jersey_number": 71,
+          "espn_id": "4431252",
+          "gsis_id": "00-0040079",
+          "years_exp": 1,
+          "college": "LSU",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "JC Latham",
+          "jersey_number": 55,
+          "espn_id": "4431437",
+          "gsis_id": "00-0039731",
+          "years_exp": 2,
+          "college": "Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Brandon Crenshaw-Dickson",
+          "jersey_number": 78,
+          "espn_id": "4426987",
+          "gsis_id": "00-0040512",
+          "years_exp": 1,
+          "college": "Florida; San Diego State",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

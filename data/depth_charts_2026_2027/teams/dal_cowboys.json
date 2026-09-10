@@ -1,0 +1,368 @@
+{
+  "team_abbr": "DAL",
+  "team_name": "Dallas Cowboys",
+  "team_nick": "Cowboys",
+  "conference": "NFC",
+  "division": "NFC East",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Dak Prescott",
+          "jersey_number": 4,
+          "espn_id": "2577417",
+          "gsis_id": "00-0033077",
+          "years_exp": 10,
+          "college": "Mississippi State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Sam Howell",
+          "jersey_number": 16,
+          "espn_id": "4426875",
+          "gsis_id": "00-0037077",
+          "years_exp": 4,
+          "college": "North Carolina",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Javonte Williams",
+          "jersey_number": 33,
+          "espn_id": "4361579",
+          "gsis_id": "00-0036997",
+          "years_exp": 5,
+          "college": "North Carolina",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Malik Davis",
+          "jersey_number": 20,
+          "espn_id": "4240603",
+          "gsis_id": "00-0037563",
+          "years_exp": 4,
+          "college": "Florida",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Emari Demercado",
+          "jersey_number": 31,
+          "espn_id": "4362478",
+          "gsis_id": "00-0038705",
+          "years_exp": 3,
+          "college": "TCU",
+          "status": "ACT"
+        }
+      ]
+    },
+    "FB": {
+      "position_title": "Fullback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Hunter Luepke",
+          "jersey_number": 40,
+          "espn_id": "4383396",
+          "gsis_id": "00-0038738",
+          "years_exp": 3,
+          "college": "North Dakota State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "CeeDee Lamb",
+          "jersey_number": 88,
+          "espn_id": "4241389",
+          "gsis_id": "00-0036358",
+          "years_exp": 6,
+          "college": "Oklahoma",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "KaVontae Turpin",
+          "jersey_number": 9,
+          "espn_id": "3676833",
+          "gsis_id": "00-0037801",
+          "years_exp": 7,
+          "college": "TCU",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "George Pickens",
+          "jersey_number": 3,
+          "espn_id": "4426354",
+          "gsis_id": "00-0037247",
+          "years_exp": 4,
+          "college": "Georgia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Jonathan Mingo",
+          "jersey_number": 81,
+          "espn_id": "4426485",
+          "gsis_id": "00-0039062",
+          "years_exp": 3,
+          "college": "Mississippi",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Ryan Flournoy",
+          "jersey_number": 19,
+          "espn_id": "5083754",
+          "gsis_id": "00-0039410",
+          "years_exp": 2,
+          "college": "Southeast Missouri State; Iowa Western CC",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Camden Brown",
+          "jersey_number": 80,
+          "espn_id": "4808759",
+          "gsis_id": "00-0040930",
+          "years_exp": 0,
+          "college": "Georgia Southern; Auburn",
+          "status": "ACT"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jake Ferguson",
+          "jersey_number": 87,
+          "espn_id": "4242355",
+          "gsis_id": "00-0038041",
+          "years_exp": 4,
+          "college": "Wisconsin",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Brevyn Spann-Ford",
+          "jersey_number": 89,
+          "espn_id": "4360967",
+          "gsis_id": "00-0039530",
+          "years_exp": 2,
+          "college": "Minnesota",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Luke Schoonmaker",
+          "jersey_number": 86,
+          "espn_id": "4372096",
+          "gsis_id": "00-0038547",
+          "years_exp": 3,
+          "college": "Michigan",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Princeton Fant",
+          "jersey_number": 85,
+          "espn_id": "4242442",
+          "gsis_id": "00-0038735",
+          "years_exp": 3,
+          "college": "Tennessee",
+          "status": "RES"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "DJ Rogers",
+          "jersey_number": 49,
+          "espn_id": "4710711",
+          "gsis_id": "00-0040938",
+          "years_exp": 0,
+          "college": "TCU",
+          "status": "RES"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Tyler Guyton",
+          "jersey_number": 60,
+          "espn_id": "4609048",
+          "gsis_id": "00-0039341",
+          "years_exp": 2,
+          "college": "Oklahoma; TCU",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Broderick Jones",
+          "jersey_number": 77,
+          "espn_id": "4428990",
+          "gsis_id": "00-0039109",
+          "years_exp": 3,
+          "college": "Georgia",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "T.J. Bass",
+          "jersey_number": 66,
+          "espn_id": "4685120",
+          "gsis_id": "00-0038731",
+          "years_exp": 3,
+          "college": "Oregon; Butte College",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Tyler Smith",
+          "jersey_number": 73,
+          "espn_id": "4568652",
+          "gsis_id": "00-0037243",
+          "years_exp": 4,
+          "college": "Tulsa",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Cooper Beebe",
+          "jersey_number": 56,
+          "espn_id": "4426663",
+          "gsis_id": "00-0039348",
+          "years_exp": 2,
+          "college": "Kansas State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Matt Hennessy",
+          "jersey_number": 72,
+          "espn_id": "4044138",
+          "gsis_id": "00-0036295",
+          "years_exp": 6,
+          "college": "Temple",
+          "status": "RES"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Tyler Booker",
+          "jersey_number": 52,
+          "espn_id": "4685263",
+          "gsis_id": "00-0040007",
+          "years_exp": 1,
+          "college": "Alabama",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Terence Steele",
+          "jersey_number": 78,
+          "espn_id": "3915834",
+          "gsis_id": "00-0036036",
+          "years_exp": 6,
+          "college": "Texas Tech",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Drew Shelton",
+          "jersey_number": 67,
+          "espn_id": "4685554",
+          "gsis_id": "00-0040874",
+          "years_exp": 0,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Ajani Cornelius",
+          "jersey_number": 65,
+          "espn_id": "4696203",
+          "gsis_id": "00-0040017",
+          "years_exp": 1,
+          "college": "Oregon; Rhode Island",
+          "status": "ACT"
+        }
+      ]
+    }
+  }
+}

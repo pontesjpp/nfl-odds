@@ -1,0 +1,374 @@
+{
+  "team_abbr": "ATL",
+  "team_name": "Atlanta Falcons",
+  "team_nick": "Falcons",
+  "conference": "NFC",
+  "division": "NFC South",
+  "season": "2026-2027",
+  "snapshot_timestamp": "2026-09-08T11:56:57Z",
+  "positions": {
+    "QB": {
+      "position_title": "Quarterback",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Tua Tagovailoa",
+          "jersey_number": 1,
+          "espn_id": "4241479",
+          "gsis_id": "00-0036212",
+          "years_exp": 6,
+          "college": "Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Michael Penix Jr.",
+          "jersey_number": 9,
+          "espn_id": "4360423",
+          "gsis_id": "00-0039917",
+          "years_exp": 2,
+          "college": "Washington; Indiana",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Cooper Rush",
+          "jersey_number": 13,
+          "espn_id": "2972515",
+          "gsis_id": "00-0033662",
+          "years_exp": 9,
+          "college": "Central Michigan; Tarrant County JC",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Jack Strand",
+          "jersey_number": 18,
+          "espn_id": "5344782",
+          "gsis_id": "00-0041194",
+          "years_exp": 0,
+          "college": "Minnesota State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RB": {
+      "position_title": "Running Back",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Bijan Robinson",
+          "jersey_number": 7,
+          "espn_id": "4430807",
+          "gsis_id": "00-0038542",
+          "years_exp": 3,
+          "college": "Texas",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Brian Robinson Jr.",
+          "jersey_number": 15,
+          "espn_id": "4241474",
+          "gsis_id": "00-0037746",
+          "years_exp": 4,
+          "college": "Alabama",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Trey Sermon",
+          "jersey_number": 44,
+          "espn_id": "4241401",
+          "gsis_id": "00-0036984",
+          "years_exp": 5,
+          "college": "Ohio State; Oklahoma",
+          "status": "RES"
+        }
+      ]
+    },
+    "WR1": {
+      "position_title": "Wide Receiver (X)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Drake London",
+          "jersey_number": 5,
+          "espn_id": "4426502",
+          "gsis_id": "00-0037238",
+          "years_exp": 4,
+          "college": "USC",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 4,
+          "player_name": "Zachariah Branch",
+          "jersey_number": 17,
+          "espn_id": "4870612",
+          "gsis_id": "00-0041044",
+          "years_exp": 0,
+          "college": "Georgia; USC",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR2": {
+      "position_title": "Wide Receiver (Z)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 2,
+          "player_name": "Jahan Dotson",
+          "jersey_number": 4,
+          "espn_id": "4361409",
+          "gsis_id": "00-0037741",
+          "years_exp": 4,
+          "college": "Penn State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 5,
+          "player_name": "Chris Blair",
+          "jersey_number": 19,
+          "espn_id": "4369886",
+          "gsis_id": "00-0036463",
+          "years_exp": 6,
+          "college": "Alcorn State",
+          "status": "ACT"
+        }
+      ]
+    },
+    "WR3": {
+      "position_title": "Wide Receiver (Slot)",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 3,
+          "player_name": "Olamide Zaccheaus",
+          "jersey_number": 14,
+          "espn_id": "3917914",
+          "gsis_id": "00-0035208",
+          "years_exp": 7,
+          "college": "Virginia",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 6,
+          "player_name": "Beaux Collins",
+          "jersey_number": 88,
+          "espn_id": "4431210",
+          "gsis_id": "00-0040432",
+          "years_exp": 1,
+          "college": "Notre Dame; Clemson",
+          "status": "RES"
+        }
+      ]
+    },
+    "TE": {
+      "position_title": "Tight End",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Kyle Pitts Sr.",
+          "jersey_number": 8,
+          "espn_id": "4360248",
+          "gsis_id": "00-0036970",
+          "years_exp": 5,
+          "college": "Florida",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Charlie Woerner",
+          "jersey_number": 89,
+          "espn_id": "4035020",
+          "gsis_id": "00-0036429",
+          "years_exp": 6,
+          "college": "Georgia",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Austin Hooper",
+          "jersey_number": 81,
+          "espn_id": "3043275",
+          "gsis_id": "00-0032392",
+          "years_exp": 10,
+          "college": "Stanford",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LT": {
+      "position_title": "Left Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jake Matthews",
+          "jersey_number": 70,
+          "espn_id": "16713",
+          "gsis_id": "00-0031279",
+          "years_exp": 12,
+          "college": "Texas A&M",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Michael Jerrell",
+          "jersey_number": 72,
+          "espn_id": "5209093",
+          "gsis_id": "00-0039842",
+          "years_exp": 2,
+          "college": "Findlay",
+          "status": "ACT"
+        }
+      ]
+    },
+    "LG": {
+      "position_title": "Left Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Matthew Bergeron",
+          "jersey_number": 65,
+          "espn_id": "4568510",
+          "gsis_id": "00-0039048",
+          "years_exp": 3,
+          "college": "Syracuse",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Kyle Hinton",
+          "jersey_number": 68,
+          "espn_id": "4682831",
+          "gsis_id": "00-0036354",
+          "years_exp": 6,
+          "college": "Washburn",
+          "status": "ACT"
+        }
+      ]
+    },
+    "C": {
+      "position_title": "Center",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Ryan Neuzil",
+          "jersey_number": 64,
+          "espn_id": "4036444",
+          "gsis_id": "00-0036833",
+          "years_exp": 5,
+          "college": "Appalachian State",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Corey Levin",
+          "jersey_number": 62,
+          "espn_id": "2973637",
+          "gsis_id": "00-0033793",
+          "years_exp": 9,
+          "college": "Tennessee-Chattanooga",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RG": {
+      "position_title": "Right Guard",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Chris Lindstrom",
+          "jersey_number": 63,
+          "espn_id": "3672833",
+          "gsis_id": "00-0035630",
+          "years_exp": 7,
+          "college": "Boston College",
+          "status": "ACT"
+        }
+      ]
+    },
+    "RT": {
+      "position_title": "Right Tackle",
+      "players": [
+        {
+          "string": 1,
+          "depth_rank": 1,
+          "player_name": "Jawaan Taylor",
+          "jersey_number": 71,
+          "espn_id": "4034961",
+          "gsis_id": "00-0035237",
+          "years_exp": 7,
+          "college": "Florida",
+          "status": "ACT"
+        },
+        {
+          "string": 2,
+          "depth_rank": 2,
+          "player_name": "Michael Jerrell",
+          "jersey_number": 72,
+          "espn_id": "5209093",
+          "gsis_id": "00-0039842",
+          "years_exp": 2,
+          "college": "Findlay",
+          "status": "ACT"
+        },
+        {
+          "string": 3,
+          "depth_rank": 3,
+          "player_name": "Ethan Onianwa",
+          "jersey_number": 75,
+          "espn_id": "4683194",
+          "gsis_id": "00-0041121",
+          "years_exp": 0,
+          "college": "Ohio State; Rice",
+          "status": "ACT"
+        },
+        {
+          "string": 4,
+          "depth_rank": 4,
+          "player_name": "Cameron Williams",
+          "jersey_number": 73,
+          "espn_id": "4685590",
+          "gsis_id": "00-0040687",
+          "years_exp": 1,
+          "college": "Texas",
+          "status": "ACT"
+        },
+        {
+          "string": 5,
+          "depth_rank": 5,
+          "player_name": "Storm Norton",
+          "jersey_number": 77,
+          "espn_id": "2973014",
+          "gsis_id": "00-0033752",
+          "years_exp": 9,
+          "college": "Toledo",
+          "status": "RES"
+        }
+      ]
+    }
+  }
+}
