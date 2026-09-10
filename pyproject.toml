@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "beautifulsoup4>=4.12.0",
     "fastapi>=0.141.1",
     "google-genai>=2.22.0",
     "httpx>=0.28.1",
@@ -13,6 +14,7 @@ dependencies = [
     "nflreadpy>=0.1.5",
     "pandas>=3.0.5",
     "playwright>=1.62.0",
+    "playwright-stealth>=2.0.0",
     "plotly>=7.0.0",
     "polars>=1.44.1",
     "psycopg2-binary>=2.9.12",
@@ -25,8 +27,28 @@ dependencies = [
 ]
 
 [project.scripts]
-nfl-odds = "nfl_odds:main"
+nfl-odds = "nfl_odds.pipeline:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
 
 [build-system]
 requires = ["uv_build>=0.12.10,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = [
+    "node_modules",
+    "archive",
+    "frontend",
+    "frontend-vite-backup",
+    "data",
+    "scratch",
+    "scripts",
+    ".venv",
+]
+pythonpath = ["src"]
+

@@ -19,6 +19,14 @@ frontend/.next/
 frontend/node_modules/
 node_modules/
 
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
 # Local cache and scratch
 scratch/
+*.log
 
+# Archive node_modules
+archive/**/node_modules/
