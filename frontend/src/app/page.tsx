@@ -214,6 +214,43 @@ export default function Home() {
     return Array.from(gameMap.values()).sort((a, b) => b.count - a.count);
   }, [portfolioBets, getBetGameInfo]);
 
+  const filteredPortfolioBets = useMemo(() => {
+    return portfolioBets
+      .filter((b: any) => {
+        if (portfolioFilter === 'pending' && b.result !== 'pending') return false;
+        if (portfolioFilter === 'won' && b.result !== 'won') return false;
+        if (portfolioFilter === 'lost' && b.result !== 'lost') return false;
+        if (portfolioFilter === 'ne_sea' && b.team !== 'NE' && b.team !== 'SEA' && b.opponent !== 'NE' && b.opponent !== 'SEA') return false;
+
+        // Filtro por Jogo
+        if (portfolioGameFilter !== 'all') {
+          const info = getBetGameInfo(b);
+          if (info.game_id !== portfolioGameFilter) {
+            const target = portfolioGames.find((g: any) => g.game_id === portfolioGameFilter);
+            if (target) {
+              const matchTeams = (b.team === target.away_team || b.team === target.home_team || b.opponent === target.away_team || b.opponent === target.home_team);
+              if (!matchTeams) return false;
+            } else {
+              return false;
+            }
+          }
+        }
+
+        // Filtro de busca por texto (jogador, time ou confronto)
+        if (portfolioSearch.trim()) {
+          const q = portfolioSearch.toLowerCase().trim();
+          const matchPlayer = (b.player_name || '').toLowerCase().includes(q);
+          const matchTeam = (b.team || '').toLowerCase().includes(q);
+          const matchOpp = (b.opponent || '').toLowerCase().includes(q);
+          const info = getBetGameInfo(b);
+          const matchGame = info.label.toLowerCase().includes(q);
+          if (!matchPlayer && !matchTeam && !matchOpp && !matchGame) return false;
+        }
+        return true;
+      })
+      .sort((a: any, b: any) => (b.ev_percent ?? -999) - (a.ev_percent ?? -999));
+  }, [portfolioBets, portfolioFilter, portfolioGameFilter, portfolioGames, portfolioSearch, getBetGameInfo]);
+
   // Box Score Modal States
   const [boxScoreOpen, setBoxScoreOpen] = useState<boolean>(false);
   const [boxScoreData, setBoxScoreData] = useState<any>(null);
@@ -2055,12 +2092,12 @@ export default function Home() {
 
           {/* 5. INVESTMENTS / PORTFOLIO TAB */}
           {mode === 'investments' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-5 sm:space-y-8">
               {/* Notification Banner */}
               {portfolioMessage && (
-                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-mono text-xs flex justify-between items-center shadow-lg">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-mono text-xs flex justify-between items-center shadow-lg">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
                     <span>{portfolioMessage}</span>
                   </div>
                   <button onClick={() => setPortfolioMessage(null)} className="text-zinc-500 hover:text-white text-sm font-bold px-2">✕</button>
@@ -2071,10 +2108,10 @@ export default function Home() {
               {((portfolioTab === 'safe' && liveSafeCount > 0 && portfolioSafeCount !== liveSafeCount) ||
                 (portfolioTab === 'high_risk' && liveHighRiskCount > 0 && portfolioHighRiskCount !== liveHighRiskCount) ||
                 (portfolioTab === 'all_props' && liveAllPropsCount > 0 && portfolioAllPropsCount !== liveAllPropsCount)) && (
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-lg">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-lg">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                    <span>
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0"></span>
+                    <span className="text-[11px] sm:text-xs">
                       {portfolioTab === 'safe'
                         ? `Atualização de mercado: Existem ${liveSafeCount} recomendações seguras disponíveis ao vivo vs ${portfolioSafeCount} salvas na carteira.`
                         : portfolioTab === 'high_risk'
@@ -2085,7 +2122,7 @@ export default function Home() {
                   <button
                     onClick={portfolioTab === 'safe' ? handleImportSafePicks : portfolioTab === 'high_risk' ? handleImportHighRiskPicks : () => handleImportAllProps('best_side')}
                     disabled={loadingPortfolio || isReadOnly}
-                    className={`px-4 py-2 rounded-lg bg-amber-500 text-black font-bold font-mono text-xs uppercase tracking-wider transition-colors shadow-sm shrink-0 ${
+                    className={`w-full sm:w-auto px-4 py-2 rounded-lg bg-amber-500 text-black font-bold font-mono text-xs uppercase tracking-wider transition-colors shadow-sm shrink-0 text-center ${
                       isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-amber-400'
                     }`}
                     title={isReadOnly ? "Ação bloqueada no modo demonstração (somente leitura)" : ""}
@@ -2096,25 +2133,28 @@ export default function Home() {
               )}
 
               {/* Portfolio Switcher Sub-Tabs */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-2 bg-[#0C0C0E] border border-[#2B261D] rounded-2xl shadow-xl">
-                <div className="flex items-center gap-2 p-1 bg-[#15130F] rounded-xl border border-[#2B261D] flex-wrap">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 p-1.5 sm:p-2 bg-[#0C0C0E] border border-[#2B261D] rounded-2xl shadow-xl">
+                <div className="grid grid-cols-3 sm:flex items-center gap-1 sm:gap-2 p-1 bg-[#15130F] rounded-xl border border-[#2B261D] w-full sm:w-auto">
                   <button
                     onClick={() => {
                       setPortfolioTab('safe');
                       fetchPortfolio('safe');
                     }}
-                    className={`flex items-center gap-2.5 px-5 py-3 rounded-lg font-mono text-xs uppercase tracking-wider transition-all duration-200 ${
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 px-2 py-2 sm:px-5 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
                       portfolioTab === 'safe'
                         ? 'bg-[#10B981] text-black font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]'
                         : 'text-zinc-400 hover:text-white hover:bg-white/5'
                     }`}
                   >
                     <span className="text-sm">🧠</span>
-                    <span>Carteira Dinâmica Inteligente</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                    <span className="truncate">
+                      <span className="sm:hidden">Dinâmica</span>
+                      <span className="hidden sm:inline">Carteira Dinâmica Inteligente</span>
+                    </span>
+                    <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
                       portfolioTab === 'safe' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-zinc-300'
                     }`}>
-                      +EV 2.5% a 15% • {portfolioSafeCount}
+                      <span className="hidden sm:inline">+EV 2.5% a 15% • </span>{portfolioSafeCount}
                     </span>
                   </button>
 
@@ -2123,18 +2163,21 @@ export default function Home() {
                       setPortfolioTab('high_risk');
                       fetchPortfolio('high_risk');
                     }}
-                    className={`flex items-center gap-2.5 px-5 py-3 rounded-lg font-mono text-xs uppercase tracking-wider transition-all duration-200 ${
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 px-2 py-2 sm:px-5 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
                       portfolioTab === 'high_risk'
                         ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(245,158,11,0.3)]'
                         : 'text-zinc-400 hover:text-white hover:bg-white/5'
                     }`}
                   >
                     <span className="text-sm">⚡</span>
-                    <span>Carteira de Alto Risco</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                    <span className="truncate">
+                      <span className="sm:hidden">Alto Risco</span>
+                      <span className="hidden sm:inline">Carteira de Alto Risco</span>
+                    </span>
+                    <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
                       portfolioTab === 'high_risk' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-amber-400'
                     }`}>
-                      Apenas EV &gt; 20% • {portfolioHighRiskCount}
+                      <span className="hidden sm:inline">EV &gt; 20% • </span>{portfolioHighRiskCount}
                     </span>
                   </button>
 
@@ -2143,18 +2186,18 @@ export default function Home() {
                       setPortfolioTab('all_props');
                       fetchPortfolio('all_props');
                     }}
-                    className={`flex items-center gap-2.5 px-5 py-3 rounded-lg font-mono text-xs uppercase tracking-wider transition-all duration-200 ${
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 px-2 py-2 sm:px-5 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
                       portfolioTab === 'all_props'
                         ? 'bg-sky-500 text-black font-bold shadow-[0_0_15px_rgba(14,165,233,0.3)]'
                         : 'text-zinc-400 hover:text-white hover:bg-white/5'
                     }`}
                   >
                     <span className="text-sm">🌐</span>
-                    <span>All Props</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                    <span className="truncate">All Props</span>
+                    <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
                       portfolioTab === 'all_props' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-sky-400'
                     }`}>
-                      Todas as Props • {portfolioAllPropsCount}
+                      <span className="hidden sm:inline">Todas as Props • </span>{portfolioAllPropsCount}
                     </span>
                   </button>
                 </div>
@@ -2172,37 +2215,37 @@ export default function Home() {
 
               {/* Top Financial Report: 6 KPI Cards */}
               <div>
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-zinc-400">
+                <div className="flex justify-between items-center mb-3 sm:mb-4">
+                  <h2 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-zinc-400 truncate">
                     {portfolioTab === 'safe' 
                       ? 'Relatório Financeiro • Carteira Conservadora (+EV 2.5% a 15%)' 
                       : portfolioTab === 'high_risk'
                       ? 'Relatório Financeiro • Carteira de Alto Risco (Apenas EV > 20%)'
-                      : 'Relatório Financeiro • Carteira All Props (100% das Props do Mercado)'}
+                      : 'Relatório Financeiro • Carteira All Props (100% das Props)'}
                   </h2>
-                  <span className="text-[11px] font-mono text-zinc-500">
-                    Semana 1 • NFL 2026-2027
+                  <span className="text-[10px] sm:text-[11px] font-mono text-zinc-500 whitespace-nowrap ml-2">
+                    Semana 1 • NFL
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
                   {/* Card 1: Capital Alocado (Ativo / Em Aberto) */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-5 rounded-2xl flex flex-col justify-between shadow-lg">
+                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
                     <div className="flex justify-between items-start mb-1">
-                      <span className="text-[#C5A880]/80 text-[10px] font-mono uppercase tracking-wider block">
+                      <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block">
                         Capital Alocado
                       </span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
-                        EM RISCO
+                      <span className="text-[8px] sm:text-[9px] font-mono px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
+                        RISCO
                       </span>
                     </div>
-                    <span className="text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
                       {portfolioSummary 
                         ? `${(portfolioSummary.pending_staked_units !== undefined ? portfolioSummary.pending_staked_units : portfolioSummary.total_staked_units).toFixed(2)} u` 
                         : '0.00 u'}
                     </span>
                     <span 
-                      className="text-zinc-500 text-[11px] font-mono mt-2 block truncate cursor-help"
+                      className="text-zinc-500 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate cursor-help"
                       title={portfolioSummary ? `Total histórico aportado: ${portfolioSummary.total_staked_units.toFixed(2)} u em ${portfolioSummary.total_bets} apostas (${portfolioSummary.settled_staked_units.toFixed(2)} u já faturadas)` : ''}
                     >
                       {portfolioSummary 
@@ -2212,31 +2255,31 @@ export default function Home() {
                   </div>
 
                   {/* Card 2: Liquidation Status */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-5 rounded-2xl flex flex-col justify-between shadow-lg">
-                    <span className="text-[#C5A880]/80 text-[10px] font-mono uppercase tracking-wider block mb-1">
+                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
                       Liquidação
                     </span>
-                    <span className="text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
                       {portfolioSummary ? `${portfolioSummary.settled_count}/${portfolioSummary.total_bets}` : '0/0'}
                     </span>
-                    <span className="text-[#D4AF37] text-[11px] font-mono mt-2 block">
-                      {portfolioSummary ? `${portfolioSummary.settled_staked_units.toFixed(2)} u faturadas (${portfolioSummary.pending_count} pendentes)` : '0 pendentes'}
+                    <span className="text-[#D4AF37] text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
+                      {portfolioSummary ? `${portfolioSummary.settled_staked_units.toFixed(2)} u (${portfolioSummary.pending_count} pend)` : '0 pendentes'}
                     </span>
                   </div>
 
                   {/* Card 3: Net Profit */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-5 rounded-2xl flex flex-col justify-between shadow-lg">
-                    <span className="text-[#C5A880]/80 text-[10px] font-mono uppercase tracking-wider block mb-1">
+                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
                       Resultado Líquido
                     </span>
-                    <span className={`text-2xl lg:text-3xl font-bold font-mono tracking-tight ${
+                    <span className={`text-xl sm:text-2xl lg:text-3xl font-bold font-mono tracking-tight ${
                       (portfolioSummary?.net_profit_units ?? 0) >= 0 ? 'text-[#10B981]' : 'text-rose-400'
                     }`}>
                       {portfolioSummary 
                         ? `${portfolioSummary.net_profit_units >= 0 ? '+' : ''}${portfolioSummary.net_profit_units.toFixed(2)} u`
                         : '0.00 u'}
                     </span>
-                    <span className={`text-[11px] font-mono mt-2 block ${
+                    <span className={`text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate ${
                       (portfolioSummary?.roi_percent ?? 0) >= 0 ? 'text-[#10B981]' : 'text-rose-500'
                     }`}>
                       ROI: {portfolioSummary ? `${portfolioSummary.roi_percent >= 0 ? '+' : ''}${portfolioSummary.roi_percent.toFixed(1)}%` : '0.0%'}
@@ -2244,14 +2287,14 @@ export default function Home() {
                   </div>
 
                   {/* Card 4: Win Rate */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-5 rounded-2xl flex flex-col justify-between shadow-lg">
-                    <span className="text-[#C5A880]/80 text-[10px] font-mono uppercase tracking-wider block mb-1">
+                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
                       Taxa de Acerto
                     </span>
-                    <span className="text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
                       {portfolioSummary ? `${portfolioSummary.win_rate_percent.toFixed(1)}%` : '0.0%'}
                     </span>
-                    <span className="text-[#C5A880]/60 text-[11px] font-mono mt-2 block truncate">
+                    <span className="text-[#C5A880]/60 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
                       {portfolioSummary 
                         ? `${portfolioSummary.won_count}W - ${portfolioSummary.lost_count}L` 
                         : '0W - 0L'}
@@ -2259,29 +2302,29 @@ export default function Home() {
                   </div>
 
                   {/* Card 5: Average Odds */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-5 rounded-2xl flex flex-col justify-between shadow-lg">
-                    <span className="text-[#C5A880]/80 text-[10px] font-mono uppercase tracking-wider block mb-1">
+                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
                       Odd Média
                     </span>
-                    <span className="text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
                       {portfolioSummary && portfolioSummary.avg_odds > 0 ? portfolioSummary.avg_odds.toFixed(2) : '1.82'}
                     </span>
-                    <span className="text-zinc-500 text-[11px] font-mono mt-2 block">
-                      Breakeven: {portfolioSummary && portfolioSummary.avg_odds > 0 ? `${(100 / portfolioSummary.avg_odds).toFixed(1)}%` : '54.9%'}
+                    <span className="text-zinc-500 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
+                      BE: {portfolioSummary && portfolioSummary.avg_odds > 0 ? `${(100 / portfolioSummary.avg_odds).toFixed(1)}%` : '54.9%'}
                     </span>
                   </div>
 
                   {/* Card 6: Profit Factor */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-5 rounded-2xl flex flex-col justify-between shadow-lg">
-                    <span className="text-[#C5A880]/80 text-[10px] font-mono uppercase tracking-wider block mb-1">
+                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
                       Profit Factor
                     </span>
-                    <span className="text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
                       {portfolioSummary && portfolioSummary.profit_factor !== null && portfolioSummary.profit_factor !== undefined
                         ? portfolioSummary.profit_factor.toFixed(2)
                         : 'N/A'}
                     </span>
-                    <span className="text-zinc-500 text-[11px] font-mono mt-2 block">
+                    <span className="text-zinc-500 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block">
                       Ganho / Perda
                     </span>
                   </div>
@@ -2290,48 +2333,48 @@ export default function Home() {
 
               {/* Dynamic Sizing & AI Conviction Panel */}
               {portfolioSummary?.stake_distribution && (
-                <div className="bg-[#0C0C0E] border border-[#2B261D] rounded-2xl p-5 shadow-xl grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div className="bg-[#0C0C0E] border border-[#2B261D] rounded-2xl p-3.5 sm:p-5 shadow-xl grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
                   {/* Col 1: Sizing Distribution */}
                   <div className="lg:col-span-2">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 mb-2">
                       <div className="flex items-center gap-2">
                         <span className="text-[#C5A880] text-sm">⚖️</span>
-                        <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+                        <h3 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-white">
                           Distribuição de Unidades Dinâmicas (Apostas Ativas)
                         </h3>
                       </div>
-                      <span className="text-[11px] font-mono text-zinc-400">
-                        Stake Médio Ativo: <strong className="text-[#D4AF37]">{portfolioSummary.avg_stake_units?.toFixed(2) ?? '1.00'} u</strong>
+                      <span className="text-[10px] sm:text-[11px] font-mono text-zinc-400">
+                        Stake Médio: <strong className="text-[#D4AF37]">{portfolioSummary.avg_stake_units?.toFixed(2) ?? '1.00'} u</strong>
                       </span>
                     </div>
-                    <p className="text-[11px] font-sans text-zinc-400 mb-3 leading-relaxed">
+                    <p className="text-[10px] sm:text-[11px] font-sans text-zinc-400 mb-3 leading-relaxed">
                       Alocação inteligente calibrada por EV (+2.5% a 15%), desconto de cauda estatística e multiplicador heurístico/IA considerando lesões (Over vs Under) e correlações de elenco.
                     </p>
-                    <div className="grid grid-cols-5 gap-2 font-mono text-center">
-                      <div className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-2.5">
-                        <div className="text-[10px] text-zinc-500 uppercase tracking-wider">0.50 u</div>
-                        <div className="text-lg font-bold text-zinc-300 mt-0.5">{portfolioSummary.stake_distribution['0.5u'] || 0}</div>
-                        <div className="text-[9px] text-zinc-500 mt-0.5">Cautela/Cauda</div>
+                    <div className="grid grid-cols-5 gap-1 sm:gap-2 font-mono text-center">
+                      <div className="bg-zinc-900/80 border border-zinc-800 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                        <div className="text-[8px] sm:text-[10px] text-zinc-500 uppercase tracking-wider truncate">0.50 u</div>
+                        <div className="text-sm sm:text-lg font-bold text-zinc-300 mt-0.5">{portfolioSummary.stake_distribution['0.5u'] || 0}</div>
+                        <div className="text-[8px] sm:text-[9px] text-zinc-500 mt-0.5 truncate">Cauda</div>
                       </div>
-                      <div className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-2.5">
-                        <div className="text-[10px] text-zinc-400 uppercase tracking-wider">0.75 u</div>
-                        <div className="text-lg font-bold text-zinc-200 mt-0.5">{portfolioSummary.stake_distribution['0.75u'] || 0}</div>
-                        <div className="text-[9px] text-zinc-500 mt-0.5">EV 2.5-5%</div>
+                      <div className="bg-zinc-900/80 border border-zinc-800 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                        <div className="text-[8px] sm:text-[10px] text-zinc-400 uppercase tracking-wider truncate">0.75 u</div>
+                        <div className="text-sm sm:text-lg font-bold text-zinc-200 mt-0.5">{portfolioSummary.stake_distribution['0.75u'] || 0}</div>
+                        <div className="text-[8px] sm:text-[9px] text-zinc-500 mt-0.5 truncate">2.5-5%</div>
                       </div>
-                      <div className="bg-zinc-900/80 border border-[#2B261D] rounded-xl p-2.5">
-                        <div className="text-[10px] text-[#C5A880]/80 uppercase tracking-wider">1.00 u</div>
-                        <div className="text-lg font-bold text-white mt-0.5">{portfolioSummary.stake_distribution['1.0u'] || 0}</div>
-                        <div className="text-[9px] text-zinc-500 mt-0.5">Padrão (5-10%)</div>
+                      <div className="bg-zinc-900/80 border border-[#2B261D] rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                        <div className="text-[8px] sm:text-[10px] text-[#C5A880]/80 uppercase tracking-wider truncate">1.00 u</div>
+                        <div className="text-sm sm:text-lg font-bold text-white mt-0.5">{portfolioSummary.stake_distribution['1.0u'] || 0}</div>
+                        <div className="text-[8px] sm:text-[9px] text-zinc-500 mt-0.5 truncate">5-10%</div>
                       </div>
-                      <div className="bg-[#C5A880]/10 border border-[#C5A880]/30 rounded-xl p-2.5">
-                        <div className="text-[10px] text-[#D4AF37] uppercase tracking-wider">1.25-1.5 u</div>
-                        <div className="text-lg font-bold text-[#D4AF37] mt-0.5">{portfolioSummary.stake_distribution['1.25u-1.5u'] || 0}</div>
-                        <div className="text-[9px] text-[#C5A880]/70 mt-0.5">Alta Convicção</div>
+                      <div className="bg-[#C5A880]/10 border border-[#C5A880]/30 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                        <div className="text-[8px] sm:text-[10px] text-[#D4AF37] uppercase tracking-wider truncate">1.25-1.5u</div>
+                        <div className="text-sm sm:text-lg font-bold text-[#D4AF37] mt-0.5">{portfolioSummary.stake_distribution['1.25u-1.5u'] || 0}</div>
+                        <div className="text-[8px] sm:text-[9px] text-[#C5A880]/70 mt-0.5 truncate">Alta Convicção</div>
                       </div>
-                      <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-2.5">
-                        <div className="text-[10px] text-emerald-400 uppercase tracking-wider">1.75 u+</div>
-                        <div className="text-lg font-bold text-emerald-300 mt-0.5">{portfolioSummary.stake_distribution['1.75u+'] || 0}</div>
-                        <div className="text-[9px] text-emerald-500/70 mt-0.5">Edge Máximo</div>
+                      <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                        <div className="text-[8px] sm:text-[10px] text-emerald-400 uppercase tracking-wider truncate">1.75 u+</div>
+                        <div className="text-sm sm:text-lg font-bold text-emerald-300 mt-0.5">{portfolioSummary.stake_distribution['1.75u+'] || 0}</div>
+                        <div className="text-[8px] sm:text-[9px] text-emerald-500/70 mt-0.5 truncate">Edge Máx</div>
                       </div>
                     </div>
                   </div>
@@ -2347,19 +2390,19 @@ export default function Home() {
                         if (match) setSelectedAiBet(match);
                       }
                     }}
-                    className={`bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between transition-all ${
+                    className={`bg-zinc-900/50 border border-zinc-800 rounded-xl p-3.5 sm:p-4 flex flex-col justify-between transition-all ${
                       portfolioSummary.highest_conviction_pick ? 'cursor-pointer hover:border-[#C5A880]/60 hover:bg-zinc-900/80 group' : ''
                     }`}
                     title={portfolioSummary.highest_conviction_pick ? "Clique para abrir a justificativa completa da IA" : ""}
                   >
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#C5A880] flex items-center gap-1.5">
+                        <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-[#C5A880] flex items-center gap-1.5">
                           <span className="inline-block w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
                           Maior Convicção do Modelo
                         </span>
                         {portfolioSummary.highest_conviction_pick && (
-                          <span className="px-2 py-0.5 rounded-full bg-[#C5A880]/20 text-[#D4AF37] border border-[#C5A880]/40 text-[10px] font-mono font-bold">
+                          <span className="px-2 py-0.5 rounded-full bg-[#C5A880]/20 text-[#D4AF37] border border-[#C5A880]/40 text-[9px] sm:text-[10px] font-mono font-bold">
                             {portfolioSummary.highest_conviction_pick.units.toFixed(2)} u
                           </span>
                         )}
@@ -2368,10 +2411,10 @@ export default function Home() {
                         <>
                           <div className="text-sm font-bold text-white font-sans mt-1 group-hover:text-[#D4AF37] transition-colors flex items-center justify-between">
                             <span>{portfolioSummary.highest_conviction_pick.player_name}</span>
-                            <span className="text-[11px] font-mono text-[#C5A880]/60 group-hover:text-[#D4AF37] transition-colors">🧠 Ver Análise ↗</span>
+                            <span className="text-[10px] sm:text-[11px] font-mono text-[#C5A880]/70 group-hover:text-[#D4AF37] transition-colors">🧠 Análise ↗</span>
                           </div>
-                          <div className="text-xs font-mono text-zinc-300 mt-1.5 flex items-center gap-2 flex-wrap">
-                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                          <div className="text-[11px] sm:text-xs font-mono text-zinc-300 mt-1.5 flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                            <span className={`px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold ${
                               portfolioSummary.highest_conviction_pick.side.toLowerCase() === 'over'
                                 ? 'bg-sky-500/15 text-sky-300 border border-sky-500/30'
                                 : 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
@@ -2387,7 +2430,7 @@ export default function Home() {
                               +{portfolioSummary.highest_conviction_pick.ev_percent.toFixed(1)}% EV
                             </span>
                           </div>
-                          <p className="text-[11px] font-sans text-zinc-400 mt-2 line-clamp-2 italic">
+                          <p className="text-[10px] sm:text-[11px] font-sans text-zinc-400 mt-2 line-clamp-2 italic">
                             &ldquo;{portfolioSummary.highest_conviction_pick.rationale}&rdquo;
                           </p>
                         </>
@@ -2431,19 +2474,19 @@ export default function Home() {
                 const isPositive = lastVal >= 0;
 
                 return (
-                  <div className="w-full bg-[#0C0C0E] border border-[#2B261D] rounded-2xl p-6 shadow-2xl">
+                  <div className="w-full bg-[#0C0C0E] border border-[#2B261D] rounded-2xl p-4 sm:p-6 shadow-2xl">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
                       <div>
                         <h3 className="font-mono text-xs uppercase tracking-widest text-[#FFFFFF] font-bold">
                           Evolução Patrimonial da Carteira (Unidades Acumuladas)
                         </h3>
-                        <p className="text-[#C5A880]/70 text-[11px] font-mono mt-0.5">
+                        <p className="text-[#C5A880]/70 text-[10px] sm:text-[11px] font-mono mt-0.5">
                           Trajetória líquida de ganhos e perdas a cada aposta liquidada
                         </p>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 sm:gap-3">
                         <span className="text-xs font-mono text-zinc-400">Saldo Atual:</span>
-                        <span className={`font-mono text-base font-bold px-3 py-1 rounded-lg border ${
+                        <span className={`font-mono text-sm sm:text-base font-bold px-2.5 sm:px-3 py-1 rounded-lg border ${
                           isPositive 
                             ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]' 
                             : 'bg-rose-500/10 text-rose-400 border-rose-500/30'
@@ -2453,7 +2496,7 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="relative w-full h-44">
+                    <div className="relative w-full h-36 sm:h-44">
                       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible" preserveAspectRatio="none">
                         <defs>
                           <linearGradient id="equityGradGreen" x1="0" y1="0" x2="0" y2="1">
@@ -2521,11 +2564,11 @@ export default function Home() {
               })()}
 
               {/* Action and Control Bar */}
-              <div className="bg-[#0C0C0E] border border-[#2B261D] p-5 rounded-2xl flex flex-col gap-4 shadow-xl">
+              <div className="bg-[#0C0C0E] border border-[#2B261D] p-3.5 sm:p-5 rounded-2xl flex flex-col gap-3 sm:gap-4 shadow-xl">
                 {isReadOnly ? (
-                  <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs gap-3">
+                  <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs gap-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-base">🔒</span>
+                      <span className="text-base shrink-0">🔒</span>
                       <div>
                         <span className="font-bold uppercase tracking-wider">Modo Visitante (Somente Leitura)</span>
                         <span className="text-zinc-400 text-[11px] block sm:inline sm:ml-2">
@@ -2533,16 +2576,16 @@ export default function Home() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                       <button
                         type="button"
                         onClick={() => handleToggleReadOnly(false)}
-                        className="px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-1.5"
+                        className="w-full sm:w-auto px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-1.5"
                         title="Desbloquear modo administrador para liquidar resultados e editar carteira"
                       >
                         <span>🔓 Desbloquear Modo Admin</span>
                       </button>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase font-bold tracking-wider">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase font-bold tracking-wider shrink-0 hidden sm:inline-block">
                         Visitante
                       </span>
                     </div>
@@ -2550,16 +2593,16 @@ export default function Home() {
                 ) : (
                   <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/30 text-emerald-400 font-mono text-xs gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                       <span className="font-bold uppercase tracking-wider">Modo Administrador Ativo</span>
                       <span className="text-zinc-400 text-[11px] hidden sm:inline">
-                        — Controle total: liquidação oficial com estatísticas reais da NFL e gestão de carteiras liberadas.
+                        — Controle total liberado.
                       </span>
                     </div>
                     <button
                       type="button"
                       onClick={() => handleToggleReadOnly(true)}
-                      className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 border border-zinc-700 text-[11px] font-mono transition-colors"
+                      className="w-full sm:w-auto px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 border border-zinc-700 text-[11px] font-mono transition-colors text-center"
                       title="Ativar modo visitante (somente leitura) para demonstrações seguras"
                     >
                       <span>🔒 Ativar Modo Visitante</span>
@@ -2567,13 +2610,13 @@ export default function Home() {
                   </div>
                 )}
 
-                <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+                <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 sm:gap-3">
                   {/* Primary Operational Group */}
-                  <div className="flex flex-wrap items-center gap-2.5">
+                  <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 sm:gap-2.5">
                     <button
                       onClick={() => handleSettlePortfolio()}
                       disabled={loadingPortfolio || isReadOnly}
-                      className={`px-5 py-2.5 rounded-xl bg-[#10B981] text-black font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.25)] flex items-center gap-2 transition-all ${
+                      className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl bg-[#10B981] text-black font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.25)] flex items-center justify-center gap-2 transition-all ${
                         isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#10B981]/90 hover:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                       }`}
                       title={isReadOnly ? "Ação bloqueada no modo somente leitura. Clique em 'Desbloquear Modo Admin' acima." : "Verificar e liquidar resultados com as estatísticas oficiais da NFL"}
@@ -2588,7 +2631,7 @@ export default function Home() {
                       <button
                         onClick={handleImportSafePicks}
                         disabled={loadingPortfolio || isReadOnly}
-                        className={`px-4 py-2.5 rounded-xl bg-[#15130F] text-white font-mono text-xs uppercase tracking-wider border border-[#2B261D] transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(16,185,129,0.12)] ${
+                        className={`w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#15130F] text-white font-mono text-xs uppercase tracking-wider border border-[#2B261D] transition-all flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(16,185,129,0.12)] ${
                           isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-[#10B981]/50'
                         }`}
                         title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar recomendações seguras"}
@@ -2602,7 +2645,7 @@ export default function Home() {
                       <button
                         onClick={handleImportHighRiskPicks}
                         disabled={loadingPortfolio || isReadOnly}
-                        className={`px-4 py-2.5 rounded-xl bg-[#15130F] text-amber-300 font-mono text-xs uppercase tracking-wider border border-amber-900/40 transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(245,158,11,0.15)] ${
+                        className={`w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#15130F] text-amber-300 font-mono text-xs uppercase tracking-wider border border-amber-900/40 transition-all flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(245,158,11,0.15)] ${
                           isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-amber-500/50'
                         }`}
                         title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar apostas de alto risco"}
@@ -2613,11 +2656,11 @@ export default function Home() {
                         <span>Sincronizar Apostas (EV &gt; 20%)</span>
                       </button>
                     ) : (
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                         <button
                           onClick={() => handleImportAllProps('best_side')}
                           disabled={loadingPortfolio || isReadOnly}
-                          className={`px-4 py-2.5 rounded-xl bg-[#15130F] text-sky-300 font-mono text-xs uppercase tracking-wider border border-sky-900/40 transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(14,165,233,0.15)] ${
+                          className={`w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#15130F] text-sky-300 font-mono text-xs uppercase tracking-wider border border-sky-900/40 transition-all flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(14,165,233,0.15)] ${
                             isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-sky-500/50'
                           }`}
                           title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar todas as props"}
@@ -2630,7 +2673,7 @@ export default function Home() {
                         <button
                           onClick={() => handleImportAllProps('all_rows')}
                           disabled={loadingPortfolio || isReadOnly}
-                          className={`px-3 py-2.5 rounded-xl bg-black text-zinc-400 font-mono text-[11px] uppercase tracking-wider border border-zinc-800 transition-all ${
+                          className={`w-full sm:w-auto px-3 py-2.5 rounded-xl bg-black text-zinc-400 font-mono text-[11px] uppercase tracking-wider border border-zinc-800 transition-all text-center ${
                             isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-zinc-900 hover:text-white'
                           }`}
                           title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Importa todas as linhas brutas com valor esperado positivo"}
@@ -2639,26 +2682,25 @@ export default function Home() {
                         </button>
                       </div>
                     )}
+                  </div>
 
+                  {/* Secondary Analysis & Management Group */}
+                  <div className="grid grid-cols-3 sm:flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
                     <button
                       onClick={handleSimulateSettlement}
                       disabled={loadingPortfolio || isReadOnly}
-                      className={`px-3.5 py-2.5 rounded-xl bg-black/60 text-[#D4AF37] font-mono text-xs uppercase tracking-wider border border-[#D4AF37]/30 transition-all flex items-center gap-1.5 ${
+                      className={`px-2 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-black/60 text-[#D4AF37] font-mono text-[11px] sm:text-xs uppercase tracking-wider border border-[#D4AF37]/30 transition-all flex items-center justify-center gap-1 text-center ${
                         isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#15130F] hover:border-[#D4AF37]/60'
                       }`}
                       title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Simula a conferência das apostas pendentes"}
                     >
-                      <span>🎲 Simular (Demo)</span>
+                      <span>🎲 Simular</span>
                     </button>
-                  </div>
-
-                  {/* Secondary Analysis & Management Group */}
-                  <div className="flex flex-wrap items-center gap-2">
 
                     <button
                       onClick={handleResetSettlement}
                       disabled={loadingPortfolio || isReadOnly}
-                      className={`px-3 py-2.5 rounded-xl bg-[#000000] text-[#C5A880]/80 hover:text-white font-mono text-xs uppercase tracking-wider border border-[#2B261D] hover:border-zinc-700 transition-all ${
+                      className={`px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl bg-[#000000] text-[#C5A880]/80 hover:text-white font-mono text-[11px] sm:text-xs uppercase tracking-wider border border-[#2B261D] hover:border-zinc-700 transition-all text-center flex items-center justify-center ${
                         isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#15130F]'
                       }`}
                       title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Retorna todas as apostas para o status Pendente"}
@@ -2669,7 +2711,7 @@ export default function Home() {
                     <button
                       onClick={handleClearPortfolio}
                       disabled={loadingPortfolio || isReadOnly}
-                      className={`px-3 py-2.5 rounded-xl bg-[#000000] text-rose-400/80 hover:text-rose-300 font-mono text-xs uppercase tracking-wider border border-rose-900/30 hover:border-rose-900/60 transition-all ${
+                      className={`px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl bg-[#000000] text-rose-400/80 hover:text-rose-300 font-mono text-[11px] sm:text-xs uppercase tracking-wider border border-rose-900/30 hover:border-rose-900/60 transition-all text-center flex items-center justify-center ${
                         isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-rose-950/30'
                       }`}
                       title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Limpar carteira"}
@@ -2682,15 +2724,14 @@ export default function Home() {
 
               {/* Ledger / Table of Bets in Portfolio */}
               <div className="bg-[#0C0C0E] border border-[#2B261D] rounded-2xl overflow-hidden shadow-2xl">
-                {/* Table Header & Search Filter */}
                 {/* Table Header & Search/Game Filters */}
-                <div className="p-5 border-b border-[#2B261D] flex flex-col gap-4">
-                  <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
+                <div className="p-3.5 sm:p-5 border-b border-[#2B261D] flex flex-col gap-3 sm:gap-4">
+                  <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3 sm:gap-4">
                     {/* Status Filter Tabs */}
-                    <div className="flex items-center gap-2 flex-wrap">
+                    <div className="grid grid-cols-2 sm:flex items-center gap-1.5 sm:gap-2">
                       <button
                         onClick={() => setPortfolioFilter('all')}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
+                        className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono tracking-wider transition-all text-center ${
                           portfolioFilter === 'all'
                             ? 'bg-[#FFFFFF] text-[#000000] font-bold border border-[#D4AF37]'
                             : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
@@ -2700,7 +2741,7 @@ export default function Home() {
                       </button>
                       <button
                         onClick={() => setPortfolioFilter('pending')}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
+                        className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono tracking-wider transition-all text-center ${
                           portfolioFilter === 'pending'
                             ? 'bg-[#D4AF37] text-black font-bold border border-[#D4AF37]'
                             : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
@@ -2710,7 +2751,7 @@ export default function Home() {
                       </button>
                       <button
                         onClick={() => setPortfolioFilter('won')}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
+                        className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono tracking-wider transition-all text-center ${
                           portfolioFilter === 'won'
                             ? 'bg-[#10B981] text-black font-bold border border-[#10B981]'
                             : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
@@ -2720,7 +2761,7 @@ export default function Home() {
                       </button>
                       <button
                         onClick={() => setPortfolioFilter('lost')}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
+                        className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono tracking-wider transition-all text-center ${
                           portfolioFilter === 'lost'
                             ? 'bg-rose-500 text-white font-bold'
                             : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
@@ -2731,7 +2772,7 @@ export default function Home() {
                     </div>
 
                     {/* Game Filter & Search Input */}
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
                       {/* Game Select Dropdown */}
                       <div className="flex items-center gap-2 flex-1 sm:flex-initial">
                         <label className="text-[11px] font-mono text-[#C5A880] uppercase tracking-wider hidden sm:inline whitespace-nowrap flex items-center gap-1">
@@ -2747,10 +2788,10 @@ export default function Home() {
                                 : 'border-[#2B261D] text-white hover:border-[#C5A880]/60'
                             }`}
                           >
-                            <option value="all">🏈 Todos os Jogos ({portfolioBets.length} apostas)</option>
+                            <option value="all">🏈 Todos os Jogos ({portfolioBets.length})</option>
                             {portfolioGames.map((g) => (
                               <option key={g.game_id} value={g.game_id}>
-                                {g.label} ({g.count} {g.count === 1 ? 'aposta' : 'apostas'})
+                                {g.label} ({g.count})
                               </option>
                             ))}
                           </select>
@@ -2758,13 +2799,13 @@ export default function Home() {
                       </div>
 
                       {/* Search Input */}
-                      <div className="relative min-w-[200px] flex-1 sm:flex-initial">
+                      <div className="relative min-w-0 sm:min-w-[200px] flex-1 sm:flex-initial">
                         <input
                           type="text"
-                          placeholder="Filtrar por jogador, time ou jogo..."
+                          placeholder="Buscar jogador, time ou jogo..."
                           value={portfolioSearch}
                           onChange={(e) => setPortfolioSearch(e.target.value)}
-                          className="w-full bg-[#000000] border border-[#2B261D] text-white text-xs font-mono rounded-xl px-4 py-2 focus:border-[#C5A880] focus:outline-none placeholder:text-zinc-600 transition-colors"
+                          className="w-full bg-[#000000] border border-[#2B261D] text-white text-xs font-mono rounded-xl px-3 sm:px-4 py-2 focus:border-[#C5A880] focus:outline-none placeholder:text-zinc-600 transition-colors"
                         />
                         {portfolioSearch && (
                           <button
@@ -2778,15 +2819,15 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Quick Game Filter Pills */}
+                  {/* Quick Game Filter Pills - Horizontal swipeable row on mobile */}
                   {portfolioGames.length > 0 && (
-                    <div className="pt-2.5 border-t border-[#2B261D]/60 flex flex-wrap items-center gap-2">
+                    <div className="pt-2 sm:pt-2.5 border-t border-[#2B261D]/60 flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 scrollbar-none -mx-3.5 px-3.5 sm:mx-0 sm:px-0">
                       <span className="text-[10px] font-mono uppercase text-[#C5A880]/80 tracking-wider whitespace-nowrap flex items-center gap-1 shrink-0 mr-1">
                         <span>🏈</span> Jogos:
                       </span>
                       <button
                         onClick={() => setPortfolioGameFilter('all')}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all whitespace-nowrap shrink-0 shadow-sm ${
+                        className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-mono tracking-wider transition-all whitespace-nowrap shrink-0 shadow-sm ${
                           portfolioGameFilter === 'all'
                             ? 'bg-[#FFFFFF] text-black font-bold border border-[#D4AF37]'
                             : 'bg-black text-zinc-400 hover:text-white border border-[#2B261D] hover:border-zinc-700'
@@ -2800,23 +2841,23 @@ export default function Home() {
                           <button
                             key={g.game_id}
                             onClick={() => setPortfolioGameFilter(isSelected ? 'all' : g.game_id)}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all whitespace-nowrap flex items-center gap-2 border shadow-sm ${
+                            className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-mono tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 sm:gap-2 border shadow-sm shrink-0 ${
                               isSelected
                                 ? 'bg-[#10B981] text-black font-bold border-[#10B981] shadow-[0_0_12px_rgba(16,185,129,0.35)]'
                                 : 'bg-[#15130F] hover:bg-[#201C15] text-zinc-300 hover:text-white border-[#2B261D] hover:border-[#C5A880]/50'
                             }`}
                             title={`Filtrar apostas de ${g.away_team} @ ${g.home_team}`}
                           >
-                            <div className="flex items-center gap-1.5">
-                              <img src={`/logos/${g.away_team}.png`} alt={g.away_team} className="w-4 h-4 object-contain shrink-0" />
+                            <div className="flex items-center gap-1">
+                              <img src={`/logos/${g.away_team}.png`} alt={g.away_team} className="w-3.5 h-3.5 sm:w-4 sm:h-4 object-contain shrink-0" />
                               <span className="font-bold">{g.away_team}</span>
                             </div>
                             <span className={isSelected ? 'text-black/60 font-bold text-[10px]' : 'text-[#C5A880]/80 text-[10px]'}>@</span>
-                            <div className="flex items-center gap-1.5">
-                              <img src={`/logos/${g.home_team}.png`} alt={g.home_team} className="w-4 h-4 object-contain shrink-0" />
+                            <div className="flex items-center gap-1">
+                              <img src={`/logos/${g.home_team}.png`} alt={g.home_team} className="w-3.5 h-3.5 sm:w-4 sm:h-4 object-contain shrink-0" />
                               <span className="font-bold">{g.home_team}</span>
                             </div>
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold ml-0.5 ${
+                            <span className={`text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 rounded-md font-bold ml-0.5 ${
                               isSelected ? 'bg-black/25 text-black' : 'bg-zinc-800 text-zinc-400'
                             }`}>
                               {g.count}
@@ -2832,9 +2873,9 @@ export default function Home() {
                     const activeGame = portfolioGames.find(g => g.game_id === portfolioGameFilter);
                     if (!activeGame) return null;
                     return (
-                      <div className="p-3 px-4 rounded-xl bg-gradient-to-r from-[#1A160F] via-[#15130F] to-[#0C0C0E] border border-[#D4AF37]/40 flex flex-wrap items-center justify-between gap-3 text-xs font-mono shadow-md animate-in fade-in duration-150">
-                        <div className="flex items-center gap-3 flex-wrap">
-                          <div className="flex items-center gap-2 bg-black/80 px-3 py-1.5 rounded-lg border border-[#D4AF37]/50">
+                      <div className="p-3 sm:px-4 rounded-xl bg-gradient-to-r from-[#1A160F] via-[#15130F] to-[#0C0C0E] border border-[#D4AF37]/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono shadow-md animate-in fade-in duration-150">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                          <div className="flex items-center gap-2 bg-black/80 px-2.5 sm:px-3 py-1.5 rounded-lg border border-[#D4AF37]/50">
                             <div className="flex items-center gap-1.5">
                               <img src={`/logos/${activeGame.away_team}.png`} alt={activeGame.away_team} className="w-4 h-4 object-contain shrink-0" />
                               <span className="font-bold text-white text-xs">{activeGame.away_team}</span>
@@ -2846,40 +2887,39 @@ export default function Home() {
                             </div>
                           </div>
                           <div className="text-zinc-300 text-xs">
-                            Exibindo <span className="font-bold text-[#D4AF37]">{activeGame.count} apostas</span> deste jogo
+                            Exibindo <span className="font-bold text-[#D4AF37]">{activeGame.count} apostas</span>
                             {(activeGame.wonCount > 0 || activeGame.lostCount > 0 || activeGame.pendingCount > 0) && (
-                              <span className="text-zinc-400 ml-2">
-                                (<span className="text-emerald-400 font-bold">{activeGame.wonCount} Greens</span> • <span className="text-rose-400 font-bold">{activeGame.lostCount} Reds</span>{activeGame.pendingCount > 0 ? ` • ${activeGame.pendingCount} Pendentes` : ''})
+                              <span className="text-zinc-400 ml-1.5">
+                                (<span className="text-emerald-400 font-bold">{activeGame.wonCount}W</span> • <span className="text-rose-400 font-bold">{activeGame.lostCount}L</span>{activeGame.pendingCount > 0 ? ` • ${activeGame.pendingCount}P` : ''})
                               </span>
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                           <button
                             onClick={() => handleOpenBoxScore(activeGame)}
-                            className="px-3 py-1 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 text-[#D4AF37] border border-[#D4AF37]/50 text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-sm"
+                            className="flex-1 sm:flex-initial px-3 py-1 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 text-[#D4AF37] border border-[#D4AF37]/50 text-xs font-mono font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
                             title="Ver estatísticas completas e box score deste jogo"
                           >
                             <svg className="w-3.5 h-3.5 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
-                            <span>Ver Box Score</span>
+                            <span>Box Score</span>
                           </button>
                           <button
                             onClick={() => setPortfolioGameFilter('all')}
-                            className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700 text-xs font-mono transition-colors flex items-center gap-1"
+                            className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-700 text-xs font-mono transition-colors flex items-center justify-center gap-1"
                             title="Limpar filtro de jogo e mostrar todas as apostas"
                           >
-                            <span>✕ Limpar Filtro</span>
+                            <span>✕ Limpar</span>
                           </button>
                         </div>
                       </div>
                     );
                   })()}
                 </div>
-
-                {/* Table */}
-                <div className="overflow-x-auto">
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-x-auto">
                   <table className="w-full text-left font-sans text-xs">
                     <thead className="bg-[#15130F] text-[#C5A880] uppercase font-mono text-[10px] tracking-wider border-b border-[#2B261D]">
                       <tr>
@@ -2897,59 +2937,20 @@ export default function Home() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-850">
-                      {(() => {
-                        const filteredBets = portfolioBets
-                          .filter(b => {
-                            if (portfolioFilter === 'pending' && b.result !== 'pending') return false;
-                            if (portfolioFilter === 'won' && b.result !== 'won') return false;
-                            if (portfolioFilter === 'lost' && b.result !== 'lost') return false;
-                            if (portfolioFilter === 'ne_sea' && b.team !== 'NE' && b.team !== 'SEA' && b.opponent !== 'NE' && b.opponent !== 'SEA') return false;
-
-                            // Filtro por Jogo
-                            if (portfolioGameFilter !== 'all') {
-                              const info = getBetGameInfo(b);
-                              if (info.game_id !== portfolioGameFilter) {
-                                const target = portfolioGames.find(g => g.game_id === portfolioGameFilter);
-                                if (target) {
-                                  const matchTeams = (b.team === target.away_team || b.team === target.home_team || b.opponent === target.away_team || b.opponent === target.home_team);
-                                  if (!matchTeams) return false;
-                                } else {
-                                  return false;
-                                }
-                              }
-                            }
-
-                            // Filtro de busca por texto (jogador, time ou confronto)
-                            if (portfolioSearch.trim()) {
-                              const q = portfolioSearch.toLowerCase().trim();
-                              const matchPlayer = (b.player_name || '').toLowerCase().includes(q);
-                              const matchTeam = (b.team || '').toLowerCase().includes(q);
-                              const matchOpp = (b.opponent || '').toLowerCase().includes(q);
-                              const info = getBetGameInfo(b);
-                              const matchGame = info.label.toLowerCase().includes(q);
-                              if (!matchPlayer && !matchTeam && !matchOpp && !matchGame) return false;
-                            }
-                            return true;
-                          })
-                          .sort((a, b) => (b.ev_percent ?? -999) - (a.ev_percent ?? -999));
-
-                        if (filteredBets.length === 0) {
-                          return (
-                            <tr>
-                              <td colSpan={11} className="py-16 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
-                                {portfolioBets.length === 0 
-                                  ? (portfolioTab === 'safe'
-                                      ? 'A carteira conservadora está vazia. Clique em "Sincronizar Recomendações Seguras" para importar apostas (+EV 2.5% a 15%).'
-                                      : portfolioTab === 'high_risk'
-                                      ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas de Alto Risco" para importar apostas (EV > 20%).'
-                                      : 'A carteira All Props está vazia. Clique em "Sincronizar Todas as Props (+EV)" para importar todas as props com valor esperado positivo (+EV > 0).')
-                                  : 'Nenhuma aposta encontrada para este filtro.'}
-                              </td>
-                            </tr>
-                          );
-                        }
-
-                        return filteredBets.map((bet) => {
+                      {filteredPortfolioBets.length === 0 ? (
+                        <tr>
+                          <td colSpan={11} className="py-16 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
+                            {portfolioBets.length === 0 
+                              ? (portfolioTab === 'safe'
+                                  ? 'A carteira conservadora está vazia. Clique em "Sincronizar Recomendações" para importar apostas (+EV 2.5% a 15%).'
+                                  : portfolioTab === 'high_risk'
+                                  ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas" para importar apostas (EV > 20%).'
+                                  : 'A carteira All Props está vazia. Clique em "Sincronizar Props" para importar todas as props com valor esperado positivo (+EV > 0).')
+                              : 'Nenhuma aposta encontrada para este filtro.'}
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredPortfolioBets.map((bet: any) => {
                           const isWon = bet.result === 'won';
                           const isLost = bet.result === 'lost';
                           const isPending = bet.result === 'pending';
@@ -3183,10 +3184,245 @@ export default function Home() {
                               </td>
                             </tr>
                           );
-                        });
-                      })()}
+                        })
+                      )}
                     </tbody>
                   </table>
+                </div>
+
+                {/* Mobile View: Dedicated responsive cards */}
+                <div className="md:hidden divide-y divide-[#2B261D] flex flex-col">
+                  {filteredPortfolioBets.length === 0 ? (
+                    <div className="py-12 px-4 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
+                      {portfolioBets.length === 0 
+                        ? (portfolioTab === 'safe'
+                            ? 'A carteira conservadora está vazia. Clique em "Sincronizar Recomendações" para importar apostas.'
+                            : portfolioTab === 'high_risk'
+                            ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas" para importar apostas.'
+                            : 'A carteira All Props está vazia. Clique em "Sincronizar Props" para importar todas as props.')
+                        : 'Nenhuma aposta encontrada para este filtro.'}
+                    </div>
+                  ) : (
+                    filteredPortfolioBets.map((bet: any) => {
+                      const isWon = bet.result === 'won';
+                      const isLost = bet.result === 'lost';
+                      const isPending = bet.result === 'pending';
+                      const isPush = bet.result === 'push';
+                      const gameInfo = getBetGameInfo(bet);
+
+                      const marketLabel = 
+                        bet.market === 'rushing_yards' ? 'Jardas Terrestres' :
+                        bet.market === 'receiving_yards' ? 'Jardas de Recepção' :
+                        bet.market === 'passing_yards' ? 'Jardas de Passe' : bet.market;
+
+                      return (
+                        <div key={bet.id} className="p-3.5 bg-[#0C0C0E] hover:bg-[#15130F]/60 transition-colors flex flex-col gap-2.5 font-mono">
+                          {/* Row 1: Player Name, Team, Tag & Status */}
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
+                              <button
+                                type="button"
+                                onClick={() => setSelectedAiBet(bet)}
+                                className="text-white hover:text-[#D4AF37] font-sans font-bold text-sm flex items-center gap-1 text-left transition-colors truncate"
+                                title="Clique para ver o racional de unidades e análise da IA"
+                              >
+                                <span className="truncate">{bet.player_name}</span>
+                                <span className="text-[11px] text-[#C5A880]/70">🧠</span>
+                              </button>
+                              {bet.team && (
+                                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+                                  {bet.team}
+                                </span>
+                              )}
+                              {bet.portfolio_type === 'high_risk' ? (
+                                <span className="text-[8px] font-mono px-1 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                                  ⚡ ALTO RISCO
+                                </span>
+                              ) : bet.portfolio_type === 'all_props' ? (
+                                <span className="text-[8px] font-mono px-1 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30">
+                                  🌐 ALL PROPS
+                                </span>
+                              ) : (
+                                <span className="text-[8px] font-mono px-1 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                                  🛡️ SAFE
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-1 shrink-0">
+                              {isWon && (
+                                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                                  GREEN
+                                </span>
+                              )}
+                              {isLost && (
+                                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                                  RED
+                                </span>
+                              )}
+                              {isPush && (
+                                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40">
+                                  PUSH
+                                </span>
+                              )}
+                              {isPending && (
+                                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                                  PENDENTE
+                                </span>
+                              )}
+                              {bet.is_locked && (
+                                <span className="px-1.5 py-0.5 rounded-full text-[8px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/40" title="Aposta Bloqueada (Jogo finalizado)">
+                                  🔒
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Row 2: Matchup & Market */}
+                          <div className="flex items-center justify-between gap-2 text-[11px] text-zinc-400">
+                            <button
+                              type="button"
+                              onClick={() => setPortfolioGameFilter(portfolioGameFilter === gameInfo.game_id ? 'all' : gameInfo.game_id)}
+                              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-zinc-900/80 border border-zinc-800 text-[10px] text-zinc-300 hover:text-white"
+                            >
+                              <img src={`/logos/${gameInfo.away_team}.png`} alt={gameInfo.away_team} className="w-3.5 h-3.5 object-contain" />
+                              <span className="font-semibold">{gameInfo.away_team}</span>
+                              <span className="text-[#C5A880]/60">@</span>
+                              <img src={`/logos/${gameInfo.home_team}.png`} alt={gameInfo.home_team} className="w-3.5 h-3.5 object-contain" />
+                              <span className="font-semibold">{gameInfo.home_team}</span>
+                            </button>
+                            <span className="text-zinc-400 truncate text-[11px]">{marketLabel}</span>
+                          </div>
+
+                          {/* Row 3: 4 Key Metrics Grid */}
+                          <div className="grid grid-cols-4 gap-1.5 p-2 bg-black/60 rounded-xl border border-[#2B261D] text-center">
+                            {/* Linha / Lado */}
+                            <div className="flex flex-col items-center justify-center">
+                              <span className="text-[9px] text-zinc-500 uppercase tracking-wider">Linha</span>
+                              <span className={`text-[11px] font-bold mt-0.5 flex items-center gap-0.5 ${
+                                bet.side === 'over' ? 'text-sky-300' : 'text-purple-300'
+                              }`}>
+                                <span>{bet.side === 'over' ? '▲' : '▼'}</span>
+                                <span>{bet.line}</span>
+                              </span>
+                            </div>
+
+                            {/* Odd */}
+                            <div className="flex flex-col items-center justify-center">
+                              <span className="text-[9px] text-zinc-500 uppercase tracking-wider">Odd</span>
+                              <span className="text-xs font-bold text-white mt-0.5">{bet.odds.toFixed(2)}</span>
+                            </div>
+
+                            {/* Aporte */}
+                            <button
+                              type="button"
+                              onClick={() => setSelectedAiBet(bet)}
+                              className="flex flex-col items-center justify-center hover:opacity-80 transition-opacity"
+                              title="Clique para ver o racional de unidades"
+                            >
+                              <span className="text-[9px] text-zinc-500 uppercase tracking-wider flex items-center gap-0.5">
+                                Aporte <span className="text-[8px]">🧠</span>
+                              </span>
+                              <span className={`text-xs font-bold mt-0.5 ${
+                                bet.units >= 1.25 ? 'text-[#D4AF37]' : 'text-zinc-200'
+                              }`}>
+                                {bet.units.toFixed(2)} u
+                              </span>
+                            </button>
+
+                            {/* EV */}
+                            <div className="flex flex-col items-center justify-center">
+                              <span className="text-[9px] text-zinc-500 uppercase tracking-wider">Edge EV</span>
+                              <span className={`text-xs font-bold mt-0.5 ${
+                                (bet.ev_percent ?? 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'
+                              }`}>
+                                {bet.ev_percent ? `${bet.ev_percent >= 0 ? '+' : ''}${bet.ev_percent.toFixed(1)}%` : '-'}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Row 4: Settlement Result & Actions */}
+                          <div className="flex items-center justify-between pt-1 border-t border-[#2B261D]/50 text-xs">
+                            <div className="flex items-center gap-3">
+                              {/* Real Result */}
+                              <div className="text-[11px]">
+                                <span className="text-zinc-500 text-[10px] uppercase mr-1">Real:</span>
+                                {bet.actual_value !== null && bet.actual_value !== undefined ? (
+                                  <span className="font-bold text-white">{bet.actual_value.toFixed(1)} yds</span>
+                                ) : (
+                                  <span className="text-zinc-500 text-[10px]">Aguardando</span>
+                                )}
+                              </div>
+
+                              {/* PnL Retorno */}
+                              <div className="text-[11px]">
+                                <span className="text-zinc-500 text-[10px] uppercase mr-1">PnL:</span>
+                                {isWon && <span className="text-emerald-400 font-bold">+{bet.profit_units.toFixed(2)} u</span>}
+                                {isLost && <span className="text-rose-400 font-bold">{bet.profit_units.toFixed(2)} u</span>}
+                                {isPush && <span className="text-zinc-400 font-bold">0.00 u</span>}
+                                {isPending && <span className="text-amber-400/80 text-[10px]">Pendente</span>}
+                              </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div>
+                              {bet.is_locked ? (
+                                <span className="text-[9px] text-zinc-500 uppercase font-semibold px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800">
+                                  🔒 Locked
+                                </span>
+                              ) : isReadOnly ? (
+                                <span className="text-[9px] text-zinc-500 uppercase font-semibold px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800">
+                                  🔒 Leitura
+                                </span>
+                              ) : (
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    onClick={() => handleManualSettle(bet.id, 'won')}
+                                    title="Marcar Green manualmente"
+                                    className="px-2 py-1 rounded bg-zinc-900 hover:bg-emerald-950 text-emerald-400 border border-zinc-800 hover:border-emerald-500/50 text-[10px] font-bold"
+                                  >
+                                    W
+                                  </button>
+                                  <button
+                                    onClick={() => handleManualSettle(bet.id, 'lost')}
+                                    title="Marcar Red manualmente"
+                                    className="px-2 py-1 rounded bg-zinc-900 hover:bg-rose-950 text-rose-400 border border-zinc-800 hover:border-rose-500/50 text-[10px] font-bold"
+                                  >
+                                    L
+                                  </button>
+                                  <button
+                                    onClick={() => handleManualSettle(bet.id, 'pending')}
+                                    title="Resetar para Pendente"
+                                    className="px-2 py-1 rounded bg-zinc-900 hover:bg-amber-950 text-amber-400 border border-zinc-800 hover:border-amber-500/50 text-[10px] font-bold"
+                                  >
+                                    P
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteBet(bet.id)}
+                                    title="Remover da carteira"
+                                    className="px-2 py-1 rounded bg-zinc-900 hover:bg-rose-950 text-zinc-500 hover:text-rose-400 border border-zinc-800 text-[10px] font-bold ml-0.5"
+                                  >
+                                    ✕
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Row 5: AI Thesis preview snippet if exists */}
+                          {bet.ai_sizing_rationale && (
+                            <div
+                              onClick={() => setSelectedAiBet(bet)}
+                              className="text-[10px] text-[#C5A880]/80 italic bg-[#15130F] px-2.5 py-1.5 rounded-lg border border-[#2B261D] cursor-pointer flex items-center justify-between gap-1.5 hover:border-[#C5A880]/50 transition-colors"
+                            >
+                              <span className="truncate">🧠 {bet.ai_sizing_rationale}</span>
+                              <span className="text-[#D4AF37] font-sans font-bold text-[9px] uppercase tracking-wider shrink-0">Ver Análise ↗</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               </div>
             </div>
@@ -3257,38 +3493,44 @@ export default function Home() {
             </div>
 
             {/* Sub-Header Tabs */}
-            <div className="px-5 py-3 border-b border-[#2B261D] bg-[#0C0C0E] flex items-center justify-between gap-4 flex-wrap">
-              <div className="flex items-center gap-2">
+            <div className="px-3.5 sm:px-5 py-2.5 sm:py-3 border-b border-[#2B261D] bg-[#0C0C0E] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4">
+              <div className="grid grid-cols-2 sm:flex items-center gap-2">
                 <button
                   onClick={() => setBoxScoreTab('stats')}
-                  className={`px-4 py-2 rounded-xl text-xs font-mono tracking-wider transition-all flex items-center gap-2 ${
+                  className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-mono tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-center ${
                     boxScoreTab === 'stats'
                       ? 'bg-[#D4AF37] text-black font-bold shadow-[0_0_12px_rgba(212,175,55,0.3)]'
                       : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
                   }`}
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span>Estatísticas Oficiais dos Jogadores (Box Score)</span>
+                  <span>
+                    <span className="hidden sm:inline">Estatísticas Oficiais (Box Score)</span>
+                    <span className="sm:hidden">Box Score</span>
+                  </span>
                 </button>
 
                 <button
                   onClick={() => setBoxScoreTab('bets')}
-                  className={`px-4 py-2 rounded-xl text-xs font-mono tracking-wider transition-all flex items-center gap-2 ${
+                  className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-mono tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-center ${
                     boxScoreTab === 'bets'
                       ? 'bg-[#10B981] text-black font-bold shadow-[0_0_12px_rgba(16,185,129,0.3)]'
                       : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
                   }`}
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span>Apostas deste Jogo ({boxScoreData?.bets?.length || 0})</span>
+                  <span>
+                    <span className="hidden sm:inline">Apostas deste Jogo</span>
+                    <span className="sm:hidden">Apostas</span> ({boxScoreData?.bets?.length || 0})
+                  </span>
                 </button>
               </div>
 
-              <div className="text-xs font-mono text-zinc-500">
+              <div className="text-[10px] sm:text-xs font-mono text-zinc-500 hidden sm:block">
                 Oficial NFLReadPy • Semana 1 / 2026
               </div>
             </div>
