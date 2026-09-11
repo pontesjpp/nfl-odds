@@ -153,6 +153,9 @@ export function PropCard({ propBet, selectedPick = null, onSelectPick, onAddToPo
           setLoadingStats(false);
         });
     }
+    if (!isExpanded && aiSummary) {
+      setActiveTab('ai');
+    }
     setIsExpanded(!isExpanded);
   };
 
@@ -163,6 +166,12 @@ export function PropCard({ propBet, selectedPick = null, onSelectPick, onAddToPo
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (aiSummary) {
+      setActiveTab('ai');
+    }
+  }, [aiSummary]);
 
 
   return (
@@ -484,15 +493,26 @@ export function PropCard({ propBet, selectedPick = null, onSelectPick, onAddToPo
                               <div className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 shadow-sm ${
                                 isRisk ? 'bg-amber-400 shadow-amber-500/50' : 'bg-emerald-400 shadow-emerald-500/50'
                               }`} />
-                              <div>
+                              <div className="flex-1">
                                 <span className={`font-bold tracking-wide ${isRisk ? 'text-amber-300' : 'text-white'}`}>{title}: </span>
-                                <span className="text-zinc-300">{body}</span>
+                                <span 
+                                  className="text-zinc-300"
+                                  dangerouslySetInnerHTML={{
+                                    __html: body.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-mono">$1</strong>')
+                                  }}
+                                />
                               </div>
                             </div>
                           );
                         }
                         return (
-                          <p key={idx} className="text-zinc-300 bg-zinc-900/50 p-3 rounded-lg border border-zinc-800/50">{line}</p>
+                          <p 
+                            key={idx} 
+                            className="text-zinc-300 bg-zinc-900/50 p-3 rounded-lg border border-zinc-800/50"
+                            dangerouslySetInnerHTML={{
+                              __html: cleanLine.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-mono">$1</strong>')
+                            }}
+                          />
                         );
                       })}
                     </div>

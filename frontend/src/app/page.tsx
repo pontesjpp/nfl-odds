@@ -275,8 +275,11 @@ export default function Home() {
     if (token && !headers.has('Authorization')) {
       headers.set('Authorization', `Bearer ${token}`);
     }
-    return fetch(url, {
+    const sep = url.includes('?') ? '&' : '?';
+    const busterUrl = `${url}${sep}_t=${Date.now()}`;
+    return fetch(busterUrl, {
       ...options,
+      cache: 'no-store',
       headers,
     });
   };
@@ -616,7 +619,8 @@ export default function Home() {
     const authHeaders: Record<string, string> = {};
     if (token) authHeaders['Authorization'] = `Bearer ${token}`;
     
-    fetch('/api/auth/status', { headers: authHeaders })
+    const buster = `_t=${Date.now()}`;
+    fetch(`/api/auth/status?${buster}`, { headers: authHeaders, cache: 'no-store' })
       .then(res => res.json())
       .then(data => {
         const isAdm = Boolean(data.is_admin);
@@ -626,22 +630,22 @@ export default function Home() {
       .catch(err => console.error("Error checking auth status:", err));
 
     fetchPortfolio();
-    fetch('/api/schedule')
+    fetch(`/api/schedule?${buster}`, { cache: 'no-store' })
       .then(res => res.json())
       .then(data => setSchedule(data))
       .catch(err => console.error("Error loading schedule:", err));
 
-    fetch('/api/live-bets')
+    fetch(`/api/live-bets?${buster}`, { cache: 'no-store' })
       .then(res => res.json())
       .then(data => setLiveBets(data))
       .catch(err => console.error("Error loading bets:", err));
 
-    fetch('/api/top-picks?limit=15')
+    fetch(`/api/top-picks?limit=15&${buster}`, { cache: 'no-store' })
       .then(res => res.json())
       .then(data => setTopPicks(data))
       .catch(err => console.error("Error loading top picks:", err));
 
-    fetch('/api/teams')
+    fetch(`/api/teams?${buster}`, { cache: 'no-store' })
       .then(res => res.json())
       .then(data => setTeamsList(data))
       .catch(err => console.error("Error loading teams:", err));
@@ -1037,7 +1041,7 @@ export default function Home() {
                             alert(errData.detail || "Erro ao rodar pipeline.");
                             return;
                           }
-                          const res = await fetch('/api/live-bets');
+                          const res = await fetch(`/api/live-bets?_t=${Date.now()}`, { cache: 'no-store' });
                           setLiveBets(await res.json());
                           alert("Odds e análises de IA atualizadas com sucesso!");
                         } catch (e) {
@@ -1341,7 +1345,7 @@ export default function Home() {
                             alert(errData.detail || "Erro ao rodar pipeline.");
                             return;
                           }
-                          const res = await fetch('/api/live-bets');
+                          const res = await fetch(`/api/live-bets?_t=${Date.now()}`, { cache: 'no-store' });
                           setLiveBets(await res.json());
                           alert("Odds e análises de IA atualizadas com sucesso!");
                         } catch (e) {
@@ -1421,7 +1425,7 @@ export default function Home() {
                   className="bg-[#0C0C0E] hover:bg-[#15130F] text-[#C5A880] hover:text-white border border-[#2B261D] hover:border-[#D4AF37]/40 font-mono text-xs tracking-widest py-3 px-6 rounded-full transition-all flex items-center gap-2 shrink-0"
                   onClick={async () => {
                     try {
-                      const res = await fetch('/api/top-picks?limit=15');
+                      const res = await fetch(`/api/top-picks?limit=15&_t=${Date.now()}`, { cache: 'no-store' });
                       setTopPicks(await res.json());
                       alert("Top picks com maior EV atualizados!");
                     } catch (e) {

@@ -1,5 +1,5 @@
 from typing import List, Optional
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 from pydantic import BaseModel
@@ -142,6 +142,15 @@ async def security_middleware(request: Request, call_next):
                     }
                 )
     return await call_next(request)
+
+@app.middleware("http")
+async def cache_control_middleware(request: Request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    return response
 
 # Load resources
 models = {}
@@ -690,7 +699,10 @@ def get_game_boxscore(game_id: str):
         raise HTTPException(status_code=500, detail=f"Erro ao carregar box score: {e}")
 
 @app.get("/api/live-bets")
-def get_live_bets():
+def get_live_bets(response: Response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
     # Always try to reload to get fresh data if it was generated in background
     global df_live_bets
     try:
@@ -708,7 +720,11 @@ def get_live_bets():
     return df_live_bets.to_dict(orient="records")
 
 @app.get("/api/top-picks")
-def get_top_picks(limit: int = 10):
+def get_top_picks(limit: int = 10, response: Response = None):
+    if response:
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
     global df_live_bets
     try:
         if os.path.exists("data/live_value_bets.parquet"):
@@ -851,7 +867,11 @@ def run_pipeline_api(request: Request):
         raise HTTPException(status_code=500, detail=f"Pipeline failed: {e}")
 
 @app.get("/api/portfolio")
-def get_portfolio(portfolio_type: str = "safe"):
+def get_portfolio(portfolio_type: str = "safe", response: Response = None):
+    if response:
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
     db = SessionLocal()
     try:
         global df_live_bets
