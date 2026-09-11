@@ -1,3 +1,4 @@
+from typing import List, Optional
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
@@ -23,7 +24,9 @@ app.add_middleware(
 )
 
 # Segurança: Modo Somente Leitura para demonstração pública (Cloudflare / Visitantes)
-READ_ONLY_MODE = os.getenv("READ_ONLY_MODE", "true").lower() in ("true", "1", "yes")
+# Padrão local: 'false' (Edição e liquidação liberadas para o administrador)
+# Para forçar modo demonstração/somente leitura, configure READ_ONLY_MODE=true no .env
+READ_ONLY_MODE = os.getenv("READ_ONLY_MODE", "false").lower() in ("true", "1", "yes")
 ADMIN_SECRET = os.getenv("ADMIN_SECRET", "")
 
 MUTATING_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
@@ -38,12 +41,36 @@ PROTECTED_PREFIXES = (
     "/api/run-pipeline",
 )
 
+class SystemModeRequest(BaseModel):
+    read_only: bool
+    admin_secret: Optional[str] = None
+
+@app.get("/api/system/mode")
+def get_system_mode():
+    return {
+        "read_only": READ_ONLY_MODE,
+        "has_admin_secret": bool(ADMIN_SECRET)
+    }
+
+@app.post("/api/system/mode")
+def set_system_mode(req: SystemModeRequest):
+    global READ_ONLY_MODE
+    if ADMIN_SECRET and req.read_only is False:
+        if req.admin_secret != ADMIN_SECRET:
+            raise HTTPException(status_code=403, detail="Chave de administrador incorreta.")
+    READ_ONLY_MODE = req.read_only
+    return {
+        "status": "success",
+        "read_only": READ_ONLY_MODE,
+        "message": f"Modo alterado para {'Somente Leitura (Visitante)' if READ_ONLY_MODE else 'Administrador (Edição Ativa)'}."
+    }
+
 @app.middleware("http")
 async def read_only_security_middleware(request: Request, call_next):
     if READ_ONLY_MODE and request.method in MUTATING_METHODS:
         path = request.url.path
-        # A rota /api/predict roda 100% em memória RAM e não altera o banco de dados
-        if path != "/api/predict":
+        # A rota /api/predict e a rota /api/system/mode não alteram o banco de dados
+        if path not in ("/api/predict", "/api/system/mode"):
             for prefix in PROTECTED_PREFIXES:
                 if path.startswith(prefix):
                     auth_header = request.headers.get("x-admin-secret", "")
@@ -1386,12 +1413,14 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
         db.close()
 
 @app.post("/api/portfolio/settle")
-def settle_portfolio(portfolio_type: Optional[str] = None):
+def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str] = None):
     db = SessionLocal()
     try:
         query = db.query(Bet).filter(Bet.result == "pending")
         if portfolio_type:
             query = query.filter(Bet.portfolio_type == portfolio_type)
+        if game_id:
+            query = query.filter(Bet.game_id == game_id)
         pending_bets = query.all()
         if not pending_bets:
             return {"settled": 0, "message": "Nenhuma aposta pendente na carteira."}

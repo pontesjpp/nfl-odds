@@ -224,7 +224,7 @@ export default function Home() {
   const [selectedAiBet, setSelectedAiBet] = useState<any | null>(null);
 
   // Security / Read-Only Demonstration Mode State
-  const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
+  const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
 
   const handleOpenBoxScore = async (game?: any) => {
     const gameId = game?.game_id || '2026_01_NE_SEA';
@@ -291,11 +291,39 @@ export default function Home() {
     }
   };
 
-  const handleSettlePortfolio = async () => {
+  const handleToggleReadOnly = async (targetMode: boolean) => {
+    try {
+      const res = await fetch('/api/system/mode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ read_only: targetMode }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setIsReadOnly(data.read_only);
+        setPortfolioMessage(data.message || (targetMode ? 'Modo Visitante (somente leitura) ativado.' : 'Modo Administrador ativado com sucesso!'));
+        await fetchPortfolio(portfolioTab);
+      } else {
+        setPortfolioMessage(data.detail || 'Não foi possível alterar o modo.');
+      }
+    } catch (err) {
+      setPortfolioMessage('Erro de conexão ao alterar o modo de segurança.');
+    }
+  };
+
+  const handleSettlePortfolio = async (gameIdParam?: string) => {
     setLoadingPortfolio(true);
     setPortfolioMessage(null);
     try {
-      const res = await fetch(`/api/portfolio/settle?portfolio_type=${portfolioTab}`, { method: 'POST' });
+      if (isReadOnly) {
+        setPortfolioMessage('Modo somente leitura ativo. Desbloqueie o Modo Administrador para liquidar.');
+        setLoadingPortfolio(false);
+        return;
+      }
+      const url = gameIdParam
+        ? `/api/portfolio/settle?game_id=${gameIdParam}`
+        : `/api/portfolio/settle?portfolio_type=${portfolioTab}`;
+      const res = await fetch(url, { method: 'POST' });
       const data = await res.json();
       if (!res.ok) {
         setPortfolioMessage(data.detail || 'Operação bloqueada no modo somente leitura.');
@@ -305,7 +333,7 @@ export default function Home() {
       await fetchPortfolio(portfolioTab);
       // Se o modal de box score estiver aberto, atualiza os dados
       if (boxScoreOpen) {
-        handleOpenBoxScore({ game_id: '2026_01_NE_SEA' });
+        handleOpenBoxScore({ game_id: gameIdParam || boxScoreData?.game_id || '2026_01_NE_SEA' });
       }
     } catch (err) {
       setPortfolioMessage('Erro ao verificar e liquidar resultados.');
@@ -2385,31 +2413,60 @@ export default function Home() {
 
               {/* Action and Control Bar */}
               <div className="bg-[#0C0C0E] border border-[#2B261D] p-5 rounded-2xl flex flex-col gap-4 shadow-xl">
-                {isReadOnly && (
-                  <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs gap-2">
+                {isReadOnly ? (
+                  <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs gap-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm">🔒</span>
-                      <span className="font-bold uppercase tracking-wider">Modo Demonstração (Somente Leitura)</span>
-                      <span className="text-amber-400/60 hidden sm:inline">•</span>
-                      <span className="text-zinc-300 text-[11px] hidden sm:inline">
-                        A base de dados e a carteira estão protegidas contra alterações. Navegação, IA e simulações ativas.
+                      <span className="text-base">🔒</span>
+                      <div>
+                        <span className="font-bold uppercase tracking-wider">Modo Visitante (Somente Leitura)</span>
+                        <span className="text-zinc-400 text-[11px] block sm:inline sm:ml-2">
+                          Botões de liquidação travados para demonstração segura.
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleToggleReadOnly(false)}
+                        className="px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-1.5"
+                        title="Desbloquear modo administrador para liquidar resultados e editar carteira"
+                      >
+                        <span>🔓 Desbloquear Modo Admin</span>
+                      </button>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase font-bold tracking-wider">
+                        Visitante
                       </span>
                     </div>
-                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase font-bold tracking-wider">
-                      Visitante Seguro
-                    </span>
+                  </div>
+                ) : (
+                  <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/30 text-emerald-400 font-mono text-xs gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="font-bold uppercase tracking-wider">Modo Administrador Ativo</span>
+                      <span className="text-zinc-400 text-[11px] hidden sm:inline">
+                        — Controle total: liquidação oficial com estatísticas reais da NFL e gestão de carteiras liberadas.
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleToggleReadOnly(true)}
+                      className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 border border-zinc-700 text-[11px] font-mono transition-colors"
+                      title="Ativar modo visitante (somente leitura) para demonstrações seguras"
+                    >
+                      <span>🔒 Ativar Modo Visitante</span>
+                    </button>
                   </div>
                 )}
 
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex flex-wrap items-center gap-3">
                     <button
-                      onClick={handleSettlePortfolio}
+                      onClick={() => handleSettlePortfolio()}
                       disabled={loadingPortfolio || isReadOnly}
                       className={`px-6 py-3 rounded-xl bg-[#10B981] text-black font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.25)] flex items-center gap-2 transition-all ${
                         isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#10B981]/90'
                       }`}
-                      title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Verificar e liquidar resultados"}
+                      title={isReadOnly ? "Ação bloqueada no modo somente leitura. Clique em 'Desbloquear Modo Admin' acima." : "Verificar e liquidar resultados com as estatísticas oficiais da NFL"}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -3068,7 +3125,7 @@ export default function Home() {
 
               <div className="flex items-center gap-3">
                 <button
-                  onClick={handleSettlePortfolio}
+                  onClick={() => handleSettlePortfolio(boxScoreData?.game_id)}
                   disabled={loadingPortfolio}
                   className="px-4 py-2.5 rounded-xl bg-[#10B981] hover:bg-[#10B981]/90 text-black font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_12px_rgba(16,185,129,0.3)] flex items-center gap-1.5 transition-all disabled:opacity-50"
                   title="Conferir e liquidar todas as apostas deste jogo no portfólio"
@@ -3239,7 +3296,7 @@ export default function Home() {
                       </p>
                     </div>
                     <button
-                      onClick={handleSettlePortfolio}
+                      onClick={() => handleSettlePortfolio(boxScoreData?.game_id)}
                       disabled={loadingPortfolio}
                       className="px-4 py-2 rounded-xl bg-[#10B981] hover:bg-[#10B981]/90 text-black font-mono font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md"
                     >
