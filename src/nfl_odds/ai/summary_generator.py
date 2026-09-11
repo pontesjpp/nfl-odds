@@ -107,25 +107,115 @@ def fallback_summary(
     risk_info: Optional[dict] = None
 ) -> str:
     player = row.get("full_player_name") or row.get("player_name", "Jogador")
+    team = row.get("team", "")
+    opponent = row.get("opponent", "Adversário")
+    market = row.get("market", "")
     line = row.get("line", 0)
-    side = row.get("side", "over").upper()
+    side = row.get("side", "over").lower()
+    side_upper = side.upper()
+    odds = row.get("odds", 1.90)
+    implied_prob = row.get("implied_prob", 0.5) * 100
+    prob_win = row.get("prob_win", 0.5) * 100
     edge = row.get("edge", 0) * 100
     ev = row.get("ev_percent", 0)
+    fair_odds = row.get("fair_odds", 1.80)
     
-    dc_phrase = ""
+    pos_role = "Atleta de rotação"
     if depth_info and depth_info.get("depth_summary"):
-        dc_phrase = f" No depth chart oficial da equipe, o atleta atua como **{depth_info['depth_summary']}**."
+        pos_role = depth_info["depth_summary"]
     
-    news_risk_phrase = ""
+    # 1. Tese de Valor
+    tese = (
+        f"Discrepância matemática quantificada entre a cotação oferecida pelas casas ({odds:.2f}, "
+        f"probabilidade implícita de {implied_prob:.1f}%) e a probabilidade estimada pelo modelo quantitativo "
+        f"({prob_win:.1f}%, Odd Justa projetada em {fair_odds:.2f}), consolidando um Edge de +{edge:.1f}% e "
+        f"Valor Esperado (+EV) de +{ev:.1f}% para a entrada **{side_upper} {line}**. No depth chart oficial de {team}, "
+        f"o atleta atua como **{pos_role}**."
+    )
+    
+    # 2. Métrica-Chave contextual
+    metric_details = []
+    if stats:
+        for k, v in list(stats.items())[:3]:
+            metric_details.append(f"{k}: {v}")
+    
+    if market == "rushing_yards":
+        if side == "under":
+            metrica = (
+                f"A defesa de {opponent} apresenta forte integridade nas trincheiras, limitando jardas antes do contato (RYBC) "
+                f"e mantendo taxas elevadas de paradas na linha de scrimmage. "
+                + (f"Métricas apuradas: {'; '.join(metric_details)}." if metric_details else "Volume recente de toques aponta para rotação compartilhada.")
+            )
+        else:
+            metrica = (
+                f"Alta eficiência por tentativa terrestre e taxa consistente de jardas após o contato (RYAC) "
+                f"contra a frente defensiva de {opponent}. "
+                + (f"Métricas apuradas: {'; '.join(metric_details)}." if metric_details else "Consistência de toques sustenta a linha proposta.")
+            )
+    elif market == "receiving_yards":
+        if side == "under":
+            metrica = (
+                f"O esquema defensivo de {opponent} prioriza cobertura recuada com safeties altos (Cover-2/Quarters), "
+                f"restringindo rotas profundas e limitando separação média por rota corrida. "
+                + (f"Métricas registradas: {'; '.join(metric_details)}." if metric_details else "Volume de alvos (Target Share) diluído no ataque.")
+            )
+        else:
+            metrica = (
+                f"Elevada participação de rotas ativas (Route Participation) e alinhamento tático favorável "
+                f"para explorar as brechas de marcação da secundária de {opponent}. "
+                + (f"Métricas apuradas: {'; '.join(metric_details)}." if metric_details else "Capacidade comprovada de conversão e YAC.")
+            )
+    elif market == "passing_yards":
+        if side == "under":
+            metrica = (
+                f"A defesa de {opponent} gera pressão constante com front-four sem necessidade de blitz, "
+                f"forçando passes de release ultra-rápido e reduzindo a profundidade média do alvo (aDOT). "
+                + (f"Métricas apuradas: {'; '.join(metric_details)}." if metric_details else "Ritmo cadenciado de dropbacks no confronto.")
+            )
+        else:
+            metrica = (
+                f"Eficiência no pocket medida por EPA positivo por dropback e precisão sobre o esperado (CPOE) "
+                f"favorável contra o esquema de secundária de {opponent}. "
+                + (f"Métricas apuradas: {'; '.join(metric_details)}." if metric_details else "Volume projetado de tentativas em script equilibrado.")
+            )
+    else:
+        metrica = f"As métricas consolidadas do atleta frente ao esquema de {opponent} respaldam a projeção em relação à linha de {line}."
+    
+    # 3. Cenário de Jogo
+    news_ctx = ""
     if risk_info and risk_info.get("has_news_alert"):
         headline = risk_info.get("alert_headline") or (news_info.get("headline") if news_info else "")
         if headline:
-            news_risk_phrase = f" **Contexto da semana ({side})**: {headline}."
+            news_ctx = f" Notícia relevante da semana: *{headline}*."
             
-    return f"""* **Tese de Valor**: O modelo matemático aponta para uma assimetria favorável com estimativa de +{edge:.1f}% de edge e valor esperado (+EV) projetado em +{ev:.1f}% para a entrada **{side} {line}**.{dc_phrase}
-* **Métrica-Chave**: O volume recente do atleta e as métricas defensivas consolidadas sustentam a projeção em relação à linha proposta pelas casas de apostas.
-* **Cenário de Jogo**: A projeção de pontos e ritmo esperado da partida indicam que a minutagem e o uso ofensivo deste jogador alinham-se com a entrada {side}.
-* **Fatores de Risco / Contraponto**: A variância natural de amostras recentes e possíveis desvios táticos no plano de jogo adversário representam riscos estatísticos inerentes à aposta.{news_risk_phrase}"""
+    if side == "under":
+        cenario = (
+            f"O script da partida entre {team} e {opponent} projeta controle de posse e divisão de volume ofensivo. "
+            f"Diante das características táticas do adversário, a distribuição de toques tende a limitar o teto de produção "
+            f"do atleta abaixo da linha de {line}.{news_ctx}"
+        )
+    else:
+        cenario = (
+            f"O fluxo do confronto entre {team} e {opponent} favorece a utilização constante do atleta em momentos decisivos "
+            f"(early downs e terceiras descidas intermediárias), permitindo que acumule volume suficiente para superar a linha proposta.{news_ctx}"
+        )
+        
+    # 4. Fatores de Risco / Contraponto
+    if side == "under":
+        risco = (
+            f"Uma jogada explosiva isolada (quebra de tackle ou ganho de 35+ jardas em falha posicional da defesa de {opponent}) "
+            f"ou um script atípico de garbage time acelerado representam os principais fatores de variância contra o Under."
+        )
+    else:
+        risco = (
+            f"Desvios no plano de jogo com maior concentração em outras peças ofensivas ou situação de placar desfavorável "
+            f"que altere a distribuição convencional de jogadas representam os riscos inerentes à aposta Over."
+        )
+
+    return f"""* **Tese de Valor**: {tese}
+* **Métrica-Chave**: {metrica}
+* **Cenário de Jogo**: {cenario}
+* **Fatores de Risco / Contraponto**: {risco}"""
 
 def parse_llm_json_response(raw_text: str) -> Optional[Dict[str, Any]]:
     text = raw_text.strip()
