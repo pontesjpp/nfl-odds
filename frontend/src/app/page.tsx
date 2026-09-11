@@ -223,8 +223,72 @@ export default function Home() {
   // AI Sizing & Contextual Explanation Modal State
   const [selectedAiBet, setSelectedAiBet] = useState<any | null>(null);
 
-  // Security / Read-Only Demonstration Mode State
-  const [isReadOnly, setIsReadOnly] = useState<boolean>(false);
+  // Security / Read-Only Demonstration Mode & MFA State
+  const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [adminModalOpen, setAdminModalOpen] = useState<boolean>(false);
+  const [adminPassword, setAdminPassword] = useState<string>('');
+  const [adminTotp, setAdminTotp] = useState<string>('');
+  const [adminAuthLoading, setAdminAuthLoading] = useState<boolean>(false);
+  const [adminAuthError, setAdminAuthError] = useState<string | null>(null);
+
+  const authFetch = async (url: string, options: RequestInit = {}) => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('nfl_admin_token') : null;
+    const headers = new Headers(options.headers || {});
+    if (token && !headers.has('Authorization')) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+    return fetch(url, {
+      ...options,
+      headers,
+    });
+  };
+
+  const handleAdminLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setAdminAuthLoading(true);
+    setAdminAuthError(null);
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: adminPassword,
+          totp_code: adminTotp.trim() || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAdminAuthError(data.detail || 'Falha ao autenticar.');
+        return;
+      }
+      if (data.token) {
+        localStorage.setItem('nfl_admin_token', data.token);
+      }
+      setIsAdmin(true);
+      setIsReadOnly(false);
+      setAdminModalOpen(false);
+      setAdminPassword('');
+      setAdminTotp('');
+      setPortfolioMessage('Autenticado como Administrador com sucesso!');
+      await fetchPortfolio(portfolioTab);
+    } catch (err) {
+      setAdminAuthError('Erro de conexão ao autenticar.');
+    } finally {
+      setAdminAuthLoading(false);
+    }
+  };
+
+  const handleAdminLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (err) {}
+    localStorage.removeItem('nfl_admin_token');
+    setIsAdmin(false);
+    setIsReadOnly(true);
+    setPortfolioMessage('Modo Visitante (somente leitura) ativado.');
+    await fetchPortfolio(portfolioTab);
+  };
 
   const handleOpenBoxScore = async (game?: any) => {
     const gameId = game?.game_id || '2026_01_NE_SEA';
@@ -272,13 +336,13 @@ export default function Home() {
 
   const fetchPortfolio = async (tab: 'safe' | 'high_risk' | 'all_props' = portfolioTab) => {
     try {
-      const res = await fetch(`/api/portfolio?portfolio_type=${tab}`);
+      const res = await authFetch(`/api/portfolio?portfolio_type=${tab}`);
       if (res.ok) {
         const data = await res.json();
         setPortfolioSummary(data.summary);
         setEquityCurve(data.equity_curve || []);
         setPortfolioBets(data.bets || []);
-        if (data.read_only !== undefined) setIsReadOnly(Boolean(data.read_only));
+        if (data.read_only !== undefined && !isAdmin) setIsReadOnly(Boolean(data.read_only));
         if (data.safe_count !== undefined) setPortfolioSafeCount(data.safe_count);
         if (data.high_risk_count !== undefined) setPortfolioHighRiskCount(data.high_risk_count);
         if (data.all_props_count !== undefined) setPortfolioAllPropsCount(data.all_props_count);
@@ -292,23 +356,12 @@ export default function Home() {
   };
 
   const handleToggleReadOnly = async (targetMode: boolean) => {
-    try {
-      const res = await fetch('/api/system/mode', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ read_only: targetMode }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setIsReadOnly(data.read_only);
-        setPortfolioMessage(data.message || (targetMode ? 'Modo Visitante (somente leitura) ativado.' : 'Modo Administrador ativado com sucesso!'));
-        await fetchPortfolio(portfolioTab);
-      } else {
-        setPortfolioMessage(data.detail || 'Não foi possível alterar o modo.');
-      }
-    } catch (err) {
-      setPortfolioMessage('Erro de conexão ao alterar o modo de segurança.');
+    if (targetMode === false) {
+      setAdminAuthError(null);
+      setAdminModalOpen(true);
+      return;
     }
+    await handleAdminLogout();
   };
 
   const handleSettlePortfolio = async (gameIdParam?: string) => {
@@ -323,7 +376,7 @@ export default function Home() {
       const url = gameIdParam
         ? `/api/portfolio/settle?game_id=${gameIdParam}`
         : `/api/portfolio/settle?portfolio_type=${portfolioTab}`;
-      const res = await fetch(url, { method: 'POST' });
+      const res = await authFetch(url, { method: 'POST' });
       const data = await res.json();
       if (!res.ok) {
         setPortfolioMessage(data.detail || 'Operação bloqueada no modo somente leitura.');
@@ -346,7 +399,7 @@ export default function Home() {
     setLoadingPortfolio(true);
     setPortfolioMessage(null);
     try {
-      const res = await fetch('/api/portfolio/import-safe-picks?replace_pending=true', { method: 'POST' });
+      const res = await authFetch('/api/portfolio/import-safe-picks?replace_pending=true', { method: 'POST' });
       const data = await res.json();
       if (!res.ok) {
         setPortfolioMessage(data.detail || 'Operação bloqueada no modo somente leitura.');
@@ -365,13 +418,13 @@ export default function Home() {
     setLoadingPortfolio(true);
     setPortfolioMessage(null);
     try {
-      const res = await fetch('/api/portfolio/import-high-risk-picks?replace_pending=true', { method: 'POST' });
+      const res = await authFetch('/api/portfolio/import-high-risk-picks?replace_pending=true', { method: 'POST' });
       const data = await res.json();
       if (!res.ok) {
         setPortfolioMessage(data.detail || 'Operação bloqueada no modo somente leitura.');
         return;
       }
-      setPortfolioMessage(`${data.imported} apostas de alto risco (EV > 20%) sincronizadas com sucesso.`);
+      setPortfolioMessage(`${data.imported} apostas de alto risco (+EV > 20%) sincronizadas.`);
       await fetchPortfolio('high_risk');
     } catch (err) {
       setPortfolioMessage('Erro ao sincronizar apostas de alto risco.');
@@ -384,7 +437,7 @@ export default function Home() {
     setLoadingPortfolio(true);
     setPortfolioMessage(null);
     try {
-      const res = await fetch(`/api/portfolio/import-all-props?replace_pending=true&mode=${mode}`, { method: 'POST' });
+      const res = await authFetch(`/api/portfolio/import-all-props?replace_pending=true&mode=${mode}`, { method: 'POST' });
       const data = await res.json();
       if (!res.ok) {
         setPortfolioMessage(data.detail || 'Operação bloqueada no modo somente leitura.');
@@ -403,7 +456,7 @@ export default function Home() {
     setLoadingPortfolio(true);
     setPortfolioMessage(null);
     try {
-      const res = await fetch(`/api/portfolio/simulate-settlement?portfolio_type=${portfolioTab}`, { method: 'POST' });
+      const res = await authFetch(`/api/portfolio/simulate-settlement?portfolio_type=${portfolioTab}`, { method: 'POST' });
       const data = await res.json();
       setPortfolioMessage(data.message || 'Simulação de desfechos concluída.');
       await fetchPortfolio(portfolioTab);
@@ -417,7 +470,7 @@ export default function Home() {
   const handleResetSettlement = async () => {
     setLoadingPortfolio(true);
     try {
-      await fetch(`/api/portfolio/reset-settlement?portfolio_type=${portfolioTab}`, { method: 'POST' });
+      await authFetch(`/api/portfolio/reset-settlement?portfolio_type=${portfolioTab}`, { method: 'POST' });
       setPortfolioMessage('Apostas desta carteira foram resetadas para pendente.');
       await fetchPortfolio(portfolioTab);
     } catch (err) {
@@ -432,7 +485,7 @@ export default function Home() {
     if (!confirm(`Deseja realmente limpar todas as apostas da ${portfolioLabel}?`)) return;
     setLoadingPortfolio(true);
     try {
-      await fetch(`/api/portfolio/clear?portfolio_type=${portfolioTab}`, { method: 'DELETE' });
+      await authFetch(`/api/portfolio/clear?portfolio_type=${portfolioTab}`, { method: 'DELETE' });
       setPortfolioMessage(`${portfolioLabel} limpa com sucesso.`);
       await fetchPortfolio(portfolioTab);
     } catch (err) {
@@ -444,7 +497,7 @@ export default function Home() {
 
   const handleManualSettle = async (betId: number, result: 'won' | 'lost' | 'push' | 'pending') => {
     try {
-      await fetch(`/api/portfolio/${betId}/manual-settle`, {
+      await authFetch(`/api/portfolio/${betId}/manual-settle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ result })
@@ -458,7 +511,7 @@ export default function Home() {
   const handleDeleteBet = async (betId: number) => {
     if (isReadOnly) return;
     try {
-      await fetch(`/api/portfolio/${betId}`, { method: 'DELETE' });
+      await authFetch(`/api/portfolio/${betId}`, { method: 'DELETE' });
       await fetchPortfolio(portfolioTab);
     } catch (err) {
       console.error("Error deleting bet:", err);
@@ -519,8 +572,22 @@ export default function Home() {
     });
   };
 
-  // Initial data loading
+  // Initial data loading & auth verification
   useEffect(() => {
+    // Check initial auth status
+    const token = typeof window !== 'undefined' ? localStorage.getItem('nfl_admin_token') : null;
+    const authHeaders: Record<string, string> = {};
+    if (token) authHeaders['Authorization'] = `Bearer ${token}`;
+    
+    fetch('/api/auth/status', { headers: authHeaders })
+      .then(res => res.json())
+      .then(data => {
+        const isAdm = Boolean(data.is_admin);
+        setIsAdmin(isAdm);
+        setIsReadOnly(!isAdm);
+      })
+      .catch(err => console.error("Error checking auth status:", err));
+
     fetchPortfolio();
     fetch('/api/schedule')
       .then(res => res.json())
@@ -788,8 +855,8 @@ export default function Home() {
           </span>
         </div>
 
-        {/* Right: Engine Status Indicator */}
-        <div className="flex items-center gap-3">
+        {/* Right: Engine Status Indicator & Admin MFA */}
+        <div className="flex items-center gap-2.5">
           <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-[#0C0C0E] border border-[#2B261D]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></span>
             <span className="font-mono text-[10px] tracking-wider text-[#C5A880] uppercase font-semibold">
@@ -800,6 +867,34 @@ export default function Home() {
             <span className="w-2 h-2 rounded-full bg-[#10B981]"></span>
             +EV LIVE
           </div>
+
+          {isAdmin ? (
+            <div className="flex items-center gap-1.5 bg-[#D4AF37]/10 border border-[#D4AF37]/40 rounded-full pl-3 pr-1.5 py-1">
+              <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+              <span className="text-[10px] font-mono font-bold tracking-wider text-[#D4AF37] uppercase mr-1">ADMIN</span>
+              <button
+                type="button"
+                onClick={handleAdminLogout}
+                className="text-[10px] font-mono text-zinc-400 hover:text-white px-2 py-0.5 rounded-full border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 transition-colors"
+                title="Sair do modo administrador"
+              >
+                Sair
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setAdminAuthError(null);
+                setAdminModalOpen(true);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0C0C0E] hover:bg-[#15130F] border border-[#2B261D] hover:border-[#D4AF37]/40 text-zinc-400 hover:text-[#D4AF37] font-mono text-[10px] tracking-wider uppercase transition-all"
+              title="Acesso de Administrador via MFA"
+            >
+              <span>🔒</span>
+              <span>ADMIN</span>
+            </button>
+          )}
         </div>
       </header>
 
@@ -893,22 +988,29 @@ export default function Home() {
                       Ver Todos os Jogos ({liveBets.length})
                     </button>
                   )}
-                  <button 
-                    className="bg-[#FFFFFF] text-[#000000] hover:bg-[#F4E8D1] border border-[#D4AF37]/50 font-bold font-mono text-xs tracking-wider py-2.5 px-5 rounded-xl transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center gap-2"
-                    onClick={async () => {
-                      alert("Iniciando scraper Stealth Playwright... Isso pode levar ~25 segundos.");
-                      try {
-                        await fetch('/api/run-pipeline', { method: 'POST' });
-                        const res = await fetch('/api/live-bets');
-                        setLiveBets(await res.json());
-                        alert("Odds atualizadas com sucesso!");
-                      } catch (e) {
-                        alert("Erro ao rodar scraper.");
-                      }
-                    }}
-                  >
-                    ATUALIZAR ODDS
-                  </button>
+                  {isAdmin && (
+                    <button 
+                      className="bg-[#FFFFFF] text-[#000000] hover:bg-[#F4E8D1] border border-[#D4AF37]/50 font-bold font-mono text-xs tracking-wider py-2.5 px-5 rounded-xl transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center gap-2"
+                      onClick={async () => {
+                        alert("Iniciando scraper Stealth Playwright e geração de IA... Isso pode levar ~25 segundos.");
+                        try {
+                          const pRes = await authFetch('/api/run-pipeline', { method: 'POST' });
+                          if (!pRes.ok) {
+                            const errData = await pRes.json();
+                            alert(errData.detail || "Erro ao rodar pipeline.");
+                            return;
+                          }
+                          const res = await fetch('/api/live-bets');
+                          setLiveBets(await res.json());
+                          alert("Odds e análises de IA atualizadas com sucesso!");
+                        } catch (e) {
+                          alert("Erro ao rodar scraper e IA.");
+                        }
+                      }}
+                    >
+                      ATUALIZAR ODDS & IA
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -1190,22 +1292,29 @@ export default function Home() {
                       ← TODOS OS JOGOS
                     </button>
                   )}
-                  <button 
-                    className="bg-[#FFFFFF] text-[#000000] hover:bg-[#F4E8D1] border border-[#D4AF37]/50 font-bold font-mono text-xs tracking-widest py-3 px-8 rounded-full transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center gap-2"
-                    onClick={async () => {
-                      alert("Iniciando scraper Stealth Playwright... Isso pode levar ~25 segundos.");
-                      try {
-                        await fetch('/api/run-pipeline', { method: 'POST' });
-                        const res = await fetch('/api/live-bets');
-                        setLiveBets(await res.json());
-                        alert("Odds atualizadas com sucesso!");
-                      } catch (e) {
-                        alert("Erro ao rodar scraper.");
-                      }
-                    }}
-                  >
-                    ATUALIZAR ODDS
-                  </button>
+                  {isAdmin && (
+                    <button 
+                      className="bg-[#FFFFFF] text-[#000000] hover:bg-[#F4E8D1] border border-[#D4AF37]/50 font-bold font-mono text-xs tracking-widest py-3 px-8 rounded-full transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center gap-2"
+                      onClick={async () => {
+                        alert("Iniciando scraper Stealth Playwright e geração de IA... Isso pode levar ~25 segundos.");
+                        try {
+                          const pRes = await authFetch('/api/run-pipeline', { method: 'POST' });
+                          if (!pRes.ok) {
+                            const errData = await pRes.json();
+                            alert(errData.detail || "Erro ao rodar pipeline.");
+                            return;
+                          }
+                          const res = await fetch('/api/live-bets');
+                          setLiveBets(await res.json());
+                          alert("Odds e análises de IA atualizadas com sucesso!");
+                        } catch (e) {
+                          alert("Erro ao rodar scraper e IA.");
+                        }
+                      }}
+                    >
+                      ATUALIZAR ODDS & IA
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -3679,6 +3788,100 @@ export default function Home() {
                 Fechar
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Admin MFA Authentication Modal */}
+      {adminModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="bg-[#0C0C0E] border border-[#D4AF37]/50 rounded-2xl w-full max-w-md overflow-hidden shadow-[0_0_50px_rgba(212,175,55,0.15)]">
+            <div className="p-6 border-b border-[#2B261D] bg-[#15130F] flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/40 flex items-center justify-center text-lg">
+                  🔐
+                </div>
+                <div>
+                  <h3 className="font-serif text-base font-bold text-white tracking-wide">
+                    Acesso de Administrador
+                  </h3>
+                  <span className="font-mono text-[10px] text-[#C5A880] tracking-wider uppercase">
+                    Autenticação MFA (TOTP)
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAdminModalOpen(false)}
+                className="w-7 h-7 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleAdminLogin} className="p-6 space-y-4">
+              <p className="text-xs text-zinc-400 leading-relaxed font-sans">
+                Para atualizar odds em tempo real, executar scraping ou liquidar resultados, confirme suas credenciais de administrador.
+              </p>
+
+              {adminAuthError && (
+                <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-500/50 text-rose-300 text-xs font-mono flex items-start gap-2">
+                  <span>⚠️</span>
+                  <span>{adminAuthError}</span>
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-mono text-zinc-300 uppercase tracking-wider block">
+                  Senha de Administrador
+                </label>
+                <input
+                  type="password"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="Digite sua senha..."
+                  required
+                  autoFocus
+                  className="w-full bg-[#15130F] border border-[#2B261D] focus:border-[#D4AF37] rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none transition-colors font-mono"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-mono text-zinc-300 uppercase tracking-wider block">
+                    Código de 6 Dígitos (Google Authenticator / Authy)
+                  </label>
+                  <span className="text-[10px] font-mono text-[#D4AF37]">MFA / TOTP</span>
+                </div>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={6}
+                  value={adminTotp}
+                  onChange={(e) => setAdminTotp(e.target.value.replace(/\D/g, ''))}
+                  placeholder="000 000"
+                  className="w-full bg-[#15130F] border border-[#2B261D] focus:border-[#D4AF37] rounded-xl px-4 py-2.5 text-center text-xl tracking-[0.35em] text-[#D4AF37] font-mono placeholder-zinc-700 focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setAdminModalOpen(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-mono text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={adminAuthLoading || !adminPassword}
+                  className="px-5 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#F4E8D1] text-black font-mono font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(212,175,55,0.25)] flex items-center gap-2"
+                >
+                  {adminAuthLoading ? 'Validando...' : 'Desbloquear Acesso'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -12,6 +12,13 @@ import math
 from nfl_odds.models.train import PlayerPropModel
 from nfl_odds.betting.ev_calc import calculate_implied_probability, calculate_ev, calculate_edge
 from nfl_odds.features.defense_rankings import compute_defense_rankings, get_team_defense_profile
+from nfl_odds.dashboard.auth import (
+    is_request_admin,
+    verify_credentials,
+    create_admin_token,
+    get_auth_config,
+    get_mfa_secret,
+)
 
 app = FastAPI(title="NFL Player Prop Analytics API")
 
@@ -24,9 +31,7 @@ app.add_middleware(
 )
 
 # Segurança: Modo Somente Leitura para demonstração pública (Cloudflare / Visitantes)
-# Padrão local: 'false' (Edição e liquidação liberadas para o administrador)
-# Para forçar modo demonstração/somente leitura, configure READ_ONLY_MODE=true no .env
-READ_ONLY_MODE = os.getenv("READ_ONLY_MODE", "false").lower() in ("true", "1", "yes")
+READ_ONLY_MODE = os.getenv("READ_ONLY_MODE", "true").lower() in ("true", "1", "yes")
 ADMIN_SECRET = os.getenv("ADMIN_SECRET", "")
 
 MUTATING_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
@@ -41,23 +46,69 @@ PROTECTED_PREFIXES = (
     "/api/run-pipeline",
 )
 
+class LoginRequest(BaseModel):
+    password: str
+    totp_code: Optional[str] = None
+
 class SystemModeRequest(BaseModel):
     read_only: bool
     admin_secret: Optional[str] = None
 
-@app.get("/api/system/mode")
-def get_system_mode():
+@app.get("/api/auth/status")
+def auth_status(request: Request):
+    is_admin = is_request_admin(request)
+    cfg = get_auth_config()
     return {
-        "read_only": READ_ONLY_MODE,
-        "has_admin_secret": bool(ADMIN_SECRET)
+        "is_admin": is_admin,
+        "mfa_enabled": cfg["mfa_enabled"],
+        "read_only": READ_ONLY_MODE and not is_admin
+    }
+
+@app.post("/api/auth/login")
+def auth_login(req: LoginRequest):
+    if not verify_credentials(req.password, req.totp_code):
+        detail_msg = "Credenciais incorretas."
+        if get_mfa_secret():
+            detail_msg = "Senha incorreta ou código do aplicativo autenticador (MFA) inválido."
+        raise HTTPException(status_code=401, detail=detail_msg)
+    
+    token = create_admin_token()
+    response = JSONResponse(content={
+        "status": "success",
+        "token": token,
+        "is_admin": True,
+        "message": "Autenticado com sucesso como Administrador."
+    })
+    response.set_cookie(
+        key="nfl_admin_token",
+        value=token,
+        httponly=True,
+        samesite="lax",
+        max_age=24 * 3600
+    )
+    return response
+
+@app.post("/api/auth/logout")
+def auth_logout():
+    response = JSONResponse(content={"status": "success", "is_admin": False})
+    response.delete_cookie("nfl_admin_token")
+    return response
+
+@app.get("/api/system/mode")
+def get_system_mode(request: Request):
+    is_admin = is_request_admin(request)
+    return {
+        "read_only": READ_ONLY_MODE and not is_admin,
+        "has_admin_secret": bool(ADMIN_SECRET or os.getenv("ADMIN_PASSWORD")),
+        "is_admin": is_admin
     }
 
 @app.post("/api/system/mode")
-def set_system_mode(req: SystemModeRequest):
+def set_system_mode(req: SystemModeRequest, request: Request):
     global READ_ONLY_MODE
-    if ADMIN_SECRET and req.read_only is False:
-        if req.admin_secret != ADMIN_SECRET:
-            raise HTTPException(status_code=403, detail="Chave de administrador incorreta.")
+    if not is_request_admin(request):
+        if ADMIN_SECRET and req.admin_secret != ADMIN_SECRET:
+            raise HTTPException(status_code=403, detail="Chave de administrador incorreta ou sessão não autenticada.")
     READ_ONLY_MODE = req.read_only
     return {
         "status": "success",
@@ -66,23 +117,30 @@ def set_system_mode(req: SystemModeRequest):
     }
 
 @app.middleware("http")
-async def read_only_security_middleware(request: Request, call_next):
-    if READ_ONLY_MODE and request.method in MUTATING_METHODS:
-        path = request.url.path
-        # A rota /api/predict e a rota /api/system/mode não alteram o banco de dados
-        if path not in ("/api/predict", "/api/system/mode"):
-            for prefix in PROTECTED_PREFIXES:
-                if path.startswith(prefix):
-                    auth_header = request.headers.get("x-admin-secret", "")
-                    query_admin = request.query_params.get("admin_key", "")
-                    if ADMIN_SECRET and (auth_header == ADMIN_SECRET or query_admin == ADMIN_SECRET):
-                        break  # Autorizado via chave de administrador
-                    return JSONResponse(
-                        status_code=403,
-                        content={
-                            "detail": "🔒 Modo Somente Leitura Ativo: A base de dados está protegida para demonstração pública. Modificações estão desabilitadas."
-                        }
-                    )
+async def security_middleware(request: Request, call_next):
+    exempt_paths = (
+        "/api/auth/login",
+        "/api/auth/logout",
+        "/api/auth/status",
+        "/api/predict",
+        "/docs",
+        "/openapi.json",
+        "/redoc",
+    )
+    path = request.url.path
+    if path in exempt_paths:
+        return await call_next(request)
+
+    if request.method in MUTATING_METHODS:
+        is_protected = any(path.startswith(p) for p in PROTECTED_PREFIXES) or path == "/api/run-pipeline"
+        if is_protected:
+            if not is_request_admin(request):
+                return JSONResponse(
+                    status_code=403,
+                    content={
+                        "detail": "🔒 Ação restrita ao Administrador: Faça login com seu autenticador MFA para atualizar odds, rodar scraping ou alterar o portfólio."
+                    }
+                )
     return await call_next(request)
 
 # Load resources
@@ -768,7 +826,12 @@ def get_locked_games_and_teams(season: int = 2026):
     return locked_game_ids, locked_teams
 
 @app.post("/api/run-pipeline")
-def run_pipeline_api():
+def run_pipeline_api(request: Request):
+    if not is_request_admin(request):
+        raise HTTPException(
+            status_code=403,
+            detail="🔒 Apenas o Administrador autenticado com MFA pode atualizar odds e acionar a IA."
+        )
     try:
         # Run the scraper
         subprocess.run(["python3", "src/nfl_odds/odds/betclic_scraper.py"], check=True)

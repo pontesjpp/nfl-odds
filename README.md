@@ -1,3 +1,13 @@
+---
+title: Biskate Analytics NFL Odds API
+emoji: 🏈
+colorFrom: yellow
+colorTo: gray
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # 🏈 Biskate Analytics — NFL Odds EV & Player Props Intelligence
 
 Plataforma de alta precisão quantitativa para precificação, análise de Expected Value (+EV) e recomendação inteligente de apostas em mercados de **Player Props** da NFL (Rushing, Passing e Receiving Yards).

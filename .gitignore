@@ -43,6 +43,7 @@ yarn-error.log*
 
 # Database files and local dumps
 *.db
+!data/nfl_odds.db
 *.sqlite
 *.sqlite3
 *.dump
@@ -50,18 +51,24 @@ yarn-error.log*
 
 # Machine Learning models and serialized weights
 *.joblib
+!data/*_model.joblib
 *.pkl
 *.pickle
 
-# Large tabular data files
+# Tabular data files
 *.parquet
+!data/live_features.parquet
+!data/live_value_bets.parquet
+!data/betclic_parsed_odds.parquet
 *.feather
 
 # Scraper raw dumps, cache files, and runtime state
-data/*_cache.json
 data/*.html
 data/*.txt
 data/ng_state.json
+data/*_cache.json
+!data/ai_summaries_cache.json
+!data/player_news_cache.json
 
 # Operating System artifacts
 .DS_Store

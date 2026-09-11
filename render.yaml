@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: nfl-odds-api
+    runtime: python
+    buildCommand: "pip install uv && uv sync --frozen --no-dev"
+    startCommand: "uv run uvicorn nfl_odds.dashboard.api:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: READ_ONLY_MODE
+        value: "true"
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: MFA_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
