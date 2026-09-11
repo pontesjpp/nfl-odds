@@ -2654,29 +2654,6 @@ export default function Home() {
 
                   {/* Secondary Analysis & Management Group */}
                   <div className="flex flex-wrap items-center gap-2">
-                    {(() => {
-                      const activeGame = portfolioGameFilter !== 'all'
-                        ? portfolioGames.find(g => g.game_id === portfolioGameFilter)
-                        : null;
-                      const targetGameId = activeGame?.game_id || '2026_01_NE_SEA';
-                      const targetLabel = activeGame ? activeGame.label : 'NE @ SEA';
-                      const awayTeam = activeGame ? activeGame.away_team : 'NE';
-                      const homeTeam = activeGame ? activeGame.home_team : 'SEA';
-                      return (
-                        <button
-                          onClick={() => handleOpenBoxScore(activeGame || { game_id: targetGameId, away_team: 'NE', home_team: 'SEA' })}
-                          className="px-3.5 py-2.5 rounded-xl bg-[#000000] hover:bg-[#15130F] text-[#D4AF37] font-mono text-xs uppercase tracking-wider border border-[#D4AF37]/40 hover:border-[#D4AF37] transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(212,175,55,0.15)]"
-                          title={`Ver estatísticas reais e resultado de todas as apostas de ${targetLabel}`}
-                        >
-                          <div className="flex items-center gap-1">
-                            <img src={`/logos/${awayTeam}.png`} alt={awayTeam} className="w-3.5 h-3.5 object-contain" />
-                            <span className="text-[10px] text-[#C5A880]/70">@</span>
-                            <img src={`/logos/${homeTeam}.png`} alt={homeTeam} className="w-3.5 h-3.5 object-contain" />
-                          </div>
-                          <span>Box Score: {targetLabel}</span>
-                        </button>
-                      );
-                    })()}
 
                     <button
                       onClick={handleResetSettlement}
