@@ -2458,13 +2458,14 @@ export default function Home() {
                   </div>
                 )}
 
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+                  {/* Primary Operational Group */}
+                  <div className="flex flex-wrap items-center gap-2.5">
                     <button
                       onClick={() => handleSettlePortfolio()}
                       disabled={loadingPortfolio || isReadOnly}
-                      className={`px-6 py-3 rounded-xl bg-[#10B981] text-black font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.25)] flex items-center gap-2 transition-all ${
-                        isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#10B981]/90'
+                      className={`px-5 py-2.5 rounded-xl bg-[#10B981] text-black font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.25)] flex items-center gap-2 transition-all ${
+                        isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#10B981]/90 hover:shadow-[0_0_20px_rgba(16,185,129,0.35)]'
                       }`}
                       title={isReadOnly ? "Ação bloqueada no modo somente leitura. Clique em 'Desbloquear Modo Admin' acima." : "Verificar e liquidar resultados com as estatísticas oficiais da NFL"}
                     >
@@ -2478,21 +2479,21 @@ export default function Home() {
                       <button
                         onClick={handleImportSafePicks}
                         disabled={loadingPortfolio || isReadOnly}
-                        className={`px-5 py-3 rounded-xl bg-[#15130F] text-white font-mono text-xs uppercase tracking-wider border border-[#2B261D] transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(16,185,129,0.15)] ${
-                          isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-[#10B981]/40'
+                        className={`px-4 py-2.5 rounded-xl bg-[#15130F] text-white font-mono text-xs uppercase tracking-wider border border-[#2B261D] transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(16,185,129,0.12)] ${
+                          isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-[#10B981]/50'
                         }`}
                         title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar recomendações seguras"}
                       >
                         <svg className="w-4 h-4 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                         </svg>
-                        <span>Sincronizar Recomendações Seguras (+EV 2.5% a 15%)</span>
+                        <span>Sincronizar Recomendações (+EV 2.5% a 15%)</span>
                       </button>
                     ) : portfolioTab === 'high_risk' ? (
                       <button
                         onClick={handleImportHighRiskPicks}
                         disabled={loadingPortfolio || isReadOnly}
-                        className={`px-5 py-3 rounded-xl bg-[#15130F] text-amber-300 font-mono text-xs uppercase tracking-wider border border-amber-900/40 transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(245,158,11,0.2)] ${
+                        className={`px-4 py-2.5 rounded-xl bg-[#15130F] text-amber-300 font-mono text-xs uppercase tracking-wider border border-amber-900/40 transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(245,158,11,0.15)] ${
                           isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-amber-500/50'
                         }`}
                         title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar apostas de alto risco"}
@@ -2500,14 +2501,14 @@ export default function Home() {
                         <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        <span>Sincronizar Apostas de Alto Risco (EV &gt; 20%)</span>
+                        <span>Sincronizar Apostas (EV &gt; 20%)</span>
                       </button>
                     ) : (
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleImportAllProps('best_side')}
                           disabled={loadingPortfolio || isReadOnly}
-                          className={`px-5 py-3 rounded-xl bg-[#15130F] text-sky-300 font-mono text-xs uppercase tracking-wider border border-sky-900/40 transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(14,165,233,0.2)] ${
+                          className={`px-4 py-2.5 rounded-xl bg-[#15130F] text-sky-300 font-mono text-xs uppercase tracking-wider border border-sky-900/40 transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(14,165,233,0.15)] ${
                             isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-sky-500/50'
                           }`}
                           title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar todas as props"}
@@ -2515,17 +2516,17 @@ export default function Home() {
                           <svg className="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
                           </svg>
-                          <span>Sincronizar Todas as Props (+EV) ({liveAllPropsCount || 155} Props)</span>
+                          <span>Sincronizar Props (+EV) ({liveAllPropsCount || 155})</span>
                         </button>
                         <button
                           onClick={() => handleImportAllProps('all_rows')}
                           disabled={loadingPortfolio || isReadOnly}
-                          className={`px-3 py-3 rounded-xl bg-black text-zinc-400 font-mono text-[11px] uppercase tracking-wider border border-zinc-800 transition-all ${
+                          className={`px-3 py-2.5 rounded-xl bg-black text-zinc-400 font-mono text-[11px] uppercase tracking-wider border border-zinc-800 transition-all ${
                             isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-zinc-900 hover:text-white'
                           }`}
                           title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Importa todas as linhas brutas com valor esperado positivo"}
                         >
-                          Linhas Brutas (+EV)
+                          Linhas Brutas
                         </button>
                       </div>
                     )}
@@ -2533,31 +2534,36 @@ export default function Home() {
                     <button
                       onClick={handleSimulateSettlement}
                       disabled={loadingPortfolio || isReadOnly}
-                      className={`px-4 py-3 rounded-xl bg-[#000000] text-[#D4AF37] font-mono text-xs uppercase tracking-wider border border-[#D4AF37]/30 transition-all flex items-center gap-2 ${
-                        isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#15130F]'
+                      className={`px-3.5 py-2.5 rounded-xl bg-black/60 text-[#D4AF37] font-mono text-xs uppercase tracking-wider border border-[#D4AF37]/30 transition-all flex items-center gap-1.5 ${
+                        isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#15130F] hover:border-[#D4AF37]/60'
                       }`}
                       title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Simula a conferência das apostas pendentes"}
                     >
-                      <span>Simular Desfechos (Demo)</span>
+                      <span>🎲 Simular (Demo)</span>
                     </button>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  {/* Secondary Analysis & Management Group */}
+                  <div className="flex flex-wrap items-center gap-2">
                     {(() => {
                       const activeGame = portfolioGameFilter !== 'all'
                         ? portfolioGames.find(g => g.game_id === portfolioGameFilter)
                         : null;
                       const targetGameId = activeGame?.game_id || '2026_01_NE_SEA';
-                      const targetLabel = activeGame ? activeGame.label : 'Patriots x Seahawks';
+                      const targetLabel = activeGame ? activeGame.label : 'NE @ SEA';
+                      const awayTeam = activeGame ? activeGame.away_team : 'NE';
+                      const homeTeam = activeGame ? activeGame.home_team : 'SEA';
                       return (
                         <button
                           onClick={() => handleOpenBoxScore(activeGame || { game_id: targetGameId, away_team: 'NE', home_team: 'SEA' })}
-                          className="px-4 py-3 rounded-xl bg-[#000000] hover:bg-[#15130F] text-[#D4AF37] font-mono text-xs uppercase tracking-wider border border-[#D4AF37]/40 transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(212,175,55,0.15)]"
+                          className="px-3.5 py-2.5 rounded-xl bg-[#000000] hover:bg-[#15130F] text-[#D4AF37] font-mono text-xs uppercase tracking-wider border border-[#D4AF37]/40 hover:border-[#D4AF37] transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(212,175,55,0.15)]"
                           title={`Ver estatísticas reais e resultado de todas as apostas de ${targetLabel}`}
                         >
-                          <svg className="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                          </svg>
+                          <div className="flex items-center gap-1">
+                            <img src={`/logos/${awayTeam}.png`} alt={awayTeam} className="w-3.5 h-3.5 object-contain" />
+                            <span className="text-[10px] text-[#C5A880]/70">@</span>
+                            <img src={`/logos/${homeTeam}.png`} alt={homeTeam} className="w-3.5 h-3.5 object-contain" />
+                          </div>
                           <span>Box Score: {targetLabel}</span>
                         </button>
                       );
@@ -2566,23 +2572,23 @@ export default function Home() {
                     <button
                       onClick={handleResetSettlement}
                       disabled={loadingPortfolio || isReadOnly}
-                      className={`px-4 py-3 rounded-xl bg-[#000000] text-[#C5A880] font-mono text-xs uppercase tracking-wider border border-[#2B261D] transition-all ${
-                        isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#15130F] hover:text-white'
+                      className={`px-3 py-2.5 rounded-xl bg-[#000000] text-[#C5A880]/80 hover:text-white font-mono text-xs uppercase tracking-wider border border-[#2B261D] hover:border-zinc-700 transition-all ${
+                        isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#15130F]'
                       }`}
                       title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Retorna todas as apostas para o status Pendente"}
                     >
-                      Resetar para Pendente
+                      Resetar
                     </button>
 
                     <button
                       onClick={handleClearPortfolio}
                       disabled={loadingPortfolio || isReadOnly}
-                      className={`px-4 py-3 rounded-xl bg-[#000000] text-rose-400 font-mono text-xs uppercase tracking-wider border border-rose-900/40 transition-all ${
-                        isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-rose-950/50'
+                      className={`px-3 py-2.5 rounded-xl bg-[#000000] text-rose-400/80 hover:text-rose-300 font-mono text-xs uppercase tracking-wider border border-rose-900/30 hover:border-rose-900/60 transition-all ${
+                        isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-rose-950/30'
                       }`}
                       title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Limpar carteira"}
                     >
-                      Limpar {portfolioTab === 'safe' ? 'Carteira Segura' : portfolioTab === 'high_risk' ? 'Carteira Alto Risco' : 'Carteira All Props'}
+                      Limpar
                     </button>
                   </div>
                 </div>
@@ -2686,18 +2692,18 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Horizontal Quick Game Pills */}
+                  {/* Quick Game Filter Pills */}
                   {portfolioGames.length > 0 && (
-                    <div className="pt-2 border-t border-[#2B261D]/60 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-                      <span className="text-[10px] font-mono uppercase text-[#C5A880]/80 tracking-wider whitespace-nowrap flex items-center gap-1 shrink-0">
-                        <span>🏈</span> Jogos com Apostas:
+                    <div className="pt-2.5 border-t border-[#2B261D]/60 flex flex-wrap items-center gap-2">
+                      <span className="text-[10px] font-mono uppercase text-[#C5A880]/80 tracking-wider whitespace-nowrap flex items-center gap-1 shrink-0 mr-1">
+                        <span>🏈</span> Jogos:
                       </span>
                       <button
                         onClick={() => setPortfolioGameFilter('all')}
-                        className={`px-2.5 py-1 rounded-lg text-xs font-mono tracking-wider transition-all whitespace-nowrap shrink-0 ${
+                        className={`px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all whitespace-nowrap shrink-0 shadow-sm ${
                           portfolioGameFilter === 'all'
                             ? 'bg-[#FFFFFF] text-black font-bold border border-[#D4AF37]'
-                            : 'bg-black text-zinc-400 hover:text-white border border-[#2B261D]'
+                            : 'bg-black text-zinc-400 hover:text-white border border-[#2B261D] hover:border-zinc-700'
                         }`}
                       >
                         Todos ({portfolioBets.length})
@@ -2708,17 +2714,23 @@ export default function Home() {
                           <button
                             key={g.game_id}
                             onClick={() => setPortfolioGameFilter(isSelected ? 'all' : g.game_id)}
-                            className={`px-2.5 py-1 rounded-lg text-xs font-mono tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 border shrink-0 ${
+                            className={`px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all whitespace-nowrap flex items-center gap-2 border shadow-sm ${
                               isSelected
-                                ? 'bg-[#10B981] text-black font-bold border-[#10B981] shadow-[0_0_12px_rgba(16,185,129,0.3)]'
-                                : 'bg-[#15130F] text-zinc-300 hover:text-white border-[#2B261D] hover:border-[#C5A880]/40'
+                                ? 'bg-[#10B981] text-black font-bold border-[#10B981] shadow-[0_0_12px_rgba(16,185,129,0.35)]'
+                                : 'bg-[#15130F] hover:bg-[#201C15] text-zinc-300 hover:text-white border-[#2B261D] hover:border-[#C5A880]/50'
                             }`}
-                            title={`Filtrar apostas de ${g.label}`}
+                            title={`Filtrar apostas de ${g.away_team} @ ${g.home_team}`}
                           >
-                            <img src={`/logos/${g.away_team}.png`} alt={g.away_team} className="w-3.5 h-3.5 object-contain inline" />
-                            <span>{g.label}</span>
-                            <img src={`/logos/${g.home_team}.png`} alt={g.home_team} className="w-3.5 h-3.5 object-contain inline" />
-                            <span className={`text-[10px] px-1.5 rounded-full font-bold ${
+                            <div className="flex items-center gap-1.5">
+                              <img src={`/logos/${g.away_team}.png`} alt={g.away_team} className="w-4 h-4 object-contain shrink-0" />
+                              <span className="font-bold">{g.away_team}</span>
+                            </div>
+                            <span className={isSelected ? 'text-black/60 font-bold text-[10px]' : 'text-[#C5A880]/80 text-[10px]'}>@</span>
+                            <div className="flex items-center gap-1.5">
+                              <img src={`/logos/${g.home_team}.png`} alt={g.home_team} className="w-4 h-4 object-contain shrink-0" />
+                              <span className="font-bold">{g.home_team}</span>
+                            </div>
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold ml-0.5 ${
                               isSelected ? 'bg-black/25 text-black' : 'bg-zinc-800 text-zinc-400'
                             }`}>
                               {g.count}
@@ -2736,12 +2748,16 @@ export default function Home() {
                     return (
                       <div className="p-3 px-4 rounded-xl bg-gradient-to-r from-[#1A160F] via-[#15130F] to-[#0C0C0E] border border-[#D4AF37]/40 flex flex-wrap items-center justify-between gap-3 text-xs font-mono shadow-md animate-in fade-in duration-150">
                         <div className="flex items-center gap-3 flex-wrap">
-                          <div className="flex items-center gap-2 bg-black/80 px-3 py-1 rounded-lg border border-[#D4AF37]/50">
-                            <img src={`/logos/${activeGame.away_team}.png`} alt={activeGame.away_team} className="w-4 h-4 object-contain" />
-                            <span className="font-bold text-white text-xs">{activeGame.away_team}</span>
+                          <div className="flex items-center gap-2 bg-black/80 px-3 py-1.5 rounded-lg border border-[#D4AF37]/50">
+                            <div className="flex items-center gap-1.5">
+                              <img src={`/logos/${activeGame.away_team}.png`} alt={activeGame.away_team} className="w-4 h-4 object-contain shrink-0" />
+                              <span className="font-bold text-white text-xs">{activeGame.away_team}</span>
+                            </div>
                             <span className="text-[#C5A880] text-[10px]">@</span>
-                            <span className="font-bold text-white text-xs">{activeGame.home_team}</span>
-                            <img src={`/logos/${activeGame.home_team}.png`} alt={activeGame.home_team} className="w-4 h-4 object-contain" />
+                            <div className="flex items-center gap-1.5">
+                              <img src={`/logos/${activeGame.home_team}.png`} alt={activeGame.home_team} className="w-4 h-4 object-contain shrink-0" />
+                              <span className="font-bold text-white text-xs">{activeGame.home_team}</span>
+                            </div>
                           </div>
                           <div className="text-zinc-300 text-xs">
                             Exibindo <span className="font-bold text-[#D4AF37]">{activeGame.count} apostas</span> deste jogo
@@ -2781,17 +2797,17 @@ export default function Home() {
                   <table className="w-full text-left font-sans text-xs">
                     <thead className="bg-[#15130F] text-[#C5A880] uppercase font-mono text-[10px] tracking-wider border-b border-[#2B261D]">
                       <tr>
-                        <th className="py-3.5 px-4 font-semibold">Ativo (Jogador)</th>
-                        <th className="py-3.5 px-4 font-semibold">Jogo</th>
-                        <th className="py-3.5 px-4 font-semibold">Mercado</th>
-                        <th className="py-3.5 px-4 font-semibold">Linha & Lado</th>
-                        <th className="py-3.5 px-4 font-semibold">Odd</th>
-                        <th className="py-3.5 px-4 font-semibold">Aporte</th>
-                        <th className="py-3.5 px-4 font-semibold">EV Teórico</th>
-                        <th className="py-3.5 px-4 font-semibold">Resultado Real</th>
-                        <th className="py-3.5 px-4 font-semibold">Retorno (PnL)</th>
-                        <th className="py-3.5 px-4 font-semibold">Status</th>
-                        <th className="py-3.5 px-4 font-semibold text-right">Ações</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">Ativo (Jogador)</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">Jogo</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">Mercado</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">Linha & Lado</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">Odd</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">Aporte</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">EV Teórico</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">Resultado Real</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">Retorno (PnL)</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap">Status</th>
+                        <th className="py-3.5 px-4 font-semibold whitespace-nowrap text-right">Ações</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-850">
@@ -2899,32 +2915,41 @@ export default function Home() {
                                 <button
                                   type="button"
                                   onClick={() => setPortfolioGameFilter(portfolioGameFilter === gameInfo.game_id ? 'all' : gameInfo.game_id)}
-                                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-mono transition-all ${
+                                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-mono transition-all whitespace-nowrap shadow-sm ${
                                     portfolioGameFilter === gameInfo.game_id
-                                      ? 'bg-[#10B981]/20 border-[#10B981] text-[#10B981] font-bold shadow-sm'
+                                      ? 'bg-[#10B981]/20 border-[#10B981] text-[#10B981] font-bold shadow-[0_0_10px_rgba(16,185,129,0.2)]'
                                       : 'bg-zinc-900/80 hover:bg-[#15130F] border-zinc-800 hover:border-[#D4AF37]/50 text-zinc-300 hover:text-[#D4AF37]'
                                   }`}
-                                  title={`Filtrar apenas apostas de ${gameInfo.label}`}
+                                  title={`Filtrar apenas apostas de ${gameInfo.away_team} @ ${gameInfo.home_team}`}
                                 >
-                                  <img src={`/logos/${gameInfo.away_team}.png`} alt={gameInfo.away_team} className="w-3.5 h-3.5 object-contain inline" />
-                                  <span>{gameInfo.label}</span>
-                                  <img src={`/logos/${gameInfo.home_team}.png`} alt={gameInfo.home_team} className="w-3.5 h-3.5 object-contain inline" />
+                                  <div className="flex items-center gap-1">
+                                    <img src={`/logos/${gameInfo.away_team}.png`} alt={gameInfo.away_team} className="w-4 h-4 object-contain shrink-0" />
+                                    <span className="font-semibold text-white">{gameInfo.away_team}</span>
+                                  </div>
+                                  <span className="text-[#C5A880]/70 text-[10px]">@</span>
+                                  <div className="flex items-center gap-1">
+                                    <img src={`/logos/${gameInfo.home_team}.png`} alt={gameInfo.home_team} className="w-4 h-4 object-contain shrink-0" />
+                                    <span className="font-semibold text-white">{gameInfo.home_team}</span>
+                                  </div>
                                 </button>
                               </td>
 
                               {/* Mercado */}
-                              <td className="py-3.5 px-4 text-zinc-300">
+                              <td className="py-3.5 px-4 text-zinc-300 whitespace-nowrap">
                                 {marketLabel}
                               </td>
 
                               {/* Linha & Lado */}
-                              <td className="py-3.5 px-4">
-                                <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+                              <td className="py-3.5 px-4 whitespace-nowrap">
+                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-bold whitespace-nowrap shadow-sm ${
                                   bet.side === 'over' 
                                     ? 'bg-sky-500/15 text-sky-300 border border-sky-500/30' 
                                     : 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
                                 }`}>
-                                  {bet.side.toUpperCase()} {bet.line}
+                                  <span className="text-[10px] font-black tracking-wider uppercase">
+                                    {bet.side === 'over' ? '▲ OVER' : '▼ UNDER'}
+                                  </span>
+                                  <span className="text-white font-bold ml-0.5">{bet.line}</span>
                                 </span>
                               </td>
 
@@ -3341,14 +3366,15 @@ export default function Home() {
                                       {b.team}
                                     </span>
                                   </td>
-                                  <td className="py-3 px-3.5 text-zinc-300">{marketLabel}</td>
-                                  <td className="py-3 px-3.5">
-                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                  <td className="py-3 px-3.5 text-zinc-300 whitespace-nowrap">{marketLabel}</td>
+                                  <td className="py-3 px-3.5 whitespace-nowrap">
+                                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-mono font-bold whitespace-nowrap shadow-sm ${
                                       b.side === 'over' 
                                         ? 'bg-sky-500/15 text-sky-300 border border-sky-500/30' 
                                         : 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
                                     }`}>
-                                      {b.side?.toUpperCase()} {b.line}
+                                      <span className="text-[9px] font-black uppercase">{b.side === 'over' ? '▲ OVER' : '▼ UNDER'}</span>
+                                      <span className="text-white font-bold ml-0.5">{b.line}</span>
                                     </span>
                                   </td>
                                   <td className="py-3 px-3.5 font-bold text-white">{Number(b.odds).toFixed(2)}</td>
@@ -3468,12 +3494,15 @@ export default function Home() {
                        selectedAiBet.market === 'passing_yards' ? 'Jardas de Passe' : selectedAiBet.market}
                     </span>
                     <span className="text-zinc-600">•</span>
-                    <span className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold ${
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-mono font-bold whitespace-nowrap ${
                       selectedAiBet.side?.toLowerCase() === 'over' 
                         ? 'bg-sky-500/15 text-sky-300 border border-sky-500/30' 
                         : 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
                     }`}>
-                      {selectedAiBet.side?.toUpperCase()} {selectedAiBet.line}
+                      <span className="text-[9px] font-black uppercase">
+                        {selectedAiBet.side?.toLowerCase() === 'over' ? '▲ OVER' : '▼ UNDER'}
+                      </span>
+                      <span className="text-white font-bold ml-0.5">{selectedAiBet.line}</span>
                     </span>
                     <span className="text-zinc-600">•</span>
                     <span className="text-xs font-mono text-white font-bold">
