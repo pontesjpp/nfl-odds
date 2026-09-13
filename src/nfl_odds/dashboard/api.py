@@ -593,15 +593,45 @@ def get_schedule(refresh: bool = False):
         cols = ['game_id', 'home_team', 'away_team', 'stadium', 'location', 'gameday', 'gametime', 'home_score', 'away_score']
         avail_cols = [c for c in cols if c in week1.columns]
         week1 = week1.select(avail_cols)
-        
         records = week1.to_dicts()
-        for r in records:
-            if r.get('home_score') is not None and r.get('away_score') is not None:
-                r['status'] = 'finished'
-            else:
-                r['home_score'] = None
-                r['away_score'] = None
-                r['status'] = 'scheduled'
+
+        # Enriquecer com ESPN live scoreboard (placar em tempo real, status de finalizado / em andamento)
+        try:
+            from nfl_odds.data.live_stats import fetch_espn_scoreboard, clean_team_code
+            espn_games = fetch_espn_scoreboard(2026, 1, force=refresh)
+            espn_map = {}
+            for eg in espn_games:
+                key = (clean_team_code(eg.get("away_team")), clean_team_code(eg.get("home_team")))
+                espn_map[key] = eg
+                
+            for r in records:
+                key = (clean_team_code(r.get("away_team")), clean_team_code(r.get("home_team")))
+                eg = espn_map.get(key)
+                if eg:
+                    if eg.get("home_score") is not None:
+                        r["home_score"] = eg["home_score"]
+                    if eg.get("away_score") is not None:
+                        r["away_score"] = eg["away_score"]
+                    r["status"] = eg.get("status", "scheduled")
+                    r["status_detail"] = eg.get("status_detail")
+                    r["event_id"] = eg.get("event_id")
+                else:
+                    if r.get('home_score') is not None and r.get('away_score') is not None:
+                        r['status'] = 'finished'
+                    else:
+                        r['home_score'] = None
+                        r['away_score'] = None
+                        r['status'] = 'scheduled'
+        except Exception as e:
+            print(f"Erro ao enriquecer schedule com ESPN: {e}")
+            for r in records:
+                if r.get('home_score') is not None and r.get('away_score') is not None:
+                    r['status'] = 'finished'
+                else:
+                    r['home_score'] = None
+                    r['away_score'] = None
+                    r['status'] = 'scheduled'
+
         schedule_cache = records
         return schedule_cache
     except Exception as e:
@@ -611,6 +641,7 @@ def get_schedule(refresh: bool = False):
 @app.get("/api/games/{game_id}/boxscore")
 def get_game_boxscore(game_id: str):
     import nflreadpy as nfl
+    from nfl_odds.data.live_stats import fetch_espn_scoreboard, fetch_espn_game_boxscore, clean_team_code
     try:
         sched = nfl.load_schedules([2026])
         if isinstance(sched, pd.DataFrame):
@@ -620,44 +651,99 @@ def get_game_boxscore(game_id: str):
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
             
         game_info = game_matches.to_dicts()[0]
-        home_team = game_info.get("home_team")
-        away_team = game_info.get("away_team")
+        home_team = clean_team_code(game_info.get("home_team"))
+        away_team = clean_team_code(game_info.get("away_team"))
         
-        # Carregar estatísticas dos jogadores da partida
-        stats = nfl.load_player_stats([2026])
-        game_stats = stats.filter(pl.col("game_id") == game_id)
-        
-        active = game_stats.filter(
-            (pl.col("passing_yards") > 0) | (pl.col("rushing_yards") > 0) | 
-            (pl.col("receiving_yards") > 0) | (pl.col("carries") > 0) | 
-            (pl.col("attempts") > 0) | (pl.col("receptions") > 0)
-        )
-        
-        def format_player(row):
-            return {
-                "player_id": row.get("player_id"),
-                "player_name": row.get("player_name"),
-                "player_display_name": row.get("player_display_name"),
-                "team": row.get("team"),
-                "position": row.get("position"),
-                "headshot_url": row.get("headshot_url"),
-                "completions": row.get("completions", 0),
-                "attempts": row.get("attempts", 0),
-                "passing_yards": row.get("passing_yards", 0),
-                "passing_tds": row.get("passing_tds", 0),
-                "passing_interceptions": row.get("passing_interceptions", 0),
-                "carries": row.get("carries", 0),
-                "rushing_yards": row.get("rushing_yards", 0),
-                "rushing_tds": row.get("rushing_tds", 0),
-                "receptions": row.get("receptions", 0),
-                "targets": row.get("targets", 0),
-                "receiving_yards": row.get("receiving_yards", 0),
-                "receiving_tds": row.get("receiving_tds", 0),
-            }
-            
-        home_players = [format_player(r) for r in active.filter(pl.col("team") == home_team).to_dicts()]
-        away_players = [format_player(r) for r in active.filter(pl.col("team") == away_team).to_dicts()]
-        
+        home_players = []
+        away_players = []
+        home_score = game_info.get("home_score")
+        away_score = game_info.get("away_score")
+        status = "finished" if home_score is not None else "scheduled"
+
+        # 1. Tenta carregar do ESPN Box Score em tempo real
+        try:
+            espn_sb = fetch_espn_scoreboard(2026, 1)
+            target_eg = next(
+                (eg for eg in espn_sb if clean_team_code(eg.get("away_team")) == away_team and clean_team_code(eg.get("home_team")) == home_team),
+                None
+            )
+            if target_eg:
+                if target_eg.get("home_score") is not None:
+                    home_score = target_eg["home_score"]
+                if target_eg.get("away_score") is not None:
+                    away_score = target_eg["away_score"]
+                status = target_eg.get("status", status)
+                
+                event_id = target_eg.get("event_id")
+                if event_id:
+                    bdata = fetch_espn_game_boxscore(event_id)
+                    if bdata and bdata.get("athletes"):
+                        for a in bdata["athletes"]:
+                            p_dict = {
+                                "player_id": a.get("player_id"),
+                                "player_name": a.get("player_name"),
+                                "player_display_name": a.get("player_display_name"),
+                                "team": a.get("team"),
+                                "position": a.get("position"),
+                                "headshot_url": a.get("headshot_url"),
+                                "completions": a.get("completions", 0),
+                                "attempts": a.get("attempts", 0),
+                                "passing_yards": a.get("passing_yards", 0.0),
+                                "passing_tds": a.get("passing_tds", 0),
+                                "passing_interceptions": a.get("passing_interceptions", 0),
+                                "carries": a.get("carries", 0),
+                                "rushing_yards": a.get("rushing_yards", 0.0),
+                                "rushing_tds": a.get("rushing_tds", 0),
+                                "receptions": a.get("receptions", 0),
+                                "targets": a.get("targets", 0),
+                                "receiving_yards": a.get("receiving_yards", 0.0),
+                                "receiving_tds": a.get("receiving_tds", 0),
+                            }
+                            if a.get("team") == home_team:
+                                home_players.append(p_dict)
+                            elif a.get("team") == away_team:
+                                away_players.append(p_dict)
+        except Exception as e:
+            print(f"Erro ao buscar boxscore na ESPN: {e}")
+
+        # 2. Se ESPN não trouxe jogadores, faz fallback para nflreadpy
+        if not home_players and not away_players:
+            try:
+                stats = nfl.load_player_stats([2026])
+                if isinstance(stats, pd.DataFrame):
+                    stats = pl.from_pandas(stats)
+                game_stats = stats.filter(pl.col("game_id") == game_id)
+                active = game_stats.filter(
+                    (pl.col("passing_yards") > 0) | (pl.col("rushing_yards") > 0) | 
+                    (pl.col("receiving_yards") > 0) | (pl.col("carries") > 0) | 
+                    (pl.col("attempts") > 0) | (pl.col("receptions") > 0)
+                )
+                def format_player(row):
+                    return {
+                        "player_id": row.get("player_id"),
+                        "player_name": row.get("player_name"),
+                        "player_display_name": row.get("player_display_name"),
+                        "team": clean_team_code(row.get("team")),
+                        "position": row.get("position"),
+                        "headshot_url": row.get("headshot_url"),
+                        "completions": row.get("completions", 0),
+                        "attempts": row.get("attempts", 0),
+                        "passing_yards": float(row.get("passing_yards") or 0.0),
+                        "passing_tds": row.get("passing_tds", 0),
+                        "passing_interceptions": row.get("passing_interceptions", 0),
+                        "carries": row.get("carries", 0),
+                        "rushing_yards": float(row.get("rushing_yards") or 0.0),
+                        "rushing_tds": row.get("rushing_tds", 0),
+                        "receptions": row.get("receptions", 0),
+                        "targets": row.get("targets", 0),
+                        "receiving_yards": float(row.get("receiving_yards") or 0.0),
+                        "receiving_tds": row.get("receiving_tds", 0),
+                    }
+                home_players = [format_player(r) for r in active.filter(pl.col("team") == home_team).to_dicts()]
+                away_players = [format_player(r) for r in active.filter(pl.col("team") == away_team).to_dicts()]
+            except Exception as e:
+                print(f"Erro no fallback nflreadpy boxscore: {e}")
+
         # Apostas do banco para este jogo
         db = SessionLocal()
         game_bets = []
@@ -685,12 +771,12 @@ def get_game_boxscore(game_id: str):
             "game_id": game_id,
             "home_team": home_team,
             "away_team": away_team,
-            "home_score": game_info.get("home_score"),
-            "away_score": game_info.get("away_score"),
+            "home_score": home_score,
+            "away_score": away_score,
             "gameday": game_info.get("gameday"),
             "gametime": game_info.get("gametime"),
             "stadium": game_info.get("stadium"),
-            "status": "finished" if game_info.get("home_score") is not None else "scheduled",
+            "status": status,
             "away_players": away_players,
             "home_players": home_players,
             "bets": game_bets
@@ -794,6 +880,23 @@ def get_locked_games_and_teams(season: int = 2026):
     locked_game_ids = set()
     locked_teams = set()
     now = datetime.now()
+
+    # 1. ESPN Scoreboard (Tempo Real)
+    try:
+        from nfl_odds.data.live_stats import fetch_espn_scoreboard, clean_team_code
+        espn_sb = fetch_espn_scoreboard(season=season, week=1)
+        for eg in espn_sb:
+            if eg.get("status") in ("finished", "in_progress") or eg.get("completed"):
+                if eg.get("game_id"):
+                    locked_game_ids.add(eg["game_id"])
+                if eg.get("home_team"):
+                    locked_teams.add(clean_team_code(eg["home_team"]))
+                if eg.get("away_team"):
+                    locked_teams.add(clean_team_code(eg["away_team"]))
+    except Exception as e:
+        print(f"Erro ao verificar partidas bloqueadas via ESPN: {e}")
+
+    # 2. nflreadpy schedule (Fallback)
     try:
         import nflreadpy as nfl
         sched = nfl.load_schedules([season])
@@ -802,8 +905,8 @@ def get_locked_games_and_teams(season: int = 2026):
             
         for row in sched.iter_rows(named=True):
             gid = row.get("game_id")
-            h_team = row.get("home_team")
-            a_team = row.get("away_team")
+            h_team = clean_team_code(row.get("home_team"))
+            a_team = clean_team_code(row.get("away_team"))
             h_score = row.get("home_score")
             a_score = row.get("away_score")
             gameday = row.get("gameday")
@@ -831,7 +934,7 @@ def get_locked_games_and_teams(season: int = 2026):
                 if a_team:
                     locked_teams.add(str(a_team))
     except Exception as e:
-        print(f"Erro ao verificar partidas bloqueadas: {e}")
+        print(f"Erro ao verificar partidas bloqueadas via nflreadpy: {e}")
         locked_game_ids.add("2026_01_NE_SEA")
         locked_teams.update(["NE", "SEA"])
         
@@ -1508,81 +1611,63 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
         if not pending_bets:
             return {"settled": 0, "message": "Nenhuma aposta pendente na carteira."}
 
-        # 1. Carregar schedule de 2026 para identificar quais jogos já foram concluídos
-        import nflreadpy as nfl
-        try:
-            sched_2026 = nfl.load_schedules([2026])
-            if isinstance(sched_2026, pd.DataFrame):
-                sched_2026 = pl.from_pandas(sched_2026)
-            finished_games = sched_2026.filter(
-                (pl.col("home_score").is_not_null()) & 
-                (pl.col("away_score").is_not_null())
-            )
-            finished_game_ids = set(finished_games["game_id"].to_list())
-            finished_teams = set(finished_games["home_team"].to_list() + finished_games["away_team"].to_list())
-        except Exception as e:
-            print(f"Erro ao verificar partidas finalizadas: {e}")
-            finished_game_ids = {"2026_01_NE_SEA"}
-            finished_teams = {"NE", "SEA"}
+        from nfl_odds.data.live_stats import (
+            get_all_finished_game_stats,
+            match_player_in_stats,
+            clean_team_code
+        )
 
-        # 2. Recarregar / atualizar cache de estatísticas de 2026
-        try:
-            stats_cache_global[2026] = load_player_stats([2026])
-        except Exception as e:
-            print(f"Stats loader error for 2026: {e}")
-            
+        # 1. Carregar catálogo completo de jogos finalizados e estatísticas oficiais (ESPN + nflreadpy)
+        finished_games_dict, all_players = get_all_finished_game_stats(season=2026, week=1)
+        finished_game_ids = set(finished_games_dict.keys())
+        finished_teams = set()
+        for g in finished_games_dict.values():
+            if g.get("home_team"):
+                finished_teams.add(clean_team_code(g["home_team"]))
+            if g.get("away_team"):
+                finished_teams.add(clean_team_code(g["away_team"]))
+
         settled_count = 0
         settled_game_names = set()
         
         for bet in pending_bets:
-            # Se o jogo do time da aposta ainda não aconteceu, mantém pendente!
+            clean_b_team = clean_team_code(bet.team)
+            
+            # Se o jogo do time da aposta ainda não terminou, mantém pendente!
             is_game_finished = False
             if bet.game_id and bet.game_id in finished_game_ids:
                 is_game_finished = True
-            elif bet.team and bet.team in finished_teams:
+            elif clean_b_team and clean_b_team in finished_teams:
                 is_game_finished = True
                 
             if not is_game_finished:
-                # O jogo deste jogador ainda não aconteceu (ex: 49ers, Chiefs, etc.)
+                # O jogo deste jogador ainda não terminou ou não iniciou
                 continue
                 
-            season = 2026
-            week = 1
-            df_season = stats_cache_global.get(season)
-            if df_season is None or len(df_season) == 0:
+            # Verifica se temos as estatísticas oficiais carregadas para este time
+            team_has_stats = any(p.get("team") == clean_b_team for p in all_players)
+            if not team_has_stats:
+                # Jogo finalizado mas estatísticas ainda em processamento; preserva pendente
                 continue
-                
-            df_week = df_season.filter(pl.col("week") == week)
-            if len(df_week) == 0:
-                continue
-                
-            # Matching robusto do jogador
-            p_name = bet.player_name.strip()
-            p_clean = p_name.lower().replace(".", "").replace("-", "").replace(" ", "")
+
+            # Matching robusto estritamente dentro do time do jogador (Sem falso-match com outros times!)
+            matched = match_player_in_stats(bet.player_name, clean_b_team, all_players)
             
-            # 1. Match direto por nome ou display_name
-            matched = df_week.filter(
-                (pl.col("player_name").str.to_lowercase().str.replace(".", "").str.replace("-", "").str.replace(" ", "") == p_clean) |
-                (pl.col("player_display_name").str.to_lowercase().str.replace(".", "").str.replace("-", "").str.replace(" ", "") == p_clean)
-            )
-            
-            # 2. Se não achou, match por sobrenome
-            if len(matched) == 0:
-                parts = p_name.replace(".", " ").split()
-                if len(parts) >= 2:
-                    last_name = parts[-1].lower().replace("-", "")
-                    matched = df_week.filter(
-                        (pl.col("player_name").str.to_lowercase().str.replace("-", "").str.ends_with(last_name)) |
-                        (pl.col("player_display_name").str.to_lowercase().str.replace("-", "").str.ends_with(last_name))
-                    )
-                    
-            if bet.team and len(matched) > 1:
-                matched = matched.filter(pl.col("team") == bet.team)
-                
-            market_col = bet.market
-            if len(matched) == 0:
-                # Jogador inativo na partida terminada (não atuou / sem estatísticas na súmula)
-                # Pela regra oficial das casas de apostas, apostas em jogadores inativos são anuladas (push / void)
+            # Identificar nome amigável do jogo
+            g_name = None
+            if bet.game_id and bet.game_id in finished_games_dict:
+                g_name = finished_games_dict[bet.game_id].get("name")
+            if not g_name and clean_b_team:
+                for fg in finished_games_dict.values():
+                    if clean_b_team in (clean_team_code(fg.get("home_team")), clean_team_code(fg.get("away_team"))):
+                        g_name = fg.get("name")
+                        break
+            if not g_name:
+                g_name = f"Jogo do {clean_b_team}"
+
+            if matched is None:
+                # Jogador inativo na partida terminada (não atuou / sem estatísticas na súmula oficial)
+                # Pela regra oficial das casas de apostas (Betclic, FanDuel, etc.), apostas em jogadores inativos são anuladas (push / void)
                 bet.result = "push"
                 bet.actual_value = 0.0
                 bet.profit_units = 0.0
@@ -1590,16 +1675,19 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
                 bet.is_locked = True
                 bet.notes = "Jogador inativo na partida (Aposta anulada / Push)"
                 settled_count += 1
+                settled_game_names.add(g_name)
                 continue
                 
-            if market_col not in matched.columns:
+            market_col = bet.market
+            if market_col not in matched:
                 continue
                 
-            val = matched[market_col][0]
+            val = matched.get(market_col, 0.0)
             actual_val = float(val) if val is not None else 0.0
             bet.actual_value = actual_val
             bet.settled_at = datetime.now()
             bet.is_locked = True
+            bet.notes = f"Súmula oficial: {matched.get('player_display_name', bet.player_name)} ({clean_b_team}) = {actual_val} yds"
             
             if bet.side == "over":
                 if actual_val > bet.line:
@@ -1623,11 +1711,10 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
                     bet.profit_units = 0.0
                     
             settled_count += 1
-            if bet.team in ("NE", "SEA"):
-                settled_game_names.add("Patriots x Seahawks")
+            settled_game_names.add(g_name)
             
         db.commit()
-        games_str = ", ".join(settled_game_names) if settled_game_names else "jogos finalizados"
+        games_str = f"{len(settled_game_names)} partidas finalizadas" if len(settled_game_names) > 2 else (", ".join(sorted(settled_game_names)) if settled_game_names else "jogos finalizados")
         remaining = len(pending_bets) - settled_count
         return {
             "settled": settled_count,
