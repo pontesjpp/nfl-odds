@@ -87,11 +87,13 @@ export default function Home() {
   const [selections, setSelections] = useState<Record<string, 'over' | 'under' | null>>({});
 
   // Portfolio States
-  const [portfolioTab, setPortfolioTab] = useState<'safe' | 'high_risk' | 'all_props'>('safe');
+  const [portfolioTab, setPortfolioTab] = useState<'safe' | 'safe_flat' | 'high_risk' | 'all_props'>('safe_flat');
   const [portfolioSafeCount, setPortfolioSafeCount] = useState<number>(0);
+  const [portfolioSafeFlatCount, setPortfolioSafeFlatCount] = useState<number>(0);
   const [portfolioHighRiskCount, setPortfolioHighRiskCount] = useState<number>(0);
   const [portfolioAllPropsCount, setPortfolioAllPropsCount] = useState<number>(0);
   const [liveSafeCount, setLiveSafeCount] = useState<number>(0);
+  const [liveSafeFlatCount, setLiveSafeFlatCount] = useState<number>(0);
   const [liveHighRiskCount, setLiveHighRiskCount] = useState<number>(0);
   const [liveAllPropsCount, setLiveAllPropsCount] = useState<number>(0);
   const [portfolioSummary, setPortfolioSummary] = useState<PortfolioSummary | null>(null);
@@ -377,7 +379,7 @@ export default function Home() {
   const [isCalculating, setIsCalculating] = useState<boolean>(false);
   const [calcError, setCalcError] = useState<string | null>(null);
 
-  const fetchPortfolio = async (tab: 'safe' | 'high_risk' | 'all_props' = portfolioTab) => {
+  const fetchPortfolio = async (tab: 'safe' | 'safe_flat' | 'high_risk' | 'all_props' = portfolioTab) => {
     try {
       const res = await authFetch(`/api/portfolio?portfolio_type=${tab}`);
       if (res.ok) {
@@ -387,9 +389,11 @@ export default function Home() {
         setPortfolioBets(data.bets || []);
         if (data.read_only !== undefined && !isAdmin) setIsReadOnly(Boolean(data.read_only));
         if (data.safe_count !== undefined) setPortfolioSafeCount(data.safe_count);
+        if (data.safe_flat_count !== undefined) setPortfolioSafeFlatCount(data.safe_flat_count);
         if (data.high_risk_count !== undefined) setPortfolioHighRiskCount(data.high_risk_count);
         if (data.all_props_count !== undefined) setPortfolioAllPropsCount(data.all_props_count);
         if (data.live_safe_count !== undefined) setLiveSafeCount(data.live_safe_count);
+        if (data.live_safe_flat_count !== undefined) setLiveSafeFlatCount(data.live_safe_flat_count);
         if (data.live_high_risk_count !== undefined) setLiveHighRiskCount(data.live_high_risk_count);
         if (data.live_all_props_count !== undefined) setLiveAllPropsCount(data.live_all_props_count);
       }
@@ -452,6 +456,25 @@ export default function Home() {
       await fetchPortfolio('safe');
     } catch (err) {
       setPortfolioMessage('Erro ao sincronizar recomendações seguras.');
+    } finally {
+      setLoadingPortfolio(false);
+    }
+  };
+
+  const handleImportSafeFlatPicks = async () => {
+    setLoadingPortfolio(true);
+    setPortfolioMessage(null);
+    try {
+      const res = await authFetch('/api/portfolio/import-safe-flat?replace_pending=true', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+        setPortfolioMessage(data.detail || 'Operação bloqueada no modo somente leitura.');
+        return;
+      }
+      setPortfolioMessage(`${data.imported} recomendações (+EV 2.5% a 15% com Flat 1.0u) sincronizadas.`);
+      await fetchPortfolio('safe_flat');
+    } catch (err) {
+      setPortfolioMessage('Erro ao sincronizar recomendações flat 1u.');
     } finally {
       setLoadingPortfolio(false);
     }
@@ -524,7 +547,13 @@ export default function Home() {
   };
 
   const handleClearPortfolio = async () => {
-    const portfolioLabel = portfolioTab === 'safe' ? 'Carteira Conservadora (+EV 2.5% - 15%)' : 'Carteira de Alto Risco (EV > 20%)';
+    const portfolioLabel = portfolioTab === 'safe' 
+      ? 'Carteira Dinâmica Inteligente (+EV 2.5% - 15%)' 
+      : portfolioTab === 'safe_flat'
+      ? 'Carteira Recomendadas Flat 1u (+EV 2.5% - 15%)'
+      : portfolioTab === 'high_risk' 
+      ? 'Carteira de Alto Risco (EV > 20%)' 
+      : 'Carteira All Props (100% das Props)';
     if (!confirm(`Deseja realmente limpar todas as apostas da ${portfolioLabel}?`)) return;
     setLoadingPortfolio(true);
     try {
@@ -565,7 +594,7 @@ export default function Home() {
     if (isReadOnly) return;
     try {
       const evVal = bet.evPercent !== undefined ? Number(bet.evPercent) : (bet.ev_percent !== undefined ? Number(bet.ev_percent) : null);
-      const ptype = portfolioTab === 'all_props' ? 'all_props' : ((evVal !== null && evVal > 20.0) ? 'high_risk' : 'safe');
+      const ptype = portfolioTab === 'all_props' ? 'all_props' : portfolioTab === 'safe_flat' ? 'safe_flat' : ((evVal !== null && evVal > 20.0) ? 'high_risk' : 'safe');
       const payload = {
         player_name: bet.playerName || bet.player_name,
         team: bet.playerTeam || bet.team,
@@ -2113,6 +2142,7 @@ export default function Home() {
 
               {/* Smart Sync Alert if live market odds drifted/changed */}
               {((portfolioTab === 'safe' && liveSafeCount > 0 && portfolioSafeCount !== liveSafeCount) ||
+                (portfolioTab === 'safe_flat' && liveSafeFlatCount > 0 && portfolioSafeFlatCount !== liveSafeFlatCount) ||
                 (portfolioTab === 'high_risk' && liveHighRiskCount > 0 && portfolioHighRiskCount !== liveHighRiskCount) ||
                 (portfolioTab === 'all_props' && liveAllPropsCount > 0 && portfolioAllPropsCount !== liveAllPropsCount)) && (
                 <div className="p-3.5 sm:p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-lg">
@@ -2120,34 +2150,37 @@ export default function Home() {
                     <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0"></span>
                     <span className="text-[11px] sm:text-xs">
                       {portfolioTab === 'safe'
-                        ? `Atualização de mercado: Existem ${liveSafeCount} recomendações seguras disponíveis ao vivo vs ${portfolioSafeCount} salvas na carteira.`
+                        ? `Atualização de mercado: Existem ${liveSafeCount} recomendações disponíveis ao vivo vs ${portfolioSafeCount} salvas na carteira dinâmica.`
+                        : portfolioTab === 'safe_flat'
+                        ? `Atualização de mercado: Existem ${liveSafeFlatCount} recomendações disponíveis ao vivo vs ${portfolioSafeFlatCount} salvas na carteira flat 1u.`
                         : portfolioTab === 'high_risk'
                         ? `Atualização de mercado: Existem ${liveHighRiskCount} apostas de alto risco disponíveis ao vivo vs ${portfolioHighRiskCount} salvas na carteira.`
                         : `Atualização de mercado: Existem ${liveAllPropsCount} props com +EV disponíveis ao vivo vs ${portfolioAllPropsCount} salvas na carteira.`}
                     </span>
                   </div>
                   <button
-                    onClick={portfolioTab === 'safe' ? handleImportSafePicks : portfolioTab === 'high_risk' ? handleImportHighRiskPicks : () => handleImportAllProps('best_side')}
+                    onClick={portfolioTab === 'safe' ? handleImportSafePicks : portfolioTab === 'safe_flat' ? handleImportSafeFlatPicks : portfolioTab === 'high_risk' ? handleImportHighRiskPicks : () => handleImportAllProps('best_side')}
                     disabled={loadingPortfolio || isReadOnly}
                     className={`w-full sm:w-auto px-4 py-2 rounded-lg bg-amber-500 text-black font-bold font-mono text-xs uppercase tracking-wider transition-colors shadow-sm shrink-0 text-center ${
                       isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-amber-400'
                     }`}
                     title={isReadOnly ? "Ação bloqueada no modo demonstração (somente leitura)" : ""}
                   >
-                    Sincronizar Carteira ({portfolioTab === 'safe' ? liveSafeCount : portfolioTab === 'high_risk' ? liveHighRiskCount : liveAllPropsCount} Ativos)
+                    Sincronizar Carteira ({portfolioTab === 'safe' ? liveSafeCount : portfolioTab === 'safe_flat' ? liveSafeFlatCount : portfolioTab === 'high_risk' ? liveHighRiskCount : liveAllPropsCount} Ativos)
                   </button>
                 </div>
               )}
 
               {/* Portfolio Switcher Sub-Tabs */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 p-1.5 sm:p-2 bg-[#0C0C0E] border border-[#2B261D] rounded-2xl shadow-xl">
-                <div className="grid grid-cols-3 sm:flex items-center gap-1 sm:gap-2 p-1 bg-[#15130F] rounded-xl border border-[#2B261D] w-full sm:w-auto">
+                <div className="grid grid-cols-2 lg:flex items-center gap-1 sm:gap-2 p-1 bg-[#15130F] rounded-xl border border-[#2B261D] w-full sm:w-auto">
+                  {/* Tab 1: Recomendadas Dinâmica Inteligente */}
                   <button
                     onClick={() => {
                       setPortfolioTab('safe');
                       fetchPortfolio('safe');
                     }}
-                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 px-2 py-2 sm:px-5 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
                       portfolioTab === 'safe'
                         ? 'bg-[#10B981] text-black font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]'
                         : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -2156,21 +2189,46 @@ export default function Home() {
                     <span className="text-sm">🧠</span>
                     <span className="truncate">
                       <span className="sm:hidden">Dinâmica</span>
-                      <span className="hidden sm:inline">Carteira Dinâmica Inteligente</span>
+                      <span className="hidden sm:inline">Recomendadas (Dinâmica)</span>
                     </span>
                     <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
                       portfolioTab === 'safe' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-zinc-300'
                     }`}>
-                      <span className="hidden sm:inline">+EV 2.5% a 15% • </span>{portfolioSafeCount}
+                      <span className="hidden sm:inline">+EV 2.5%-15% • </span>{portfolioSafeCount}
                     </span>
                   </button>
 
+                  {/* Tab 2: Recomendadas Flat 1u (Sem alocação inteligente) */}
+                  <button
+                    onClick={() => {
+                      setPortfolioTab('safe_flat');
+                      fetchPortfolio('safe_flat');
+                    }}
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
+                      portfolioTab === 'safe_flat'
+                        ? 'bg-[#00E5FF] text-black font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
+                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <span className="text-sm">📏</span>
+                    <span className="truncate">
+                      <span className="sm:hidden">Flat 1u</span>
+                      <span className="hidden sm:inline">Recomendadas (Flat 1u)</span>
+                    </span>
+                    <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
+                      portfolioTab === 'safe_flat' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-cyan-300'
+                    }`}>
+                      <span className="hidden sm:inline">Flat 1.0u • </span>{portfolioSafeFlatCount}
+                    </span>
+                  </button>
+
+                  {/* Tab 3: Carteira de Alto Risco */}
                   <button
                     onClick={() => {
                       setPortfolioTab('high_risk');
                       fetchPortfolio('high_risk');
                     }}
-                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 px-2 py-2 sm:px-5 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
                       portfolioTab === 'high_risk'
                         ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(245,158,11,0.3)]'
                         : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -2188,12 +2246,13 @@ export default function Home() {
                     </span>
                   </button>
 
+                  {/* Tab 4: All Props */}
                   <button
                     onClick={() => {
                       setPortfolioTab('all_props');
                       fetchPortfolio('all_props');
                     }}
-                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 px-2 py-2 sm:px-5 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
                       portfolioTab === 'all_props'
                         ? 'bg-sky-500 text-black font-bold shadow-[0_0_15px_rgba(14,165,233,0.3)]'
                         : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -2213,6 +2272,8 @@ export default function Home() {
                   <span className="text-[11px] font-mono text-zinc-400 block">
                     {portfolioTab === 'safe' 
                       ? 'Alocação quantitativa dinâmica ponderada por IA (Over/Under) e companheiros (+EV 2.5% a 15%)'
+                      : portfolioTab === 'safe_flat'
+                      ? 'Recomendações com stake fixa uniforme de 1.0 unidade em todas as entradas (+EV 2.5% a 15%)'
                       : portfolioTab === 'high_risk'
                       ? 'Props com desregulagem matemática severa (EV > 20%), alta volatilidade'
                       : 'Universo completo de props do mercado (todas as 227 props avaliadas)'}
@@ -2225,7 +2286,9 @@ export default function Home() {
                 <div className="flex justify-between items-center mb-3 sm:mb-4">
                   <h2 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-zinc-400 truncate">
                     {portfolioTab === 'safe' 
-                      ? 'Relatório Financeiro • Carteira Conservadora (+EV 2.5% a 15%)' 
+                      ? 'Relatório Financeiro • Carteira Conservadora Dinâmica (+EV 2.5% a 15%)' 
+                      : portfolioTab === 'safe_flat'
+                      ? 'Relatório Financeiro • Recomendações Flat 1.0u (+EV 2.5% a 15%)'
                       : portfolioTab === 'high_risk'
                       ? 'Relatório Financeiro • Carteira de Alto Risco (Apenas EV > 20%)'
                       : 'Relatório Financeiro • Carteira All Props (100% das Props)'}
@@ -2657,12 +2720,26 @@ export default function Home() {
                         className={`w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#15130F] text-white font-mono text-xs uppercase tracking-wider border border-[#2B261D] transition-all flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(16,185,129,0.12)] ${
                           isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-[#10B981]/50'
                         }`}
-                        title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar recomendações seguras"}
+                        title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar recomendações seguras com sizing dinâmico"}
                       >
                         <svg className="w-4 h-4 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                         </svg>
-                        <span>Sincronizar Recomendações (+EV 2.5% a 15%)</span>
+                        <span>Sincronizar Dinâmica (+EV 2.5% a 15%)</span>
+                      </button>
+                    ) : portfolioTab === 'safe_flat' ? (
+                      <button
+                        onClick={handleImportSafeFlatPicks}
+                        disabled={loadingPortfolio || isReadOnly}
+                        className={`w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#15130F] text-cyan-300 font-mono text-xs uppercase tracking-wider border border-cyan-900/40 transition-all flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(0,229,255,0.15)] ${
+                          isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-cyan-400/50'
+                        }`}
+                        title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar recomendações com stake fixa de 1.0 unidade"}
+                      >
+                        <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                        </svg>
+                        <span>Sincronizar Flat 1.0u (+EV 2.5% a 15%)</span>
                       </button>
                     ) : portfolioTab === 'high_risk' ? (
                       <button
@@ -2975,7 +3052,9 @@ export default function Home() {
                           <td colSpan={11} className="py-16 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
                             {portfolioBets.length === 0 
                               ? (portfolioTab === 'safe'
-                                  ? 'A carteira conservadora está vazia. Clique em "Sincronizar Recomendações" para importar apostas (+EV 2.5% a 15%).'
+                                  ? 'A carteira conservadora dinâmica está vazia. Clique em "Sincronizar Dinâmica" para importar apostas (+EV 2.5% a 15%).'
+                                  : portfolioTab === 'safe_flat'
+                                  ? 'A carteira flat 1.0u está vazia. Clique em "Sincronizar Flat 1.0u" para importar recomendações (+EV 2.5% a 15%).'
                                   : portfolioTab === 'high_risk'
                                   ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas" para importar apostas (EV > 20%).'
                                   : 'A carteira All Props está vazia. Clique em "Sincronizar Props" para importar todas as props com valor esperado positivo (+EV > 0).')
@@ -3229,7 +3308,9 @@ export default function Home() {
                     <div className="py-12 px-4 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
                       {portfolioBets.length === 0 
                         ? (portfolioTab === 'safe'
-                            ? 'A carteira conservadora está vazia. Clique em "Sincronizar Recomendações" para importar apostas.'
+                            ? 'A carteira conservadora dinâmica está vazia. Clique em "Sincronizar Dinâmica" para importar apostas.'
+                            : portfolioTab === 'safe_flat'
+                            ? 'A carteira flat 1.0u está vazia. Clique em "Sincronizar Flat 1.0u" para importar recomendações.'
                             : portfolioTab === 'high_risk'
                             ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas" para importar apostas.'
                             : 'A carteira All Props está vazia. Clique em "Sincronizar Props" para importar todas as props.')

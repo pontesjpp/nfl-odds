@@ -979,11 +979,13 @@ def get_portfolio(portfolio_type: str = "safe", response: Response = None):
     try:
         global df_live_bets
         live_safe_count = 0
+        live_safe_flat_count = 0
         live_high_risk_count = 0
         live_all_props_count = 0
         if not df_live_bets.empty:
             ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
             live_safe_count = int(((df_live_bets[ev_col] >= 2.5) & (df_live_bets[ev_col] <= 15.0)).sum())
+            live_safe_flat_count = live_safe_count
             live_high_risk_count = int((df_live_bets[ev_col] > 20.0).sum())
             # All props com EV positivo estrito
             df_positive = df_live_bets[df_live_bets[ev_col] > 0.0]
@@ -991,6 +993,7 @@ def get_portfolio(portfolio_type: str = "safe", response: Response = None):
 
         all_bets = db.query(Bet).all()
         safe_count = sum(1 for b in all_bets if (b.portfolio_type or "safe") == "safe")
+        safe_flat_count = sum(1 for b in all_bets if b.portfolio_type == "safe_flat")
         high_risk_count = sum(1 for b in all_bets if b.portfolio_type == "high_risk")
         all_props_count = sum(1 for b in all_bets if b.portfolio_type == "all_props")
         
@@ -1096,9 +1099,11 @@ def get_portfolio(portfolio_type: str = "safe", response: Response = None):
             "portfolio_type": portfolio_type,
             "read_only": READ_ONLY_MODE,
             "safe_count": safe_count,
+            "safe_flat_count": safe_flat_count,
             "high_risk_count": high_risk_count,
             "all_props_count": all_props_count,
             "live_safe_count": live_safe_count,
+            "live_safe_flat_count": live_safe_flat_count,
             "live_high_risk_count": live_high_risk_count,
             "live_all_props_count": live_all_props_count,
             "summary": {
@@ -1185,7 +1190,7 @@ def add_portfolio_bet(req: PortfolioAddRequest):
         db.close()
 
 @app.post("/api/portfolio/import-safe-picks")
-def import_safe_picks(replace_pending: bool = False):
+def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, portfolio_type: str = "safe"):
     global df_live_bets
     try:
         if os.path.exists("data/live_value_bets.parquet"):
@@ -1202,6 +1207,7 @@ def import_safe_picks(replace_pending: bool = False):
     mask = (df_live_bets[ev_col] >= 2.5) & (df_live_bets[ev_col] <= 15.0)
     
     safe_df = df_live_bets[mask]
+    target_ptype = "safe_flat" if (flat_stake or portfolio_type == "safe_flat") else "safe"
     
     locked_game_ids, locked_teams = get_locked_games_and_teams(2026)
     
@@ -1213,7 +1219,7 @@ def import_safe_picks(replace_pending: bool = False):
         if replace_pending:
             del_query = db.query(Bet).filter(
                 Bet.result == "pending",
-                Bet.portfolio_type == "safe",
+                Bet.portfolio_type == target_ptype,
                 Bet.is_locked == False
             )
             if locked_teams:
@@ -1261,26 +1267,32 @@ def import_safe_picks(replace_pending: bool = False):
             side_fav = str(row.get("side_favorability") or "NEUTRAL")
             z_dist = float(row.get("z_distance")) if (row.get("z_distance") is not None and not pd.isna(row.get("z_distance"))) else None
 
-            smart = calculate_smart_units(
-                ev_percent=ev_v if ev_v is not None else 5.0,
-                odds=odds,
-                prob_win=win_prob or (1.0 / odds if odds > 0 else 0.5),
-                side=side,
-                market=market,
-                z_distance=z_dist,
-                ai_multiplier=ai_mult,
-                recommendation_adjustment=rec_adj,
-                ai_sizing_rationale=ai_rat
-            )
+            if flat_stake or target_ptype == "safe_flat":
+                units_to_use = 1.0
+                base_u = 1.0
+                final_mult = 1.0
+                rationale_to_use = "Flat Stake: 1.0 unidade fixa em todas as recomendações."
+            else:
+                smart = calculate_smart_units(
+                    ev_percent=ev_v if ev_v is not None else 5.0,
+                    odds=odds,
+                    prob_win=win_prob or (1.0 / odds if odds > 0 else 0.5),
+                    side=side,
+                    market=market,
+                    z_distance=z_dist,
+                    ai_multiplier=ai_mult,
+                    recommendation_adjustment=rec_adj,
+                    ai_sizing_rationale=ai_rat
+                )
 
-            # Se a IA vetou formalmente (AVOID), não adiciona na carteira
-            if smart["status"] == "VETOED_BY_AI" or smart["final_units"] <= 0.0:
-                continue
+                # Se a IA vetou formalmente (AVOID), não adiciona na carteira
+                if smart["status"] == "VETOED_BY_AI" or smart["final_units"] <= 0.0:
+                    continue
 
-            units_to_use = smart["final_units"]
-            base_u = smart["base_units"]
-            final_mult = smart["ai_multiplier"]
-            rationale_to_use = smart["sizing_rationale"]
+                units_to_use = smart["final_units"]
+                base_u = smart["base_units"]
+                final_mult = smart["ai_multiplier"]
+                rationale_to_use = smart["sizing_rationale"]
             
             existing = db.query(Bet).filter(
                 Bet.player_name == player_name,
@@ -1289,7 +1301,7 @@ def import_safe_picks(replace_pending: bool = False):
                 Bet.side == side,
                 Bet.season == season,
                 Bet.week == week,
-                Bet.portfolio_type == "safe"
+                Bet.portfolio_type == target_ptype
             ).first()
             
             if not existing:
@@ -1314,7 +1326,7 @@ def import_safe_picks(replace_pending: bool = False):
                     ev_percent=ev_v,
                     season=season,
                     week=week,
-                    portfolio_type="safe",
+                    portfolio_type=target_ptype,
                     result="pending",
                     profit_units=0.0,
                     is_locked=False
@@ -1342,10 +1354,15 @@ def import_safe_picks(replace_pending: bool = False):
             "updated": updated_count,
             "skipped_locked": skipped_locked_count,
             "total_safe_found": len(safe_df),
-            "replaced": replace_pending
+            "replaced": replace_pending,
+            "portfolio_type": target_ptype
         }
     finally:
         db.close()
+
+@app.post("/api/portfolio/import-safe-flat")
+def import_safe_flat(replace_pending: bool = False):
+    return import_safe_picks(replace_pending=replace_pending, flat_stake=True, portfolio_type="safe_flat")
 
 @app.post("/api/portfolio/import-high-risk-picks")
 def import_high_risk_picks(replace_pending: bool = False):
