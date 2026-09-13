@@ -54,6 +54,10 @@ class SystemModeRequest(BaseModel):
     read_only: bool
     admin_secret: Optional[str] = None
 
+@app.get("/api/health")
+def health_check():
+    return {"status": "healthy", "service": "nfl-odds-api", "timestamp": datetime.now().isoformat()}
+
 @app.get("/api/auth/status")
 def auth_status(request: Request):
     is_admin = is_request_admin(request)
@@ -119,6 +123,7 @@ def set_system_mode(req: SystemModeRequest, request: Request):
 @app.middleware("http")
 async def security_middleware(request: Request, call_next):
     exempt_paths = (
+        "/api/health",
         "/api/auth/login",
         "/api/auth/logout",
         "/api/auth/status",
