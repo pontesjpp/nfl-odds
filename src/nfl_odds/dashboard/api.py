@@ -1012,6 +1012,7 @@ def get_portfolio(portfolio_type: str = "safe", response: Response = None):
         roi_percent = (net_profit_units / settled_staked_units * 100.0) if settled_staked_units > 0 else 0.0
         resolved_count = len(won_bets) + len(lost_bets)
         win_rate_percent = (len(won_bets) / resolved_count * 100.0) if resolved_count > 0 else 0.0
+        hit_rate_percent = (len(won_bets) / len(settled_bets) * 100.0) if len(settled_bets) > 0 else 0.0
         avg_odds = (sum(b.odds * b.units for b in bets) / total_staked_units) if total_staked_units > 0 else 0.0
         
         gross_profit = sum(b.profit_units for b in won_bets)
@@ -1113,6 +1114,8 @@ def get_portfolio(portfolio_type: str = "safe", response: Response = None):
                 "net_profit_units": round(net_profit_units, 2),
                 "roi_percent": round(roi_percent, 2),
                 "win_rate_percent": round(win_rate_percent, 2),
+                "hit_rate_percent": round(hit_rate_percent, 2),
+                "resolved_count": resolved_count,
                 "avg_odds": round(avg_odds, 2),
                 "profit_factor": round(profit_factor, 2) if profit_factor is not None else None,
                 "avg_stake_units": smart_stats["avg_stake"],
@@ -1599,17 +1602,18 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
         db.close()
 
 @app.post("/api/portfolio/settle")
-def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str] = None):
+def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str] = None, re_settle_pushes: bool = True):
     db = SessionLocal()
     try:
-        query = db.query(Bet).filter(Bet.result == "pending")
+        results_to_check = ["pending", "push"] if re_settle_pushes else ["pending"]
+        query = db.query(Bet).filter(Bet.result.in_(results_to_check))
         if portfolio_type:
             query = query.filter(Bet.portfolio_type == portfolio_type)
         if game_id:
             query = query.filter(Bet.game_id == game_id)
-        pending_bets = query.all()
-        if not pending_bets:
-            return {"settled": 0, "message": "Nenhuma aposta pendente na carteira."}
+        candidate_bets = query.all()
+        if not candidate_bets:
+            return {"settled": 0, "message": "Nenhuma aposta pendente ou passível de liquidação na carteira."}
 
         from nfl_odds.data.live_stats import (
             get_all_finished_game_stats,
@@ -1628,12 +1632,13 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
                 finished_teams.add(clean_team_code(g["away_team"]))
 
         settled_count = 0
+        updated_push_count = 0
         settled_game_names = set()
         
-        for bet in pending_bets:
+        for bet in candidate_bets:
             clean_b_team = clean_team_code(bet.team)
             
-            # Se o jogo do time da aposta ainda não terminou, mantém pendente!
+            # Se o jogo do time da aposta ainda não terminou, mantém o estado atual!
             is_game_finished = False
             if bet.game_id and bet.game_id in finished_game_ids:
                 is_game_finished = True
@@ -1647,7 +1652,7 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
             # Verifica se temos as estatísticas oficiais carregadas para este time
             team_has_stats = any(p.get("team") == clean_b_team for p in all_players)
             if not team_has_stats:
-                # Jogo finalizado mas estatísticas ainda em processamento; preserva pendente
+                # Jogo finalizado mas estatísticas ainda em processamento; preserva
                 continue
 
             # Matching robusto estritamente dentro do time do jogador (Sem falso-match com outros times!)
@@ -1665,17 +1670,20 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
             if not g_name:
                 g_name = f"Jogo do {clean_b_team}"
 
+            prev_result = bet.result
+
             if matched is None:
                 # Jogador inativo na partida terminada (não atuou / sem estatísticas na súmula oficial)
                 # Pela regra oficial das casas de apostas (Betclic, FanDuel, etc.), apostas em jogadores inativos são anuladas (push / void)
-                bet.result = "push"
-                bet.actual_value = 0.0
-                bet.profit_units = 0.0
-                bet.settled_at = datetime.now()
-                bet.is_locked = True
-                bet.notes = "Jogador inativo na partida (Aposta anulada / Push)"
-                settled_count += 1
-                settled_game_names.add(g_name)
+                if prev_result != "push":
+                    bet.result = "push"
+                    bet.actual_value = 0.0
+                    bet.profit_units = 0.0
+                    bet.settled_at = datetime.now()
+                    bet.is_locked = True
+                    bet.notes = "Jogador inativo na partida (Aposta anulada / Push)"
+                    settled_count += 1
+                    settled_game_names.add(g_name)
                 continue
                 
             market_col = bet.market
@@ -1710,16 +1718,36 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
                     bet.result = "push"
                     bet.profit_units = 0.0
                     
-            settled_count += 1
-            settled_game_names.add(g_name)
+            if prev_result == "pending":
+                settled_count += 1
+                settled_game_names.add(g_name)
+            elif prev_result == "push" and bet.result != "push":
+                updated_push_count += 1
+                settled_game_names.add(g_name)
             
         db.commit()
         games_str = f"{len(settled_game_names)} partidas finalizadas" if len(settled_game_names) > 2 else (", ".join(sorted(settled_game_names)) if settled_game_names else "jogos finalizados")
-        remaining = len(pending_bets) - settled_count
+        
+        remaining_query = db.query(Bet).filter(Bet.result == "pending")
+        if portfolio_type:
+            remaining_query = remaining_query.filter(Bet.portfolio_type == portfolio_type)
+        remaining = remaining_query.count()
+
+        msg_parts = []
+        if settled_count > 0:
+            msg_parts.append(f"{settled_count} apostas liquidadas")
+        if updated_push_count > 0:
+            msg_parts.append(f"{updated_push_count} apostas anteriormente pendentes/push atualizadas com súmula oficial")
+        if not msg_parts:
+            msg_parts.append("Nenhuma nova aposta para liquidar no momento")
+            
+        action_msg = " e ".join(msg_parts)
         return {
-            "settled": settled_count,
+            "settled": settled_count + updated_push_count,
+            "newly_settled": settled_count,
+            "re_settled": updated_push_count,
             "remaining_pending": remaining,
-            "message": f"{settled_count} apostas de {games_str} liquidadas com estatísticas oficiais! ({remaining} apostas aguardam os próximos jogos da rodada)"
+            "message": f"{action_msg} de {games_str}! ({remaining} apostas aguardam os próximos jogos da rodada)"
         }
     finally:
         db.close()

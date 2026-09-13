@@ -55,6 +55,8 @@ interface PortfolioSummary {
   net_profit_units: number;
   roi_percent: number;
   win_rate_percent: number;
+  hit_rate_percent?: number;
+  resolved_count?: number;
   avg_odds: number;
   profit_factor: number | null;
   avg_stake_units?: number;
@@ -97,7 +99,7 @@ export default function Home() {
   const [portfolioBets, setPortfolioBets] = useState<any[]>([]);
   const [loadingPortfolio, setLoadingPortfolio] = useState<boolean>(false);
   const [portfolioMessage, setPortfolioMessage] = useState<string | null>(null);
-  const [portfolioFilter, setPortfolioFilter] = useState<'all' | 'pending' | 'won' | 'lost' | 'ne_sea'>('all');
+  const [portfolioFilter, setPortfolioFilter] = useState<'all' | 'pending' | 'won' | 'lost' | 'push' | 'ne_sea'>('all');
   const [portfolioGameFilter, setPortfolioGameFilter] = useState<string>('all');
   const [portfolioSearch, setPortfolioSearch] = useState<string>('');
 
@@ -220,6 +222,7 @@ export default function Home() {
         if (portfolioFilter === 'pending' && b.result !== 'pending') return false;
         if (portfolioFilter === 'won' && b.result !== 'won') return false;
         if (portfolioFilter === 'lost' && b.result !== 'lost') return false;
+        if (portfolioFilter === 'push' && b.result !== 'push') return false;
         if (portfolioFilter === 'ne_sea' && b.team !== 'NE' && b.team !== 'SEA' && b.opponent !== 'NE' && b.opponent !== 'SEA') return false;
 
         // Filtro por Jogo
@@ -2259,7 +2262,10 @@ export default function Home() {
                   </div>
 
                   {/* Card 2: Liquidation Status */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                  <div 
+                    className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg"
+                    title={portfolioSummary ? `Detalhamento: ${portfolioSummary.won_count}W (Greens) / ${portfolioSummary.lost_count}L (Reds) / ${portfolioSummary.push_count}P (Pushes/Anuladas)` : ''}
+                  >
                     <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
                       Liquidação
                     </span>
@@ -2291,16 +2297,29 @@ export default function Home() {
                   </div>
 
                   {/* Card 4: Win Rate */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
-                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
-                      Taxa de Acerto
-                    </span>
+                  <div 
+                    className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg"
+                    title={portfolioSummary ? `${portfolioSummary.won_count} vitórias, ${portfolioSummary.lost_count} derrotas, ${portfolioSummary.push_count} pushes/anuladas. Total liquidado: ${portfolioSummary.settled_count}. Decisive Win Rate: ${portfolioSummary.win_rate_percent.toFixed(1)}%. Overall Hit Rate: ${(portfolioSummary.hit_rate_percent ?? ((portfolioSummary.won_count / (portfolioSummary.settled_count || 1)) * 100)).toFixed(1)}%.` : ''}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
+                        Taxa de Acerto
+                      </span>
+                      {portfolioSummary && portfolioSummary.push_count > 0 && (
+                        <span 
+                          className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                          title="Hit rate global sobre todas as liquidadas (inclui empates/pushes)"
+                        >
+                          {(portfolioSummary.hit_rate_percent ?? ((portfolioSummary.won_count / (portfolioSummary.settled_count || 1)) * 100)).toFixed(1)}% tot
+                        </span>
+                      )}
+                    </div>
                     <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
                       {portfolioSummary ? `${portfolioSummary.win_rate_percent.toFixed(1)}%` : '0.0%'}
                     </span>
                     <span className="text-[#C5A880]/60 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
                       {portfolioSummary 
-                        ? `${portfolioSummary.won_count}W - ${portfolioSummary.lost_count}L` 
+                        ? `${portfolioSummary.won_count}W - ${portfolioSummary.lost_count}L${portfolioSummary.push_count > 0 ? ` - ${portfolioSummary.push_count}P` : ''} (${portfolioSummary.settled_count} liq)` 
                         : '0W - 0L'}
                     </span>
                   </div>
@@ -2732,7 +2751,7 @@ export default function Home() {
                 <div className="p-3.5 sm:p-5 border-b border-[#2B261D] flex flex-col gap-3 sm:gap-4">
                   <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3 sm:gap-4">
                     {/* Status Filter Tabs */}
-                    <div className="grid grid-cols-2 sm:flex items-center gap-1.5 sm:gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                       <button
                         onClick={() => setPortfolioFilter('all')}
                         className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono tracking-wider transition-all text-center ${
@@ -2772,6 +2791,16 @@ export default function Home() {
                         }`}
                       >
                         REDS ({portfolioSummary?.lost_count || 0})
+                      </button>
+                      <button
+                        onClick={() => setPortfolioFilter('push')}
+                        className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-mono tracking-wider transition-all text-center ${
+                          portfolioFilter === 'push'
+                            ? 'bg-amber-500 text-black font-bold border border-amber-500'
+                            : 'bg-[#000000] text-[#C5A880]/80 hover:text-white border border-[#2B261D]'
+                        }`}
+                      >
+                        PUSHES ({portfolioSummary?.push_count || 0})
                       </button>
                     </div>
 
