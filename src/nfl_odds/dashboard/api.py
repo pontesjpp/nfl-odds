@@ -1,3 +1,11 @@
+import os
+os.environ.setdefault("POLARS_MAX_THREADS", "1")
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
+os.environ.setdefault("MALLOC_ARENA_MAX", "2")
+
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,11 +14,11 @@ from pydantic import BaseModel
 import polars as pl
 import pandas as pd
 import numpy as np
-import os
 import math
 import json
+import ctypes
+import gc
 
-from nfl_odds.models.train import PlayerPropModel
 from nfl_odds.betting.ev_calc import calculate_implied_probability, calculate_ev, calculate_edge
 from nfl_odds.features.defense_rankings import compute_defense_rankings, get_team_defense_profile
 from nfl_odds.dashboard.auth import (
@@ -158,15 +166,65 @@ async def cache_control_middleware(request: Request, call_next):
         response.headers["Expires"] = "0"
     return response
 
-# Load resources
-models = {}
-for m in ["rushing_yards", "receiving_yards", "passing_yards"]:
+# C-level memory trimming to prevent glibc heap fragmentation in Linux containers
+try:
+    _libc = ctypes.CDLL("libc.so.6")
+except Exception:
+    _libc = None
+
+def trim_memory():
+    """Forces garbage collection and releases glibc arena pages back to the OS."""
+    gc.collect()
+    if _libc and hasattr(_libc, "malloc_trim"):
+        try:
+            _libc.malloc_trim(0)
+        except Exception:
+            pass
+
+_request_counter = 0
+
+@app.middleware("http")
+async def memory_management_middleware(request: Request, call_next):
+    global _request_counter
+    response = await call_next(request)
+    _request_counter += 1
+    if _request_counter % 25 == 0:
+        trim_memory()
+    return response
+
+# Lazy-loaded model cache to avoid 150MB+ XGBoost/scikit-learn startup RAM overhead
+_models = {}
+
+def get_available_models() -> List[str]:
+    """Returns list of models available on disk or in memory."""
+    available = set(_models.keys())
+    for m in ["rushing_yards", "receiving_yards", "passing_yards"]:
+        if os.path.exists(f"data/{m}_model.joblib"):
+            available.add(m)
+    return sorted(list(available))
+
+def get_model(market: str):
+    """Lazily load a model only when requested to save RAM on startup."""
+    global _models
+    if market in _models:
+        return _models[market]
+    
+    path = f"data/{market}_model.joblib"
+    if not os.path.exists(path):
+        return None
+        
     try:
-        path = f"data/{m}_model.joblib"
-        if os.path.exists(path):
-            models[m] = PlayerPropModel.load(path)
+        from nfl_odds.models.train import PlayerPropModel
+        model = PlayerPropModel.load(path)
+        _models[market] = model
+        trim_memory()
+        return model
     except Exception as e:
-        print(f"Error loading {m} model: {e}")
+        print(f"Error loading {market} model: {e}")
+        return None
+
+# For backwards compatibility with any external introspection
+models = _models
 
 # Zero-overhead lightweight data loaders and caches to stay under 512MB RAM
 _live_bets_cache = {"mtime": 0.0, "df": pd.DataFrame(), "records": []}
@@ -343,7 +401,7 @@ def get_teams():
 def status():
     bets_df = get_live_bets_df()
     return {
-        "models_loaded": list(models.keys()),
+        "models_loaded": get_available_models(),
         "live_data_loaded": is_live_features_available(),
         "live_bets_loaded": not bets_df.empty,
         "read_only": READ_ONLY_MODE
@@ -388,16 +446,8 @@ def get_player_features(
     importances = {}
     
     if market:
-        if market not in models:
-            try:
-                path = f"data/{market}_model.joblib"
-                if os.path.exists(path):
-                    models[market] = PlayerPropModel.load(path)
-            except Exception as e:
-                print(f"Could not dynamic load {market} model: {e}")
-                
-        if market in models:
-            m = models[market]
+        m = get_model(market)
+        if m is not None:
             features_to_return = m.features
             importances = m.get_feature_importances()
         else:
@@ -523,18 +573,9 @@ def predict(req: PredictRequest):
         if not is_live_features_available():
             raise HTTPException(status_code=400, detail="Data not loaded")
         
-        if req.market not in models:
-            try:
-                path = f"data/{req.market}_model.joblib"
-                if os.path.exists(path):
-                    models[req.market] = PlayerPropModel.load(path)
-            except Exception:
-                pass
-                
-        if req.market not in models:
+        model_to_use = get_model(req.market)
+        if model_to_use is None:
             raise HTTPException(status_code=400, detail=f"Model for {req.market} not loaded")
-            
-        model_to_use = models[req.market]
             
         player_data_all = query_live_player(req.player_name)
         if player_data_all.is_empty():
@@ -1018,6 +1059,11 @@ def run_pipeline_api(request: Request):
         raise HTTPException(
             status_code=403,
             detail="🔒 Apenas o Administrador autenticado com MFA pode atualizar odds e acionar a IA."
+        )
+    if os.getenv("RENDER") == "true" or os.getenv("IS_RENDER") == "true":
+        raise HTTPException(
+            status_code=400,
+            detail="⚠️ O scraper e pipeline consomem mais de 512MB de RAM e não podem ser executados diretamente no container web do Render. Execute './scripts/update_odds.sh' localmente na sua máquina e faça git push para sincronizar."
         )
     try:
         # Run the scraper

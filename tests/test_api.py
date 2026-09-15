@@ -97,3 +97,20 @@ def test_defense_rankings(client):
     data = response.json()
     assert "teams" in data
     assert data["total_teams"] == 32
+
+def test_trim_memory_execution():
+    from nfl_odds.dashboard.api import trim_memory
+    # Should execute safely and silently without exception
+    trim_memory()
+
+def test_render_run_pipeline_safeguard(client, monkeypatch):
+    import os
+    from nfl_odds.dashboard.auth import create_admin_token
+    token = create_admin_token()
+    headers = {"Authorization": f"Bearer {token}"}
+
+    monkeypatch.setenv("RENDER", "true")
+    res = client.post("/api/run-pipeline", headers=headers)
+    assert res.status_code == 400
+    assert "512MB" in res.json()["detail"]
+
