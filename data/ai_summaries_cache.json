@@ -1821,5 +1821,47 @@
     "ai_sizing_rationale": "Stake calibrada no Under: rivalidade da NFC West truncada nas trincheiras e controle de relógio dos 49ers.",
     "ai_summary": "* **Tese de Valor**: Linha em Under 244.5 jardas (@ 1.82, prob. implícita de 54.9%). Projeção do modelo de 57.2% de probabilidade de vitória (Odd Justa: 1.75), com Edge de +2.3% e +4.2% de Valor Esperado (+EV). Purdy atua como **QB1 (Quarterback) • Titular • 4 anos de exp**.\n* **Métrica-Chave**: A defesa dos Rams pressiona com frequência pelos tackles defensivos com Kobie Turner e Jared Verse, forçando passes curtos e rápidos. A média de dropbacks de Purdy contra defesas de divisão é de apenas 29 tentativas por jogo.\n* **Cenário de Jogo**: Clássico californiano no SoFi Stadium. Shanahan desenhará um plano de jogo com muitas corridas de 'outside zone' para diminuir o tempo de posse dos Rams e manter Matthew Stafford no banco. Purdy não precisará forçar o jogo aéreo para bater metas de jardas, operando com eficiência cirúrgica sem volume inflado.\n* **Fatores de Risco / Contraponto**: O poder de YAC dos recebedores dos 49ers: George Kittle ou Deebo Samuel transformarem duas rotas curtas em ganhos de 50 jardas após o contato.",
     "gemini_analyzed": true
+  },
+  "J.Allen_rushing_yards_29.5_under_v2": {
+    "has_news_alert": true,
+    "alert_severity": "INFO",
+    "alert_type": "TIMESHARE_TARGETS",
+    "alert_headline": "Allen completed 20 of 29 passes for 334 yards and two touchdowns while rushing six times for 23 yards and two touchdowns in Sunday's 36-31 win over the Texans.",
+    "news_context": "Allen ran in touchdowns of 21 yards and one yard in the second quarter. Those two rushing scores give him 43 regular-season rushing touchdowns since the start of the 2023 campaign, which is second most in the NFL during that span behind Derrick Henry. Allen added his third total TD of the second quarter with a 43-yard touchdown pass to offseason acquisition DJ Moore. The 2024 MVP delivered some late heroics after the Bills fell behind 31-30 in the fourth quarter, leading a seven-play, 96-yard drive capped by a 34-yard Allen touchdown pass to Joshua Palmer with 1:36 to play. Buffalo's defense did the rest as the Bills improved to 1-0 ahead of Thursday's Week 2 home opener against the Lions.",
+    "impact_assessment": "Cenário fortemente favorável para UNDER em rushing_yards: divisão de volume com outros atletas corrobora com a linha reduzida.",
+    "side_favorability": "HIGHLY_FAVORABLE_FOR_UNDER",
+    "recommendation_adjustment": "BOOST",
+    "ai_unit_multiplier": 1.3,
+    "ai_sizing_rationale": "Stake aumentada em +30% no Under: jogador atua em comitê/timeshare com volume fragmentado.",
+    "ai_summary": "* **Tese de Valor**: Discrepância matemática quantificada entre a cotação oferecida pelas casas (1.82, probabilidade implícita de 54.9%) e a probabilidade estimada pelo modelo quantitativo (60.2%, Odd Justa projetada em 1.66), consolidando um Edge de +5.2% e Valor Esperado (+EV) de +9.5% para a entrada **UNDER 29.5**. No depth chart oficial de BUF, o atleta atua como **QB1 (Quarterback) • Titular • 8 anos de exp**.\n* **Métrica-Chave**: A defesa de DET apresenta forte integridade nas trincheiras, limitando jardas antes do contato (RYBC) e mantendo taxas elevadas de paradas na linha de scrimmage. Métricas apuradas: Adversário: KC; Pontos Projetados do Time: 24.0; Favoritismo / Spread: UNDERDOG / ZEBRA por 1.5 pontos (Spread Vegas: +1.5).\n* **Cenário de Jogo**: O script da partida entre BUF e DET projeta controle de posse e divisão de volume ofensivo. Diante das características táticas do adversário, a distribuição de toques tende a limitar o teto de produção do atleta abaixo da linha de 29.5. Notícia relevante da semana: *Allen completed 20 of 29 passes for 334 yards and two touchdowns while rushing six times for 23 yards and two touchdowns in Sunday's 36-31 win over the Texans.*.\n* **Fatores de Risco / Contraponto**: Uma jogada explosiva isolada (quebra de tackle ou ganho de 35+ jardas em falha posicional da defesa de DET) ou um script atípico de garbage time acelerado representam os principais fatores de variância contra o Under.",
+    "gemini_analyzed": false
+  },
+  "I.TeSlaa_receiving_yards_15.5_under_v2": {
+    "has_news_alert": false,
+    "alert_severity": "NONE",
+    "alert_type": "NONE",
+    "alert_headline": "TeSlaa failed to haul in his only target during Detroit's overtime win over the Saints on Sunday.",
+    "news_context": "TeSlaa played 52 of the team's 77 offensive snaps but was still the only Lions player who didn't record any receptions, among those who were targeted. The 2025 third-round pick had a promising rookie campaign, catching 16 passes for 239 yards and six touchdowns despite limited usage, but he is coming off a disappointing training camp. TeSlaa will look to improve upon his performance during the Week 2 matchup against the Bills.",
+    "impact_assessment": "Sem relatos clínicos adversos ou alterações na hierarquia ofensiva da semana.",
+    "side_favorability": "NEUTRAL",
+    "recommendation_adjustment": "MAINTAIN",
+    "ai_unit_multiplier": 1.0,
+    "ai_sizing_rationale": "Alocação padrão baseada no modelo quantitativo (sem desvios contextuais na semana).",
+    "ai_summary": "* **Tese de Valor**: Discrepância matemática quantificada entre a cotação oferecida pelas casas (1.80, probabilidade implícita de 55.6%) e a probabilidade estimada pelo modelo quantitativo (58.2%, Odd Justa projetada em 1.72), consolidando um Edge de +2.7% e Valor Esperado (+EV) de +4.8% para a entrada **UNDER 15.5**. No depth chart oficial de DET, o atleta atua como **WR3 (Wide Receiver (Slot)) • Titular • 1 anos de exp**.\n* **Métrica-Chave**: O esquema defensivo de BUF prioriza cobertura recuada com safeties altos (Cover-2/Quarters), restringindo rotas profundas e limitando separação média por rota corrida. Métricas registradas: Adversário: CHI; Pontos Projetados do Time: 24.0; Favoritismo / Spread: UNDERDOG / ZEBRA por 3.5 pontos (Spread Vegas: +3.5).\n* **Cenário de Jogo**: O script da partida entre DET e BUF projeta controle de posse e divisão de volume ofensivo. Diante das características táticas do adversário, a distribuição de toques tende a limitar o teto de produção do atleta abaixo da linha de 15.5.\n* **Fatores de Risco / Contraponto**: Uma jogada explosiva isolada (quebra de tackle ou ganho de 35+ jardas em falha posicional da defesa de BUF) ou um script atípico de garbage time acelerado representam os principais fatores de variância contra o Under.",
+    "gemini_analyzed": false
+  },
+  "J.Goff_passing_yards_266.5_under_v2": {
+    "has_news_alert": false,
+    "alert_severity": "NONE",
+    "alert_type": "NONE",
+    "alert_headline": "Goff completed 26 of 39 passes for 206 yards and two touchdowns in Sunday's 31-30 overtime win over the Saints. He added two yards on two ca",
+    "news_context": "Both of Goff's TD passes went to Amon-Ra St. Brown, while Jahmyr Gibbs scored on a pair of one-yard runs. The Lions' offense may have gotten a little narrower in the offseason when David Montgomery left for the Texans, but that shouldn't affect the QB's production after he threw for at least 4,500 yards and 30 touchdowns in each of the last three seasons. Goff will now shift his focus to the Bills for a Week 2 road game.",
+    "impact_assessment": "Sem relatos clínicos adversos ou alterações na hierarquia ofensiva da semana.",
+    "side_favorability": "NEUTRAL",
+    "recommendation_adjustment": "MAINTAIN",
+    "ai_unit_multiplier": 1.0,
+    "ai_sizing_rationale": "Alocação padrão baseada no modelo quantitativo (sem desvios contextuais na semana).",
+    "ai_summary": "* **Tese de Valor**: Discrepância matemática quantificada entre a cotação oferecida pelas casas (1.82, probabilidade implícita de 54.9%) e a probabilidade estimada pelo modelo quantitativo (61.6%, Odd Justa projetada em 1.62), consolidando um Edge de +6.7% e Valor Esperado (+EV) de +12.1% para a entrada **UNDER 266.5**. No depth chart oficial de DET, o atleta atua como **QB1 (Quarterback) • Titular • 10 anos de exp**.\n* **Métrica-Chave**: A defesa de BUF gera pressão constante com front-four sem necessidade de blitz, forçando passes de release ultra-rápido e reduzindo a profundidade média do alvo (aDOT). Métricas apuradas: Adversário: SF; Pontos Projetados do Time: 22.5; Favoritismo / Spread: UNDERDOG / ZEBRA por 7.5 pontos (Spread Vegas: +7.5).\n* **Cenário de Jogo**: O script da partida entre DET e BUF projeta controle de posse e divisão de volume ofensivo. Diante das características táticas do adversário, a distribuição de toques tende a limitar o teto de produção do atleta abaixo da linha de 266.5.\n* **Fatores de Risco / Contraponto**: Uma jogada explosiva isolada (quebra de tackle ou ganho de 35+ jardas em falha posicional da defesa de BUF) ou um script atípico de garbage time acelerado representam os principais fatores de variância contra o Under.",
+    "gemini_analyzed": false
   }
 }

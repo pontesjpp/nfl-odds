@@ -515,7 +515,7 @@ def predict(req: PredictRequest):
                     active_opponent = opp_code
             
         lines_arr = np.array([req.line])
-        prob_over = float(model_to_use.probability_over_line(player_data, lines_arr)[0])
+        prob_over = float(model_to_use.probability_over_line(player_data, lines_arr, calibrate=True)[0])
         prob_over = max(0.0001, min(0.9999, prob_over))
         prob_under = 1.0 - prob_over
         
@@ -537,8 +537,8 @@ def predict(req: PredictRequest):
     profit_over = (ev_percent_over / 100.0) * stake
     profit_under = (ev_percent_under / 100.0) * stake
     
-    fair_odds_over = 1.0 / prob_over if prob_over > 0.0001 else 0.0
-    fair_odds_under = 1.0 / prob_under if prob_under > 0.0001 else 0.0
+    fair_odds_over = round(min(10000.0, 1.0 / max(prob_over, 0.0001)), 2)
+    fair_odds_under = round(min(10000.0, 1.0 / max(prob_under, 0.0001)), 2)
     
     def calc_kelly(p, o):
         if o <= 1.0 or p <= 0.0:
@@ -837,6 +837,7 @@ def get_top_picks(limit: int = 10, response: Response = None):
     return top_picks.to_dict(orient="records")
 
 import subprocess
+import sys
 from datetime import datetime
 from typing import List, Optional
 from nfl_odds.data.database import SessionLocal, Bet
@@ -958,9 +959,9 @@ def run_pipeline_api(request: Request):
         )
     try:
         # Run the scraper
-        subprocess.run(["python3", "src/nfl_odds/odds/betclic_scraper.py"], check=True)
+        subprocess.run([sys.executable, "scripts/run_scraper.py"], check=True)
         # Run the pipeline
-        subprocess.run(["python3", "pipeline.py", "--live"], check=True)
+        subprocess.run([sys.executable, "pipeline.py", "--live"], check=True)
         
         # Auto-sync portfolios for pending bets so recommendations and portfolio stay 100% aligned
         try:
@@ -975,7 +976,7 @@ def run_pipeline_api(request: Request):
         raise HTTPException(status_code=500, detail=f"Pipeline failed: {e}")
 
 @app.get("/api/portfolio")
-def get_portfolio(portfolio_type: str = "safe", response: Response = None):
+def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, response: Response = None):
     if response:
         response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
         response.headers["Pragma"] = "no-cache"
@@ -1002,7 +1003,18 @@ def get_portfolio(portfolio_type: str = "safe", response: Response = None):
         high_risk_count = sum(1 for b in all_bets if b.portfolio_type == "high_risk")
         all_props_count = sum(1 for b in all_bets if b.portfolio_type == "all_props")
         
-        bets = [b for b in all_bets if (b.portfolio_type or "safe") == portfolio_type]
+        type_bets = [b for b in all_bets if (b.portfolio_type or "safe") == portfolio_type]
+        available_weeks = sorted(list(set(b.week for b in all_bets if b.week is not None)), reverse=True)
+
+        if week and week != "all":
+            try:
+                w_int = int(week)
+                bets = [b for b in type_bets if b.week == w_int]
+            except ValueError:
+                bets = type_bets
+        else:
+            bets = type_bets
+
         bets.sort(key=lambda b: b.timestamp or datetime.min)
         
         total_bets = len(bets)
@@ -1111,6 +1123,8 @@ def get_portfolio(portfolio_type: str = "safe", response: Response = None):
             "live_safe_flat_count": live_safe_flat_count,
             "live_high_risk_count": live_high_risk_count,
             "live_all_props_count": live_all_props_count,
+            "available_weeks": available_weeks,
+            "selected_week": str(week) if week and week != "all" else "all",
             "summary": {
                 "total_bets": total_bets,
                 "settled_count": len(settled_bets),
@@ -1644,7 +1658,14 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
         )
 
         # 1. Carregar catálogo completo de jogos finalizados e estatísticas oficiais (ESPN + nflreadpy)
-        finished_games_dict, all_players = get_all_finished_game_stats(season=2026, week=1)
+        candidate_weeks = list(set(b.week for b in candidate_bets if b.week)) or [2]
+        finished_games_dict = {}
+        all_players = []
+        for w in candidate_weeks:
+            w_games, w_players = get_all_finished_game_stats(season=2026, week=w)
+            finished_games_dict.update(w_games)
+            all_players.extend(w_players)
+
         finished_game_ids = set(finished_games_dict.keys())
         finished_teams = set()
         for g in finished_games_dict.values():

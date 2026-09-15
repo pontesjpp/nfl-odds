@@ -102,6 +102,8 @@ export default function Home() {
   const [loadingPortfolio, setLoadingPortfolio] = useState<boolean>(false);
   const [portfolioMessage, setPortfolioMessage] = useState<string | null>(null);
   const [portfolioFilter, setPortfolioFilter] = useState<'all' | 'pending' | 'won' | 'lost' | 'push' | 'ne_sea'>('all');
+  const [portfolioWeekFilter, setPortfolioWeekFilter] = useState<string>('all');
+  const [portfolioAvailableWeeks, setPortfolioAvailableWeeks] = useState<number[]>([]);
   const [portfolioGameFilter, setPortfolioGameFilter] = useState<string>('all');
   const [portfolioSearch, setPortfolioSearch] = useState<string>('');
 
@@ -227,6 +229,11 @@ export default function Home() {
         if (portfolioFilter === 'push' && b.result !== 'push') return false;
         if (portfolioFilter === 'ne_sea' && b.team !== 'NE' && b.team !== 'SEA' && b.opponent !== 'NE' && b.opponent !== 'SEA') return false;
 
+        // Filtro por Semana
+        if (portfolioWeekFilter !== 'all' && b.week !== undefined && b.week !== null && String(b.week) !== String(portfolioWeekFilter)) {
+          return false;
+        }
+
         // Filtro por Jogo
         if (portfolioGameFilter !== 'all') {
           const info = getBetGameInfo(b);
@@ -254,7 +261,7 @@ export default function Home() {
         return true;
       })
       .sort((a: any, b: any) => (b.ev_percent ?? -999) - (a.ev_percent ?? -999));
-  }, [portfolioBets, portfolioFilter, portfolioGameFilter, portfolioGames, portfolioSearch, getBetGameInfo]);
+  }, [portfolioBets, portfolioFilter, portfolioWeekFilter, portfolioGameFilter, portfolioGames, portfolioSearch, getBetGameInfo]);
 
   // Box Score Modal States
   const [boxScoreOpen, setBoxScoreOpen] = useState<boolean>(false);
@@ -379,14 +386,21 @@ export default function Home() {
   const [isCalculating, setIsCalculating] = useState<boolean>(false);
   const [calcError, setCalcError] = useState<string | null>(null);
 
-  const fetchPortfolio = async (tab: 'safe' | 'safe_flat' | 'high_risk' | 'all_props' = portfolioTab) => {
+  const fetchPortfolio = async (
+    tab: 'safe' | 'safe_flat' | 'high_risk' | 'all_props' = portfolioTab,
+    week: string = portfolioWeekFilter
+  ) => {
     try {
-      const res = await authFetch(`/api/portfolio?portfolio_type=${tab}`);
+      const weekQuery = week && week !== 'all' ? `&week=${encodeURIComponent(week)}` : '';
+      const res = await authFetch(`/api/portfolio?portfolio_type=${tab}${weekQuery}`);
       if (res.ok) {
         const data = await res.json();
         setPortfolioSummary(data.summary);
         setEquityCurve(data.equity_curve || []);
         setPortfolioBets(data.bets || []);
+        if (data.available_weeks && Array.isArray(data.available_weeks)) {
+          setPortfolioAvailableWeeks(data.available_weeks);
+        }
         if (data.read_only !== undefined && !isAdmin) setIsReadOnly(Boolean(data.read_only));
         if (data.safe_count !== undefined) setPortfolioSafeCount(data.safe_count);
         if (data.safe_flat_count !== undefined) setPortfolioSafeFlatCount(data.safe_flat_count);
@@ -2881,8 +2895,39 @@ export default function Home() {
                       </button>
                     </div>
 
-                    {/* Game Filter & Search Input */}
+                    {/* Week, Game Filter & Search Input */}
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                      {/* Week Select Dropdown */}
+                      {portfolioAvailableWeeks.length > 0 && (
+                        <div className="flex items-center gap-2 flex-1 sm:flex-initial">
+                          <label className="text-[11px] font-mono text-[#D4AF37] uppercase tracking-wider hidden sm:inline whitespace-nowrap flex items-center gap-1">
+                            <span>📅</span> Semana:
+                          </label>
+                          <div className="relative w-full sm:w-auto">
+                            <select
+                              value={portfolioWeekFilter}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setPortfolioWeekFilter(val);
+                                fetchPortfolio(portfolioTab, val);
+                              }}
+                              className={`w-full sm:w-auto bg-[#000000] border text-xs font-mono rounded-xl pl-3 pr-8 py-2 focus:outline-none transition-all cursor-pointer ${
+                                portfolioWeekFilter !== 'all'
+                                  ? 'border-[#D4AF37] text-[#D4AF37] font-bold shadow-[0_0_12px_rgba(212,175,55,0.25)]'
+                                  : 'border-[#2B261D] text-white hover:border-[#C5A880]/60'
+                              }`}
+                            >
+                              <option value="all">📅 Todas as Semanas</option>
+                              {portfolioAvailableWeeks.map((w) => (
+                                <option key={w} value={String(w)}>
+                                  Semana {w}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Game Select Dropdown */}
                       <div className="flex items-center gap-2 flex-1 sm:flex-initial">
                         <label className="text-[11px] font-mono text-[#C5A880] uppercase tracking-wider hidden sm:inline whitespace-nowrap flex items-center gap-1">
@@ -2928,6 +2973,48 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Quick Week Filter Pills */}
+                  {portfolioAvailableWeeks.length > 1 && (
+                    <div className="pt-2 sm:pt-2.5 border-t border-[#2B261D]/60 flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 scrollbar-none -mx-3.5 px-3.5 sm:mx-0 sm:px-0">
+                      <span className="text-[10px] font-mono uppercase text-[#D4AF37]/80 tracking-wider whitespace-nowrap flex items-center gap-1 shrink-0 mr-1">
+                        <span>📅</span> Semanas:
+                      </span>
+                      <button
+                        onClick={() => {
+                          setPortfolioWeekFilter('all');
+                          fetchPortfolio(portfolioTab, 'all');
+                        }}
+                        className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-mono tracking-wider transition-all whitespace-nowrap shrink-0 shadow-sm ${
+                          portfolioWeekFilter === 'all'
+                            ? 'bg-[#D4AF37] text-black font-bold border border-[#D4AF37]'
+                            : 'bg-black text-zinc-400 hover:text-white border border-[#2B261D] hover:border-zinc-700'
+                        }`}
+                      >
+                        Todas as Semanas
+                      </button>
+                      {portfolioAvailableWeeks.map((w) => {
+                        const isSelected = portfolioWeekFilter === String(w);
+                        return (
+                          <button
+                            key={w}
+                            onClick={() => {
+                              const val = isSelected ? 'all' : String(w);
+                              setPortfolioWeekFilter(val);
+                              fetchPortfolio(portfolioTab, val);
+                            }}
+                            className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-mono tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 sm:gap-2 border shadow-sm shrink-0 ${
+                              isSelected
+                                ? 'bg-[#D4AF37] text-black font-bold border-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.35)]'
+                                : 'bg-[#15130F] hover:bg-[#201C15] text-zinc-300 hover:text-white border-[#2B261D] hover:border-[#C5A880]/50'
+                            }`}
+                          >
+                            Semana {w}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
 
                   {/* Quick Game Filter Pills - Horizontal swipeable row on mobile */}
                   {portfolioGames.length > 0 && (
@@ -3091,6 +3178,11 @@ export default function Home() {
                                   {bet.team && (
                                     <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
                                       {bet.team}
+                                    </span>
+                                  )}
+                                  {bet.week && (
+                                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#1F1B14] text-[#D4AF37] border border-[#D4AF37]/30" title={`Semana ${bet.week}`}>
+                                      W{bet.week}
                                     </span>
                                   )}
                                   {bet.portfolio_type === 'high_risk' ? (
@@ -3346,6 +3438,11 @@ export default function Home() {
                               {bet.team && (
                                 <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
                                   {bet.team}
+                                </span>
+                              )}
+                              {bet.week && (
+                                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#1F1B14] text-[#D4AF37] border border-[#D4AF37]/30" title={`Semana ${bet.week}`}>
+                                  W{bet.week}
                                 </span>
                               )}
                               {bet.portfolio_type === 'high_risk' ? (

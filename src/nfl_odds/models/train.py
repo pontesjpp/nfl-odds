@@ -17,6 +17,7 @@ class PlayerPropModel:
             random_state=42
         )
         self.features = []
+        self.calibrator = None
         
     def fit(self, df: pl.DataFrame, features: List[str], sample_weight: np.ndarray = None):
         self.features = features
@@ -52,15 +53,45 @@ class PlayerPropModel:
         
     def save(self, path: str):
         import joblib
-        joblib.dump({"model": self.model, "features": self.features, "quantiles": self.quantiles, "target": self.target}, path)
+        bundle = {
+            "model": self.model,
+            "features": self.features,
+            "quantiles": self.quantiles,
+            "target": self.target,
+            "calibrator": self.calibrator.to_dict() if self.calibrator is not None else None,
+        }
+        joblib.dump(bundle, path)
         
     @classmethod
     def load(cls, path: str):
         import joblib
+        from pathlib import Path
         data = joblib.load(path)
         instance = cls(target=data["target"], quantiles=data["quantiles"])
         instance.model = data["model"]
         instance.features = data["features"]
+
+        # Dual serialization: bundle dictionary with fallback to separate calibrator joblib
+        if "calibrator" in data and data["calibrator"] is not None:
+            from nfl_odds.models.calibration import ProbabilityCalibrator
+            if isinstance(data["calibrator"], dict):
+                instance.calibrator = ProbabilityCalibrator.from_dict(data["calibrator"])
+            elif isinstance(data["calibrator"], ProbabilityCalibrator):
+                instance.calibrator = data["calibrator"]
+        else:
+            cal_candidates = [
+                Path(path).parent / f"{instance.target}_calibrator.joblib",
+                Path("data") / f"{instance.target}_calibrator.joblib",
+            ]
+            for cal_path in cal_candidates:
+                if cal_path.exists():
+                    from nfl_odds.models.calibration import ProbabilityCalibrator
+                    cal_data = joblib.load(cal_path)
+                    if isinstance(cal_data, dict):
+                        instance.calibrator = ProbabilityCalibrator.from_dict(cal_data)
+                    elif isinstance(cal_data, ProbabilityCalibrator):
+                        instance.calibrator = cal_data
+                    break
         return instance
 
     def predict_distribution(self, df: pl.DataFrame) -> np.ndarray:
@@ -72,8 +103,11 @@ class PlayerPropModel:
         importances = self.model.feature_importances_
         return {f: float(imp) for f, imp in zip(self.features, importances)}
         
-    def probability_over_line(self, df: pl.DataFrame, lines: np.ndarray) -> np.ndarray:
-        """Calculate P(Y > line) for each sample."""
+    def probability_over_line(self, df: pl.DataFrame, lines: np.ndarray, calibrate: bool = True) -> np.ndarray:
+        """Calculate P(Y > line) for each sample.
+
+        If calibrate=True and a calibrator is attached, applies calibration transformation.
+        """
         preds = self.predict_distribution(df)
         probs = []
         
@@ -86,8 +120,11 @@ class PlayerPropModel:
             # y = cumulative probabilities (the self.quantiles array)
             # To estimate P(Y > line), we interpolate
             
-            # Pad with 0 at the low end and something high at the high end
-            x = np.concatenate(([0], row_quantiles, [row_quantiles[-1] * 1.5 + 10]))
+            # Pad with safe lower and upper support
+            low_pad = min(0.0, float(row_quantiles[0]) - 5.0)
+            high_pad = max(float(row_quantiles[-1]) * 1.5, float(row_quantiles[-1]) + 10.0)
+            x = np.concatenate(([low_pad], row_quantiles, [high_pad]))
+            x = np.sort(x)
             y = np.concatenate(([0.0], self.quantiles, [1.0]))
             
             # Ensure x is strictly increasing for interpolation (add tiny noise if flat)
@@ -101,7 +138,10 @@ class PlayerPropModel:
             prob_over = 1.0 - prob_under
             probs.append(prob_over)
             
-        return np.array(probs)
+        raw_probs = np.array(probs, dtype=np.float64)
+        if calibrate and self.calibrator is not None:
+            return self.calibrator.calibrate(raw_probs)
+        return np.clip(raw_probs, 0.0001, 0.9999)
 
 def split_temporal(df: pl.DataFrame, test_years: List[int]) -> Tuple[pl.DataFrame, pl.DataFrame]:
     """Temporal split based on season."""

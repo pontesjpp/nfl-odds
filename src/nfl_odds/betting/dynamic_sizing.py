@@ -35,10 +35,13 @@ def calculate_smart_units(
     z_distance: Optional[float] = None,
     ai_multiplier: Optional[float] = 1.0,
     recommendation_adjustment: str = "MAINTAIN",
-    ai_sizing_rationale: Optional[str] = None
+    ai_sizing_rationale: Optional[str] = None,
+    apply_high_ev_haircut: bool = True
 ) -> Dict[str, Any]:
     """
     Calcula a alocação dinâmica de unidades para uma aposta específica.
+    Aplica haircut prudencial de 0.75x para picks com EV > 8.0% para conter
+    sobre-alocação em probabilidades extremas potencialmente descalibradas.
     """
     # -------------------------------------------------------------
     # 1. Filtro Estrito de EV (2.5% a 15.0%)
@@ -48,6 +51,7 @@ def calculate_smart_units(
             "final_units": 0.0,
             "base_units": 0.0,
             "tail_penalty": 1.0,
+            "high_ev_haircut": 1.0,
             "ai_multiplier": 0.0,
             "status": "EXCLUDED_BY_EV_FILTER",
             "reason": f"EV de {ev_percent:.1f}% fora do intervalo estrito de 2.5% a 15.0%."
@@ -64,20 +68,23 @@ def calculate_smart_units(
             "final_units": 0.0,
             "base_units": 1.0,
             "tail_penalty": 1.0,
+            "high_ev_haircut": 1.0,
             "ai_multiplier": 0.0,
             "status": "VETOED_BY_AI",
             "reason": ai_sizing_rationale or "Aposta vetada pela auditoria de risco da IA."
         }
 
     # -------------------------------------------------------------
-    # 3. Base Quantitativa Normalizada (U_base)
+    # 3. Base Quantitativa Normalizada (U_base) & Haircut de Alto EV
     # -------------------------------------------------------------
+    high_ev_haircut = 0.75 if (apply_high_ev_haircut and ev_percent > 8.0) else 1.00
+
     if ev_percent < 5.0:
         base_units = 0.75
     elif ev_percent < 10.0:
         base_units = 1.00
     else:
-        base_units = 1.25
+        base_units = 1.00 if apply_high_ev_haircut else 1.25
 
     # Amortecimento em odds longas (> 2.20) para conter variância matemática
     if odds > 2.20:
@@ -108,7 +115,7 @@ def calculate_smart_units(
     # -------------------------------------------------------------
     # 6. Produto Híbrido, Clamping e Discretização
     # -------------------------------------------------------------
-    raw_units = base_units * tail_penalty * ai_mult
+    raw_units = base_units * tail_penalty * ai_mult * high_ev_haircut
 
     # Clamp operacional: Mínimo 0.50u, Máximo 2.50u
     clamped = max(0.50, min(2.50, raw_units))
@@ -119,13 +126,15 @@ def calculate_smart_units(
     # Montar justificativa formatada
     mult_pct = int(round((ai_mult - 1.0) * 100))
     mult_sign = f"+{mult_pct}%" if mult_pct > 0 else (f"{mult_pct}%" if mult_pct < 0 else "Neutro")
+    haircut_note = " (Haircut prudencial 0.75x para EV > 8%)" if high_ev_haircut < 1.0 else ""
     
-    rationale = ai_sizing_rationale or f"Alocação base {base_units:.2f}u com ajuste IA de {mult_sign}."
+    rationale = ai_sizing_rationale or f"Alocação base {base_units:.2f}u com ajuste IA de {mult_sign}{haircut_note}."
 
     return {
         "final_units": float(final_units),
         "base_units": float(round(base_units, 2)),
         "tail_penalty": float(round(tail_penalty, 2)),
+        "high_ev_haircut": float(round(high_ev_haircut, 2)),
         "ai_multiplier": float(round(ai_mult, 2)),
         "recommendation_adjustment": adj_clean,
         "sizing_rationale": rationale,

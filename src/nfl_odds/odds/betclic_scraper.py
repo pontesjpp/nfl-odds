@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import polars as pl
 import re
 import os
+import sys
+import argparse
 
 async def scrape_match(url: str):
     print(f"Scraping {url}...")
@@ -12,7 +14,8 @@ async def scrape_match(url: str):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            viewport={"width": 1920, "height": 1080}
         )
         page = await context.new_page()
         
@@ -20,7 +23,7 @@ async def scrape_match(url: str):
         await Stealth().apply_stealth_async(page)
         
         try:
-            response = await page.goto(url, wait_until="domcontentloaded")
+            response = await page.goto(url, wait_until="domcontentloaded", timeout=25000)
             if response and response.status in [403, 429]:
                 print(f"🚨 ANTI-BOT BLOQUEIOU O ACESSO (Status {response.status}) 🚨")
                 await browser.close()
@@ -32,35 +35,69 @@ async def scrape_match(url: str):
             
         await page.wait_for_timeout(2000)
         
-        # 1. Bypass any overlays/cookie banners
+        # Verifica bloqueio ou captcha no título / conteúdo
+        title = await page.title()
+        if "datadome" in title.lower() or "blocked" in title.lower():
+            print(f"🚨 ANTI-BOT BLOQUEIOU O ACESSO (Título: {title}) 🚨")
+            await browser.close()
+            return None
+            
+        # 1. Bypass any overlays / cookie banners (TrustCommander / Didomi / generic)
         try:
-            await page.evaluate("""
-                document.querySelectorAll('div[class*="overlay"], div[class*="backdrop"], [id*="privacy"]').forEach(el => el.remove());
-            """)
+            await page.evaluate("""() => {
+                const selectors = [
+                    '#tc-privacy-wrapper', '.tc-privacy-wrapper', '#popin_tc_privacy',
+                    '#didomi-host', 'div[class*="overlay"]', 'div[class*="backdrop"]',
+                    '[id*="privacy"]', '[class*="privacy"]'
+                ];
+                for (const s of selectors) {
+                    document.querySelectorAll(s).forEach(el => el.remove());
+                }
+                document.body.style.overflow = 'auto';
+            }""")
         except Exception:
             pass
             
-        # 2. Click the Joueurs tab organically
+        # 2. Check if 'Joueurs' tab exists organically
+        joueurs_tab = page.locator('span.tab_label', has_text=re.compile(r'^Joueurs$', re.IGNORECASE)).or_(
+            page.get_by_text("Joueurs", exact=True)
+        ).first
+        
+        has_joueurs = False
+        try:
+            count = await joueurs_tab.count()
+            if count > 0 and await joueurs_tab.is_visible():
+                has_joueurs = True
+        except Exception:
+            has_joueurs = False
+            
+        if not has_joueurs:
+            print("ℹ️ Aba 'Joueurs' não encontrada neste jogo (props de jogadores ainda não abertas pela Betclic).")
+            await browser.close()
+            return pl.DataFrame()
+            
         print("Navigating to 'Joueurs' tab...")
         try:
-            tab = page.get_by_text("Joueurs", exact=True)
-            await tab.scroll_into_view_if_needed(timeout=5000)
-            await tab.click(timeout=5000)
+            await joueurs_tab.scroll_into_view_if_needed(timeout=2500)
+            await joueurs_tab.click(force=True, timeout=3000)
+        except Exception:
+            try:
+                await joueurs_tab.evaluate("el => el.click()")
+            except Exception as e:
+                print(f"Error clicking tab: {e}")
+                await browser.close()
+                return pl.DataFrame()
             
-            # Wait for markets to load
-            for _ in range(10):
-                await page.wait_for_timeout(1000)
-                count = await page.locator('.marketBox').count()
-                if count > 15:
-                    break
-                    
-        except Exception as e:
-            print(f"Error clicking tab: {e}")
-            
-        await page.wait_for_timeout(3000)
+        # Wait for markets to load
+        for _ in range(15):
+            await page.wait_for_timeout(500)
+            count = await page.locator('.marketBox').count()
+            if count > 15:
+                break
+                
+        await page.wait_for_timeout(1000)
         
         # 3. Expand all 'see more' / 'afficher plus' buttons
-        print("Expanding all 'See More' player lists...")
         try:
             see_more_btns = page.locator('button.is-seeMore')
             count = await see_more_btns.count()
@@ -68,21 +105,20 @@ async def scrape_match(url: str):
                 print(f"Found {count} 'See More' buttons. Clicking them...")
                 for i in range(count):
                     try:
-                        await see_more_btns.nth(i).scroll_into_view_if_needed(timeout=2000)
-                        await see_more_btns.nth(i).click(timeout=3000)
-                        await page.wait_for_timeout(300)
-                    except Exception as e:
+                        await see_more_btns.nth(i).click(force=True, timeout=1500)
+                        await page.wait_for_timeout(200)
+                    except Exception:
                         pass
         except Exception as e:
             print(f"Error expanding 'See More' buttons: {e}")
             
-        await page.wait_for_timeout(3000)
+        await page.wait_for_timeout(1000)
         
-        # 4. Extract the HTML state
+        # 4. Extract HTML state
         html = await page.content()
         await browser.close()
         
-    # 4. Parse the HTML using BeautifulSoup
+    # Parse the HTML using BeautifulSoup
     soup = BeautifulSoup(html, 'html.parser')
     markets = soup.select('.marketBox')
     
@@ -101,14 +137,12 @@ async def scrape_match(url: str):
             
         selections = m.select('.marketBox_lineSelection')
         for sel in selections:
-            # The player name is usually in the label
             label = sel.select_one('.marketBox_label')
             if not label:
                 continue
                 
             label_text = label.get_text(strip=True)
             
-            # The odds are in the button
             btn = sel.select_one('bcdk-bet-button-odds-animated')
             odd_str = btn.get_text(strip=True).replace(',', '.') if btn else "1.85"
             try:
@@ -116,7 +150,6 @@ async def scrape_match(url: str):
             except ValueError:
                 odd_val = 1.85
                 
-            # Parse 'Jadarian Price + de 8,5' vs '- de 8,5'
             match = re.match(r'(.+) ([+-]) de ([\d,]+)', label_text)
             if match:
                 player = match.group(1).strip()
@@ -138,7 +171,6 @@ async def scrape_match(url: str):
                     "bookmaker": "Betclic"
                 })
             else:
-                # TD Scorers
                 if "Touchdown" in market_name:
                     data.append({
                         "player_name": label_text.strip(),
@@ -154,50 +186,77 @@ async def scrape_match(url: str):
     if len(df) > 0:
         print(f"Loaded {len(df)} player props.")
     else:
-        print("Warning: Scraped data is empty. Anti-bot triggered or format changed.")
+        print("Warning: Scraped data is empty after navigating to 'Joueurs'. Anti-bot triggered or format changed.")
         
     return df
 
-async def main():
-    if not os.path.exists("data/links.txt"):
-        print("Error: data/links.txt not found. Please create it with Betclic URLs.")
-        return
+async def run_betclic_scraping(slow_mode: bool = True, links_file: str = "data/links.txt") -> pl.DataFrame:
+    if not os.path.exists(links_file):
+        print(f"Error: {links_file} not found. Please create it with Betclic URLs.")
+        return pl.DataFrame()
 
-    with open("data/links.txt", "r") as f:
+    with open(links_file, "r") as f:
         links = [line.strip() for line in f if line.strip()]
 
-    if not links:
-        print("No links found in data/links.txt")
-        return
+    # Preserve original order while deduplicating
+    links = list(dict.fromkeys(links))
 
-    print(f"Found {len(links)} links. Starting sequential scraping...")
+    if not links:
+        print(f"No links found in {links_file}")
+        return pl.DataFrame()
+
+    mode_text = "🐢 Slow Scrape (recomendado anti-bot: 30-60s de intervalo)" if slow_mode else "⚡ Fast Scrape (5-12s de intervalo)"
+    print(f"Encontrados {len(links)} jogos únicos para raspar. Modo: {mode_text}")
     
     all_dfs = []
     
-    for i, url in enumerate(links):
-        df = await scrape_match(url)
-        
-        if df is None:
-            print("Aborting remaining links due to anti-bot block.")
-            break
+    for i, url in enumerate(links, 1):
+        print(f"\n--- Processando jogo {i}/{len(links)} ---")
+        try:
+            df = await scrape_match(url)
             
-        if not df.is_empty():
-            all_dfs.append(df)
+            if df is None:
+                print("🚨 Abortando jogos restantes devido a bloqueio do anti-bot para proteger seu IP.")
+                break
+                
+            if not df.is_empty():
+                all_dfs.append(df)
+            else:
+                print("Nenhum dado retornado para este jogo.")
+        except Exception as e:
+            print(f"Erro ao processar o jogo: {e}")
             
-        if i < len(links) - 1:
-            # Slow Scrape Mode: Wait 45 to 90 seconds to avoid DataDome velocity triggers
+        if i < len(links):
             import random
-            wait_time = random.uniform(45.0, 90.0)
-            print(f"🐢 Slow Scrape: Waiting {wait_time:.1f} seconds to simulate human reading time and protect IP...")
+            if slow_mode:
+                wait_time = random.uniform(30.0, 60.0)
+                print(f"🐢 Slow Scrape: Esperando {wait_time:.1f}s para simular leitura humana e proteger IP...")
+            else:
+                wait_time = random.uniform(5.0, 12.0)
+                print(f"⚡ Fast Scrape: Esperando {wait_time:.1f}s para evitar bloqueio de IP...")
             await asyncio.sleep(wait_time)
             
     if all_dfs:
         final_df = pl.concat(all_dfs)
         os.makedirs("data", exist_ok=True)
-        final_df.write_parquet("data/betclic_parsed_odds.parquet")
-        print(f"Successfully saved a total of {len(final_df)} props to data/betclic_parsed_odds.parquet")
+        out_path = "data/betclic_parsed_odds.parquet"
+        final_df.write_parquet(out_path)
+        print(f"\n✅ Scraping concluído! Foram salvas {len(final_df)} props totais em '{out_path}'.")
+        print("Agora você pode rodar: uv run python pipeline.py --live")
+        return final_df
     else:
-        print("No data extracted from any links.")
+        print("\n❌ Nenhuma prop foi encontrada/raspada em nenhum jogo (mercados ainda fechados na Betclic).")
+        return pl.DataFrame()
+
+async def main():
+    parser = argparse.ArgumentParser(description="Scraper de Player Props da Betclic")
+    parser.add_argument("--fast", action="store_true", help="Executa no modo rápido (5-12s delay)")
+    parser.add_argument("--slow", action="store_true", default=True, help="Executa no modo slow human-like (30-60s delay, padrão)")
+    parser.add_argument("--links", default="data/links.txt", help="Caminho para arquivo de links")
+    args = parser.parse_args()
+
+    slow_mode = not args.fast
+    await run_betclic_scraping(slow_mode=slow_mode, links_file=args.links)
 
 if __name__ == "__main__":
     asyncio.run(main())

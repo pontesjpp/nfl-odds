@@ -8,10 +8,12 @@ TEAM_MAP = {
     "JAC": "JAX", "OAK": "LV", "SDC": "LAC", "STL": "LA", "RAM": "LA"
 }
 
-def patch_week1_teams(df_test_base: pl.DataFrame) -> pl.DataFrame:
+def patch_week1_teams(df_test_base: pl.DataFrame, week: int = 2) -> pl.DataFrame:
     """
     Overwrites the 'team' and team/opponent features in the latest player row 
-    based on the 2026 depth charts / df_ids for Week 1 Cold Start.
+    based on the 2026 depth charts / df_ids and upcoming NFL schedule.
+    Also imputes early-season / cold-start season averages and shrinkage to ensure
+    zero nulls in the feature vector.
     """
     df_ids = load_player_ids()
     # df_ids has 'gsis_id' and 'team'
@@ -39,10 +41,10 @@ def patch_week1_teams(df_test_base: pl.DataFrame) -> pl.DataFrame:
     except Exception as e:
         print(f"Warning: could not augment with 2026 depth chart team: {e}")
     
-    # We also need the current opponent and vegas lines.
+    # We also need the current opponent and vegas lines for the specified week.
     try:
         from nfl_odds.odds.schedule_manager import get_upcoming_games
-        df_sched = get_upcoming_games(2026, 1)
+        df_sched = get_upcoming_games(2026, week)
         # Create a mapping of team -> opponent & lines
         opp_map = []
         for row in df_sched.iter_rows(named=True):
@@ -124,7 +126,7 @@ def patch_week1_teams(df_test_base: pl.DataFrame) -> pl.DataFrame:
     # Ensure chronological order by week so rolling stats take the end of the previous season
     df_sorted = df_test_base.sort(["week"])
 
-    # Get the latest stats for each TEAM from 2025
+    # Get the latest stats for each TEAM
     latest_team_stats = df_sorted.group_by("team").agg([
         pl.col(c).drop_nulls().last() for c in team_cols if c in df_test_base.columns
     ])
@@ -133,7 +135,7 @@ def patch_week1_teams(df_test_base: pl.DataFrame) -> pl.DataFrame:
         pl.col(c).drop_nulls().last() for c in opp_cols if c in df_test_base.columns
     ])
 
-    # For Week 1 baseline, use the full season average from the previous season (2025)
+    # Full season average from previous defense data
     try:
         df_stats_prev = load_player_stats([2025])
         df_def_prev = df_stats_prev.group_by(["opponent_team", "game_id"]).agg([
@@ -184,6 +186,79 @@ def patch_week1_teams(df_test_base: pl.DataFrame) -> pl.DataFrame:
         weather_cols.append(pl.lit(0.0).alias("precipitation_pct"))
     df = df.with_columns(weather_cols)
 
+    # -------------------------------------------------------------
+    # Impute season_avg, shrunk_season_avg and rolling nulls for early-season
+    # -------------------------------------------------------------
+    stat_prefixes = [
+        "passing_yards", "attempts", "completions", "passing_cpoe",
+        "epa_per_dropback", "sack_rate", "adot",
+        "rushing_yards", "carries", "carry_share",
+        "receiving_yards", "targets", "receptions", "catch_rate",
+        "receiving_yards_after_catch", "wopr", "target_share",
+        "air_yards_share", "receiving_adot"
+    ]
+    fill_exprs = []
+    handled_cols = set()
+    for p in stat_prefixes:
+        s_col = f"{p}_season_avg"
+        if s_col in df.columns and s_col not in handled_cols:
+            handled_cols.add(s_col)
+            # Fallback chain: actual stat -> avg_3 -> avg_5 -> 0.0
+            fallback = pl.col(p) if p in df.columns else pl.lit(0.0)
+            if f"{p}_avg_3" in df.columns:
+                fallback = fallback.fill_null(pl.col(f"{p}_avg_3"))
+            if f"{p}_avg_5" in df.columns:
+                fallback = fallback.fill_null(pl.col(f"{p}_avg_5"))
+            fallback = fallback.fill_null(0.0)
+            fill_exprs.append(pl.col(s_col).fill_null(fallback))
+            
+        shrunk_col = f"{p}_shrunk_season_avg"
+        if shrunk_col in df.columns and shrunk_col not in handled_cols:
+            handled_cols.add(shrunk_col)
+            s_val = pl.col(s_col) if s_col in df.columns else pl.lit(0.0)
+            fill_exprs.append(pl.col(shrunk_col).fill_null(s_val).fill_null(0.0))
+
+    other_feature_defaults = {
+        "role_stability_score": 1.0,
+        "rushing_yards_std_5": 0.0,
+        "passing_yards_std_5": 0.0,
+        "receiving_yards_std_5": 0.0,
+        "carries_ewm_3": 0.0,
+        "rushing_yards_ewm_3": 0.0,
+        "rybc_avg_3": 0.0,
+        "ryac_avg_3": 0.0,
+        "light_box_pct_avg_3": 0.0,
+        "avg_box_count_avg_3": 0.0,
+        "offense_pct_ewm_3": 0.0,
+        "rz_carry_share_ewm_3": 0.0,
+        "carry_share_ewm_3": 0.0,
+        "committee_entropy_avg_3": 0.0,
+        "is_turf": False,
+        "wopr_ewm_5": 0.0,
+        "target_share_ewm_5": 0.0,
+        "air_yards_share_ewm_5": 0.0,
+        "offense_pct_avg_5": 0.0,
+        "red_zone_targets_avg_5": 0.0,
+        "rz_efficiency_offense_avg_5": 0.0,
+        "days_rest": 7.0,
+        "is_short_week": False,
+    }
+    for col, val in other_feature_defaults.items():
+        if col in df.columns and col not in handled_cols:
+            handled_cols.add(col)
+            fill_exprs.append(pl.col(col).fill_null(val))
+            
+    # Also ensure rolling stats have fallbacks for rookies / missing players
+    for p in stat_prefixes:
+        for w in [3, 5, 10]:
+            avg_col = f"{p}_avg_{w}"
+            if avg_col in df.columns and avg_col not in handled_cols:
+                handled_cols.add(avg_col)
+                fb = pl.col(p) if p in df.columns else pl.lit(0.0)
+                fill_exprs.append(pl.col(avg_col).fill_null(fb).fill_null(0.0))
+
+    df = df.with_columns(fill_exprs)
+
     # Recalculate interactions
     interaction_exprs = [
         (pl.col("implied_team_total") * pl.col("proe_avg_5")).fill_null(0.0).alias("implied_team_total_x_proe"),
@@ -220,5 +295,3 @@ def patch_week1_teams(df_test_base: pl.DataFrame) -> pl.DataFrame:
     df = df.drop(["current_team", "current_opponent", "current_is_home", "current_spread_line", "current_total_line"], strict=False)
     
     return df
-
-

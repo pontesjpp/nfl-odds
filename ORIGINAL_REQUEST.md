@@ -39,3 +39,36 @@ Generate a structured report at `SECURITY_AUDIT_REPORT.md` documenting:
 ### Deliverables & Independent Verification
 - [ ] `SECURITY_AUDIT_REPORT.md` is generated in `/home/jppontes/nfl-odds` with clear severity ratings, file/line locations, and remediation steps.
 - [ ] An automated programmatic verification script is executed to validate repository clean state, returning exit code 0.
+
+## Follow-up — 2026-09-15T09:30:53Z
+
+Implement the Week 2 NFL props predictive and betting pipeline improvements plan: calibrate model win probabilities to address Brier score deficit, enforce conservative risk management rules (haircut for high EV bets and default flat sizing), and introduce automated regression verification.
+
+Working directory: /home/jppontes/nfl-odds
+Integrity mode: development
+
+## Requirements
+
+### R1. Probability Calibration Layer
+Introduce a formal probability calibration stage (e.g. Platt Scaling or Isotonic Regression) applied to the XGBoost quantile-interpolated probabilities before EV calculation. The calibration must demonstrably improve the Brier Skill Score against a baseline predictor on historical holdout data.
+
+### R2. Stake Management & High-EV Haircut
+Adjust the betting logic to apply a risk haircut (reduced exposure factor, e.g. 0.75x) to bets with high nominal expected value (EV > 8.0%) rather than inflating stakes, while keeping the Safe Flat (1.0u) allocation tier prominently featured as the recommended baseline.
+
+### R3. Automated Pipeline Tests & Significance Verification
+Build an end-to-end regression test suite verifying that odds parsing, probability calibration, EV evaluation, and stake calculations produce valid and bounded outputs. Ensure the weekly significance tracking routine integrates cleanly with settled results.
+
+## Acceptance Criteria
+
+### Calibration & Edge Evaluation
+- [ ] Calibration transformation is applied to win probabilities across all supported markets (passing, rushing, receiving yards) without producing unmonotonic or NaN probabilities.
+- [ ] A test script or benchmark confirms a positive or improved Brier Skill Score on validation splits compared to uncalibrated probabilities.
+- [ ] The fair odds and EV calculations strictly consume the calibrated probabilities.
+
+### Risk Sizing
+- [ ] Portfolio sizing engine applies an explicit haircut to picks where EV > 8.0% instead of awarding higher unit multipliers.
+- [ ] Safe Flat portfolio calculations remain exact 1.0u per bet regardless of model multipliers.
+
+### Verification & Robustness
+- [ ] A dedicated test command (e.g. pytest or equivalent test runner) executes all unit and pipeline verification tests with exit code 0.
+- [ ] No regression is introduced to existing dashboard API endpoints (`/api/predict`, `/api/portfolio`, `/api/top-picks`).

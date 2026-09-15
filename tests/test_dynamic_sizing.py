@@ -38,9 +38,20 @@ def test_over_vs_under_polarities():
     assert res_under_boost["final_units"] == 1.25
 
 def test_discretization_and_clamping():
-    res_boost = calculate_smart_units(ev_percent=14.0, ai_multiplier=1.35, recommendation_adjustment="BOOST")
+    res_boost = calculate_smart_units(ev_percent=14.0, ai_multiplier=1.35, recommendation_adjustment="BOOST", apply_high_ev_haircut=False)
     assert res_boost["final_units"] == 1.75
     assert (res_boost["final_units"] * 4) % 1 == 0
+
+def test_high_ev_haircut():
+    # Bets with EV > 8.0% get 0.75x haircut factor
+    res_high_ev = calculate_smart_units(ev_percent=11.0, apply_high_ev_haircut=True)
+    assert res_high_ev["high_ev_haircut"] == 0.75
+    assert res_high_ev["final_units"] == 0.75
+
+    # Bets with EV <= 8.0% do not get haircut
+    res_med_ev = calculate_smart_units(ev_percent=7.5, apply_high_ev_haircut=True)
+    assert res_med_ev["high_ev_haircut"] == 1.00
+    assert res_med_ev["final_units"] == 1.00
 
 def test_tail_penalty():
     res_normal = calculate_smart_units(ev_percent=8.0, z_distance=0.3)

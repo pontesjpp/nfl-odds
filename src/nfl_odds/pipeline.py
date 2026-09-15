@@ -12,8 +12,8 @@ from nfl_odds.features.patch_week1 import patch_week1_teams
 from nfl_odds.models.train import PlayerPropModel, split_temporal
 from nfl_odds.betting.ev_calc import analyze_opportunities
 
-def run_pipeline(live=False):
-    print("1. Collecting NFL Data (2022-2026)...")
+def run_pipeline(live=False, week=2):
+    print(f"1. Collecting NFL Data (2022-2026) for Week {week}...")
     years_to_load = [2022, 2023, 2024, 2025, 2026]
     
     try:
@@ -134,11 +134,14 @@ def run_pipeline(live=False):
     
     all_results = []
     
-    df_test_base = patch_week1_teams(df_test_base)
+    df_test_base = patch_week1_teams(df_test_base, week=week)
 
     os.makedirs("data", exist_ok=True)
-    df_features_live = df_test_base
-    df_features_live.write_parquet("data/live_features_tmp.parquet")
+    df_features_full = pl.concat([
+        df_features.filter(pl.col("season") != latest_season),
+        df_test_base
+    ], how="diagonal_relaxed")
+    df_features_full.write_parquet("data/live_features_tmp.parquet")
     os.replace("data/live_features_tmp.parquet", "data/live_features.parquet")
     
     for market, config in markets_config.items():
@@ -159,6 +162,12 @@ def run_pipeline(live=False):
         
         model = PlayerPropModel(target=market)
         model.fit(train_df, config["features"], sample_weight=sample_weights)
+
+        # Attach persisted market calibrator if available
+        cal_path = f"data/{market}_calibrator.joblib"
+        if os.path.exists(cal_path):
+            from nfl_odds.models.calibration import ProbabilityCalibrator
+            model.calibrator = ProbabilityCalibrator.load(cal_path)
         
         model.save(f"data/{market}_model_tmp.joblib")
         os.replace(f"data/{market}_model_tmp.joblib", f"data/{market}_model.joblib")
@@ -175,7 +184,7 @@ def run_pipeline(live=False):
             
         if len(test_eval) > 0:
             lines = test_eval["line"].to_numpy()
-            probs_over = model.probability_over_line(test_eval, lines)
+            probs_over = model.probability_over_line(test_eval, lines, calibrate=True)
             
             df_eval_with_odds = test_eval.select(["player_name", "team", "season", "week", "market", "line", "odds", "side", "espn_id"])
             results = analyze_opportunities(df_eval_with_odds, probs_over)
@@ -191,9 +200,9 @@ def run_pipeline(live=False):
 
         try:
             from nfl_odds.odds.schedule_manager import get_upcoming_games
-            df_sched_w1 = get_upcoming_games(2026, 1)
+            df_sched_w = get_upcoming_games(2026, week)
             sched_map = {}
-            for row in df_sched_w1.iter_rows(named=True):
+            for row in df_sched_w.iter_rows(named=True):
                 sched_map[row["home_team"]] = (row["game_id"], row["away_team"])
                 sched_map[row["away_team"]] = (row["game_id"], row["home_team"])
             
@@ -201,7 +210,7 @@ def run_pipeline(live=False):
             opps = [sched_map.get(t, (None, None))[1] for t in final_results["team"]]
             final_results = final_results.with_columns([
                 pl.lit(2026).alias("season"),
-                pl.lit(1).alias("week"),
+                pl.lit(week).alias("week"),
                 pl.Series("game_id", game_ids),
                 pl.Series("opponent", opps)
             ])
@@ -227,8 +236,9 @@ def run_pipeline(live=False):
 def main():
     parser = argparse.ArgumentParser(description="NFL Odds EV Pipeline")
     parser.add_argument("--live", action="store_true", help="Use live/extracted Betclic odds")
+    parser.add_argument("--week", type=int, default=2, help="NFL Week number (default: 2)")
     args = parser.parse_args()
-    run_pipeline(live=args.live)
+    run_pipeline(live=args.live, week=args.week)
 
 if __name__ == "__main__":
     main()

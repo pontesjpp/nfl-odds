@@ -27,7 +27,9 @@ def analyze_opportunities(df_odds: pl.DataFrame, model_probs: np.ndarray) -> pl.
     
     df = df.with_columns(
         pl.when(pl.col("side") == "over").then(pl.col("model_prob"))
-        .otherwise(1.0 - pl.col("model_prob")).alias("prob_win")
+        .otherwise(1.0 - pl.col("model_prob"))
+        .clip(0.0001, 0.9999)
+        .alias("prob_win")
     )
     
     df = df.with_columns([
@@ -41,7 +43,7 @@ def analyze_opportunities(df_odds: pl.DataFrame, model_probs: np.ndarray) -> pl.
     
     df = df.with_columns([
         ((pl.col("ev_10_eur") / 10.0) * 100.0).alias("ev_percent"),
-        (1.0 / pl.col("prob_win")).alias("fair_odds")
+        (1.0 / pl.col("prob_win")).clip(1.0, 10000.0).alias("fair_odds")
     ])
     
     return df
