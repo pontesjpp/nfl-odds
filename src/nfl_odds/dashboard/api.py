@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import os
 import math
+import json
 
 from nfl_odds.models.train import PlayerPropModel
 from nfl_odds.betting.ev_calc import calculate_implied_probability, calculate_ev, calculate_edge
@@ -167,30 +168,137 @@ for m in ["rushing_yards", "receiving_yards", "passing_yards"]:
     except Exception as e:
         print(f"Error loading {m} model: {e}")
 
+# Zero-overhead lightweight data loaders and caches to stay under 512MB RAM
+_live_bets_cache = {"mtime": 0.0, "df": pd.DataFrame(), "records": []}
+
+def get_live_bets_df(force: bool = False) -> pd.DataFrame:
+    global _live_bets_cache
+    path = "data/live_value_bets.parquet"
+    if not os.path.exists(path):
+        return pd.DataFrame()
+    try:
+        mtime = os.path.getmtime(path)
+        if not force and mtime == _live_bets_cache["mtime"] and not _live_bets_cache["df"].empty:
+            return _live_bets_cache["df"]
+        df = pl.read_parquet(path).to_pandas()
+        if "ev_percent" in df.columns:
+            df = df.sort_values(by="ev_percent", ascending=False)
+        df = df.replace([np.inf, -np.inf], None)
+        df = df.where(pd.notnull(df), None)
+        _live_bets_cache["mtime"] = mtime
+        _live_bets_cache["df"] = df
+        _live_bets_cache["records"] = df.to_dict(orient="records")
+        return df
+    except Exception as e:
+        print(f"Error loading live bets: {e}")
+        return _live_bets_cache["df"]
+
+def is_live_features_available() -> bool:
+    return os.path.exists("data/live_features.parquet") and os.path.getsize("data/live_features.parquet") > 0
+
+_players_cache = {"mtime": 0.0, "all": [], "by_market": {}}
+
+def get_cached_players(market: Optional[str] = None) -> List[dict]:
+    global _players_cache
+    path = "data/live_features.parquet"
+    if not os.path.exists(path):
+        return []
+    try:
+        mtime = os.path.getmtime(path)
+        if mtime != _players_cache["mtime"] or not _players_cache["all"]:
+            lf = pl.scan_parquet(path)
+            schema = lf.collect_schema()
+            cols = ["player_name", "position", "team"]
+            if "player_display_name" in schema:
+                cols.append("player_display_name")
+            if "opponent_team" in schema:
+                cols.append("opponent_team")
+            
+            latest_season = lf.select(pl.col("season").max()).collect()[0, 0]
+            latest_week = lf.filter(pl.col("season") == latest_season).select(pl.col("week").max()).collect()[0, 0]
+            min_week = max(1, (latest_week or 1) - 4)
+            
+            df_latest = lf.filter((pl.col("season") == latest_season) & (pl.col("week") >= min_week))
+            players_df = df_latest.select([c for c in cols if c in schema]).unique().collect()
+            
+            if "player_display_name" in players_df.columns:
+                players_df = players_df.sort("player_display_name")
+            else:
+                players_df = players_df.sort("player_name")
+                
+            records = players_df.to_dicts()
+            _players_cache["mtime"] = mtime
+            _players_cache["all"] = records
+            _players_cache["by_market"] = {}
+            
+        if not market:
+            return _players_cache["all"]
+            
+        if market not in _players_cache["by_market"]:
+            pos_map = {
+                "passing_yards": {"QB"},
+                "rushing_yards": {"RB", "QB", "WR", "FB"},
+                "receiving_yards": {"WR", "TE", "RB"}
+            }
+            allowed = pos_map.get(market)
+            if allowed:
+                _players_cache["by_market"][market] = [
+                    p for p in _players_cache["all"] if p.get("position") in allowed
+                ]
+            else:
+                _players_cache["by_market"][market] = _players_cache["all"]
+                
+        return _players_cache["by_market"][market]
+    except Exception as e:
+        print(f"Error loading players cache: {e}")
+        return _players_cache["all"]
+
+def query_live_player(player_name: str, espn_id: Optional[str] = None) -> pl.DataFrame:
+    path = "data/live_features.parquet"
+    if not os.path.exists(path):
+        return pl.DataFrame()
+    try:
+        lf = pl.scan_parquet(path)
+        schema = lf.collect_schema()
+        if espn_id and str(espn_id) not in ("undefined", "null", "") and "espn_id" in schema:
+            res = lf.filter(pl.col("espn_id").cast(pl.Utf8) == str(espn_id)).collect()
+            if not res.is_empty():
+                return res
+        clean_name = player_name.strip()
+        has_display = "player_display_name" in schema
+        filt = (pl.col("player_name") == clean_name) | (pl.col("player_name").str.to_lowercase() == clean_name.lower())
+        if has_display:
+            filt = filt | (pl.col("player_display_name") == clean_name) | (pl.col("player_display_name").str.to_lowercase() == clean_name.lower())
+        return lf.filter(filt).collect()
+    except Exception as e:
+        print(f"Error querying live player: {e}")
+        return pl.DataFrame()
+
+def query_team_defense(opp_code: str, features: Optional[List[str]] = None) -> pl.DataFrame:
+    path = "data/live_features.parquet"
+    if not os.path.exists(path):
+        return pl.DataFrame()
+    try:
+        opp_code = opp_code.upper().strip()
+        lf = pl.scan_parquet(path)
+        schema = lf.collect_schema()
+        cols = ["opponent_team", "team", "week", "season"]
+        if features:
+            cols += [f for f in features if f in schema and f not in cols]
+            lf = lf.select(cols)
+        filt = (pl.col("opponent_team") == opp_code) | (pl.col("team") == opp_code)
+        return lf.filter(filt).collect()
+    except Exception as e:
+        print(f"Error querying team defense: {e}")
+        return pl.DataFrame()
+
+# Compatibility dummy references
 df_live = pl.DataFrame()
-try:
-    if os.path.exists("data/live_features.parquet"):
-        df_live = pl.read_parquet("data/live_features.parquet")
-except Exception:
-    pass
-
-df_backtest = pd.DataFrame()
-try:
-    if os.path.exists("data/backtest_results.parquet"):
-        df_backtest = pl.read_parquet("data/backtest_results.parquet").to_pandas()
-        df_backtest = df_backtest.replace([np.inf, -np.inf], None)
-        df_backtest = df_backtest.where(pd.notnull(df_backtest), None)
-except Exception:
-    pass
-
 df_live_bets = pd.DataFrame()
-try:
-    if os.path.exists("data/live_value_bets.parquet"):
-        df_live_bets = pl.read_parquet("data/live_value_bets.parquet").to_pandas()
-        df_live_bets = df_live_bets.replace([np.inf, -np.inf], None)
-        df_live_bets = df_live_bets.where(pd.notnull(df_live_bets), None)
-except Exception:
-    pass
+
+# Warm-up lightweight caches at boot
+get_live_bets_df()
+get_cached_players()
 
 NFL_TEAMS = [
     {"code": "ARI", "name": "Arizona Cardinals"},
@@ -233,40 +341,17 @@ def get_teams():
 
 @app.get("/api/status")
 def status():
+    bets_df = get_live_bets_df()
     return {
         "models_loaded": list(models.keys()),
-        "live_data_loaded": not df_live.is_empty(),
-        "live_bets_loaded": not df_live_bets.empty,
+        "live_data_loaded": is_live_features_available(),
+        "live_bets_loaded": not bets_df.empty,
         "read_only": READ_ONLY_MODE
     }
 
 @app.get("/api/players")
 def get_players(market: str = None):
-    if df_live.is_empty():
-        return []
-    latest_week = df_live["week"].max()
-    df_latest = df_live.filter(pl.col("week") >= latest_week - 4)
-    
-    if market == "passing_yards":
-        df_latest = df_latest.filter(pl.col("position") == "QB")
-    elif market == "rushing_yards":
-        df_latest = df_latest.filter(pl.col("position").is_in(["RB", "QB", "WR", "FB"]))
-    elif market == "receiving_yards":
-        df_latest = df_latest.filter(pl.col("position").is_in(["WR", "TE", "RB"]))
-        
-    cols = ["player_name", "position", "team"]
-    if "player_display_name" in df_latest.columns:
-        cols.append("player_display_name")
-    if "opponent_team" in df_latest.columns:
-        cols.append("opponent_team")
-        
-    players_df = df_latest.select(cols).unique()
-    if "player_display_name" in players_df.columns:
-        players_df = players_df.sort("player_display_name")
-    else:
-        players_df = players_df.sort("player_name")
-        
-    return players_df.to_pandas().replace([np.inf, -np.inf], None).where(pd.notnull(players_df.to_pandas()), None).to_dict(orient="records")
+    return get_cached_players(market)
 
 @app.get("/api/players/{player_name}/features")
 def get_player_features(
@@ -278,30 +363,10 @@ def get_player_features(
     season: int = 2026,
     week: int = 1
 ):
-    global df_live
-    try:
-        if os.path.exists("data/live_features.parquet"):
-            df_live = pl.read_parquet("data/live_features.parquet")
-    except Exception:
-        pass
-        
-    if df_live.is_empty():
+    if not is_live_features_available():
         raise HTTPException(status_code=400, detail="Data not loaded")
     
-    player_data_all = pl.DataFrame()
-    if espn_id and espn_id != "undefined" and espn_id != "null":
-        # Cast espn_id column to str in case it's integer in parquet
-        player_data_all = df_live.filter(pl.col("espn_id").cast(pl.Utf8) == str(espn_id))
-        
-    if player_data_all.is_empty():
-        clean_name = player_name.strip()
-        player_data_all = df_live.filter(
-            (pl.col("player_name") == clean_name) |
-            (pl.col("player_display_name") == clean_name) |
-            (pl.col("player_name").str.to_lowercase() == clean_name.lower()) |
-            (pl.col("player_display_name").str.to_lowercase() == clean_name.lower())
-        )
-        
+    player_data_all = query_live_player(player_name, espn_id=espn_id)
     if player_data_all.is_empty():
         raise HTTPException(status_code=404, detail="Player not found")
         
@@ -346,11 +411,11 @@ def get_player_features(
     if opponent and opponent.strip():
         opp_code = opponent.upper().strip()
         if opp_code != active_opponent:
-            opp_rows = df_live.filter((pl.col("opponent_team") == opp_code) | (pl.col("team") == opp_code))
+            def_features = [c for c in features_to_return if c.startswith("def_") or "opp" in c]
+            opp_rows = query_team_defense(opp_code, def_features)
             if not opp_rows.is_empty():
                 latest_opp_week = opp_rows["week"].max()
                 opp_def_data = opp_rows.filter(pl.col("week") == latest_opp_week).head(1)
-                def_features = [c for c in features_to_return if c.startswith("def_") or "opp" in c]
                 for c in def_features:
                     if c in opp_def_data.columns and c in player_data.columns:
                         val = opp_def_data[c][0]
@@ -455,7 +520,7 @@ def predict(req: PredictRequest):
         prob_over = max(0.001, min(0.999, prob_over))
         prob_under = 1.0 - prob_over
     else:
-        if df_live.is_empty():
+        if not is_live_features_available():
             raise HTTPException(status_code=400, detail="Data not loaded")
         
         if req.market not in models:
@@ -471,13 +536,7 @@ def predict(req: PredictRequest):
             
         model_to_use = models[req.market]
             
-        clean_name = req.player_name.strip()
-        player_data_all = df_live.filter(
-            (pl.col("player_name") == clean_name) |
-            (pl.col("player_display_name") == clean_name) |
-            (pl.col("player_name").str.to_lowercase() == clean_name.lower()) |
-            (pl.col("player_display_name").str.to_lowercase() == clean_name.lower())
-        )
+        player_data_all = query_live_player(req.player_name)
         if player_data_all.is_empty():
             raise HTTPException(status_code=404, detail=f"Player '{req.player_name}' not found")
             
@@ -502,11 +561,11 @@ def predict(req: PredictRequest):
         if req.opponent and req.opponent.strip():
             opp_code = req.opponent.upper().strip()
             if opp_code != active_opponent:
-                opp_rows = df_live.filter((pl.col("opponent_team") == opp_code) | (pl.col("team") == opp_code))
+                def_features = [c for c in model_to_use.features if c.startswith("def_") or "opp" in c]
+                opp_rows = query_team_defense(opp_code, def_features)
                 if not opp_rows.is_empty():
                     latest_opp_week = opp_rows["week"].max()
                     opp_def_data = opp_rows.filter(pl.col("week") == latest_opp_week).head(1)
-                    def_features = [c for c in model_to_use.features if c.startswith("def_") or "opp" in c]
                     for c in def_features:
                         if c in opp_def_data.columns and c in player_data.columns:
                             val = opp_def_data[c][0]
@@ -582,80 +641,105 @@ def predict(req: PredictRequest):
 
 schedule_cache = None
 
+def load_cached_schedule(season: int = 2026) -> List[dict]:
+    schedule_file = f"data/schedule_{season}.json"
+    if os.path.exists(schedule_file):
+        try:
+            with open(schedule_file, "r") as f:
+                return json.load(f)
+        except Exception as err:
+            print(f"Error reading {schedule_file}: {err}")
+    try:
+        import nflreadpy as nfl
+        df = nfl.load_schedules([season])
+        if isinstance(df, pd.DataFrame):
+            df = pl.from_pandas(df)
+        week1 = df.filter(pl.col('week') == 1)
+        cols = ['game_id', 'home_team', 'away_team', 'stadium', 'location', 'gameday', 'gametime', 'home_score', 'away_score']
+        avail_cols = [c for c in cols if c in week1.columns]
+        week1 = week1.select(avail_cols)
+        records = week1.to_dicts()
+        try:
+            with open(schedule_file, "w") as f:
+                json.dump(records, f, indent=2)
+        except Exception:
+            pass
+        return records
+    except Exception as e:
+        print(f"Error loading schedule via nflreadpy: {e}")
+        return []
+
 @app.get("/api/schedule")
 def get_schedule(refresh: bool = False):
     global schedule_cache
     if schedule_cache is not None and not refresh:
         return schedule_cache
         
-    try:
-        import nflreadpy as nfl
-        df = nfl.load_schedules([2026])
-        if isinstance(df, pd.DataFrame):
-            df = pl.from_pandas(df)
-        week1 = df.filter(pl.col('week') == 1)
-        
-        cols = ['game_id', 'home_team', 'away_team', 'stadium', 'location', 'gameday', 'gametime', 'home_score', 'away_score']
-        avail_cols = [c for c in cols if c in week1.columns]
-        week1 = week1.select(avail_cols)
-        records = week1.to_dicts()
+    records = load_cached_schedule(2026)
+    if not records:
+        return []
 
-        # Enriquecer com ESPN live scoreboard (placar em tempo real, status de finalizado / em andamento)
-        try:
-            from nfl_odds.data.live_stats import fetch_espn_scoreboard, clean_team_code
-            espn_games = fetch_espn_scoreboard(2026, 1, force=refresh)
-            espn_map = {}
-            for eg in espn_games:
-                key = (clean_team_code(eg.get("away_team")), clean_team_code(eg.get("home_team")))
-                espn_map[key] = eg
-                
-            for r in records:
-                key = (clean_team_code(r.get("away_team")), clean_team_code(r.get("home_team")))
-                eg = espn_map.get(key)
-                if eg:
-                    if eg.get("home_score") is not None:
-                        r["home_score"] = eg["home_score"]
-                    if eg.get("away_score") is not None:
-                        r["away_score"] = eg["away_score"]
-                    r["status"] = eg.get("status", "scheduled")
-                    r["status_detail"] = eg.get("status_detail")
-                    r["event_id"] = eg.get("event_id")
-                else:
-                    if r.get('home_score') is not None and r.get('away_score') is not None:
-                        r['status'] = 'finished'
-                    else:
-                        r['home_score'] = None
-                        r['away_score'] = None
-                        r['status'] = 'scheduled'
-        except Exception as e:
-            print(f"Erro ao enriquecer schedule com ESPN: {e}")
-            for r in records:
+    # Enriquecer com ESPN live scoreboard (placar em tempo real, status de finalizado / em andamento)
+    try:
+        from nfl_odds.data.live_stats import fetch_espn_scoreboard, clean_team_code
+        espn_games = fetch_espn_scoreboard(2026, 1, force=refresh)
+        espn_map = {}
+        for eg in espn_games:
+            key = (clean_team_code(eg.get("away_team")), clean_team_code(eg.get("home_team")))
+            espn_map[key] = eg
+            
+        for r in records:
+            key = (clean_team_code(r.get("away_team")), clean_team_code(r.get("home_team")))
+            eg = espn_map.get(key)
+            if eg:
+                if eg.get("home_score") is not None:
+                    r["home_score"] = eg["home_score"]
+                if eg.get("away_score") is not None:
+                    r["away_score"] = eg["away_score"]
+                r["status"] = eg.get("status", "scheduled")
+                r["status_detail"] = eg.get("status_detail")
+                r["event_id"] = eg.get("event_id")
+            else:
                 if r.get('home_score') is not None and r.get('away_score') is not None:
                     r['status'] = 'finished'
                 else:
                     r['home_score'] = None
                     r['away_score'] = None
                     r['status'] = 'scheduled'
-
-        schedule_cache = records
-        return schedule_cache
     except Exception as e:
-        print(f"Error loading schedule: {e}")
-        return []
+        print(f"Erro ao enriquecer schedule com ESPN: {e}")
+        for r in records:
+            if r.get('home_score') is not None and r.get('away_score') is not None:
+                r['status'] = 'finished'
+            else:
+                r['home_score'] = None
+                r['away_score'] = None
+                r['status'] = 'scheduled'
+
+    schedule_cache = records
+    return schedule_cache
 
 @app.get("/api/games/{game_id}/boxscore")
 def get_game_boxscore(game_id: str):
-    import nflreadpy as nfl
     from nfl_odds.data.live_stats import fetch_espn_scoreboard, fetch_espn_game_boxscore, clean_team_code
     try:
-        sched = nfl.load_schedules([2026])
-        if isinstance(sched, pd.DataFrame):
-            sched = pl.from_pandas(sched)
-        game_matches = sched.filter(pl.col("game_id") == game_id)
-        if len(game_matches) == 0:
+        records = load_cached_schedule(2026)
+        game_matches = [g for g in records if g.get("game_id") == game_id]
+        if not game_matches:
+            try:
+                import nflreadpy as nfl
+                sched = nfl.load_schedules([2026])
+                if isinstance(sched, pd.DataFrame):
+                    sched = pl.from_pandas(sched)
+                gm = sched.filter(pl.col("game_id") == game_id)
+                if len(gm) > 0:
+                    game_matches = gm.to_dicts()
+            except Exception:
+                pass
+        if not game_matches:
             raise HTTPException(status_code=404, detail="Jogo não encontrado.")
             
-        game_info = game_matches.to_dicts()[0]
+        game_info = game_matches[0]
         home_team = clean_team_code(game_info.get("home_team"))
         away_team = clean_team_code(game_info.get("away_team"))
         
@@ -790,25 +874,14 @@ def get_game_boxscore(game_id: str):
         raise HTTPException(status_code=500, detail=f"Erro ao carregar box score: {e}")
 
 @app.get("/api/live-bets")
-def get_live_bets(response: Response):
-    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
-    # Always try to reload to get fresh data if it was generated in background
-    global df_live_bets
-    try:
-        if os.path.exists("data/live_value_bets.parquet"):
-            df_live_bets = pl.read_parquet("data/live_value_bets.parquet").to_pandas()
-            if "ev_percent" in df_live_bets.columns:
-                df_live_bets = df_live_bets.sort_values(by="ev_percent", ascending=False)
-            df_live_bets = df_live_bets.replace([np.inf, -np.inf], None)
-            df_live_bets = df_live_bets.where(pd.notnull(df_live_bets), None)
-    except Exception:
-        pass
-        
-    if df_live_bets.empty:
-        return []
-    return df_live_bets.to_dict(orient="records")
+@app.get("/api/bets")
+def get_live_bets(response: Response = None):
+    if response:
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    get_live_bets_df()
+    return _live_bets_cache["records"]
 
 @app.get("/api/top-picks")
 def get_top_picks(limit: int = 10, response: Response = None):
@@ -816,15 +889,7 @@ def get_top_picks(limit: int = 10, response: Response = None):
         response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-    global df_live_bets
-    try:
-        if os.path.exists("data/live_value_bets.parquet"):
-            df_live_bets = pl.read_parquet("data/live_value_bets.parquet").to_pandas()
-            df_live_bets = df_live_bets.replace([np.inf, -np.inf], None)
-            df_live_bets = df_live_bets.where(pd.notnull(df_live_bets), None)
-    except Exception:
-        pass
-        
+    df_live_bets = get_live_bets_df()
     if df_live_bets.empty:
         return []
         
@@ -902,14 +967,11 @@ def get_locked_games_and_teams(season: int = 2026):
     except Exception as e:
         print(f"Erro ao verificar partidas bloqueadas via ESPN: {e}")
 
-    # 2. nflreadpy schedule (Fallback)
+    # 2. Local schedule JSON (Fallback)
     try:
-        import nflreadpy as nfl
-        sched = nfl.load_schedules([season])
-        if isinstance(sched, pd.DataFrame):
-            sched = pl.from_pandas(sched)
-            
-        for row in sched.iter_rows(named=True):
+        from nfl_odds.data.live_stats import clean_team_code
+        sched = load_cached_schedule(season)
+        for row in sched:
             gid = row.get("game_id")
             h_team = clean_team_code(row.get("home_team"))
             a_team = clean_team_code(row.get("away_team"))
@@ -940,7 +1002,7 @@ def get_locked_games_and_teams(season: int = 2026):
                 if a_team:
                     locked_teams.add(str(a_team))
     except Exception as e:
-        print(f"Erro ao verificar partidas bloqueadas via nflreadpy: {e}")
+        print(f"Erro ao verificar partidas bloqueadas via schedule: {e}")
         locked_game_ids.add("2026_01_NE_SEA")
         locked_teams.update(["NE", "SEA"])
         
@@ -983,7 +1045,7 @@ def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, resp
         response.headers["Expires"] = "0"
     db = SessionLocal()
     try:
-        global df_live_bets
+        df_live_bets = get_live_bets_df()
         live_safe_count = 0
         live_safe_flat_count = 0
         live_high_risk_count = 0
@@ -1210,15 +1272,7 @@ def add_portfolio_bet(req: PortfolioAddRequest):
 
 @app.post("/api/portfolio/import-safe-picks")
 def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, portfolio_type: str = "safe"):
-    global df_live_bets
-    try:
-        if os.path.exists("data/live_value_bets.parquet"):
-            df_live_bets = pl.read_parquet("data/live_value_bets.parquet").to_pandas()
-            df_live_bets = df_live_bets.replace([np.inf, -np.inf], None)
-            df_live_bets = df_live_bets.where(pd.notnull(df_live_bets), None)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro ao carregar odds: {e}")
-        
+    df_live_bets = get_live_bets_df(force=True)
     if df_live_bets.empty:
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         
@@ -1385,15 +1439,7 @@ def import_safe_flat(replace_pending: bool = False):
 
 @app.post("/api/portfolio/import-high-risk-picks")
 def import_high_risk_picks(replace_pending: bool = False):
-    global df_live_bets
-    try:
-        if os.path.exists("data/live_value_bets.parquet"):
-            df_live_bets = pl.read_parquet("data/live_value_bets.parquet").to_pandas()
-            df_live_bets = df_live_bets.replace([np.inf, -np.inf], None)
-            df_live_bets = df_live_bets.where(pd.notnull(df_live_bets), None)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro ao carregar odds: {e}")
-        
+    df_live_bets = get_live_bets_df(force=True)
     if df_live_bets.empty:
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         
@@ -1508,15 +1554,7 @@ def import_high_risk_picks(replace_pending: bool = False):
 
 @app.post("/api/portfolio/import-all-props")
 def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
-    global df_live_bets
-    try:
-        if os.path.exists("data/live_value_bets.parquet"):
-            df_live_bets = pl.read_parquet("data/live_value_bets.parquet").to_pandas()
-            df_live_bets = df_live_bets.replace([np.inf, -np.inf], None)
-            df_live_bets = df_live_bets.where(pd.notnull(df_live_bets), None)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro ao carregar odds: {e}")
-        
+    df_live_bets = get_live_bets_df(force=True)
     if df_live_bets.empty:
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         

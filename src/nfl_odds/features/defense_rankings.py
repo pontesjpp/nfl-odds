@@ -30,35 +30,6 @@ def compute_defense_rankings(season: int = 2026, week: int = 1, force_refresh: b
     if not os.path.exists(features_path):
         return {}
 
-    df_features = pl.read_parquet(features_path)
-
-    # Definir temporada alvo conforme a regra
-    is_week_1 = week <= 1
-    target_season = (season - 1) if is_week_1 else season
-    
-    # Filtrar dados para a temporada
-    df_s = df_features.filter(pl.col("season") == target_season)
-    
-    # Se a partir da semana 2, filtrar apenas jogos anteriores à semana atual
-    if not is_week_1:
-        df_s = df_s.filter(pl.col("week") < week)
-
-    # Fallback seguro: se na semana 2+ ainda não houver jogos computados da nova temporada
-    if df_s.is_empty():
-        target_season = season - 1
-        df_s = df_features.filter(pl.col("season") == target_season)
-        source_label = f"Temporada {target_season}-{target_season+1} (Linha de Base Rodada 1)"
-        is_fallback = True
-    else:
-        if is_week_1:
-            source_label = f"Temporada {target_season}-{target_season+1} (Linha de Base Rodada 1)"
-        else:
-            source_label = f"Temporada {target_season}-{target_season+1} (Rodadas 1 a {week - 1})"
-        is_fallback = False
-
-    # Pegar o último snapshot disponível de cada defesa adversária no período
-    latest_opps = df_s.sort(["opponent_team", "week"]).group_by("opponent_team").tail(1)
-
     # Mapeamento de métricas defensivas:
     # (coluna, higher_is_better_defense, categoria, nome legível, unidade)
     metrics_config = {
@@ -71,6 +42,38 @@ def compute_defense_rankings(season: int = 2026, week: int = 1, force_refresh: b
         "def_pressure_rate_generated_avg_5": (True, "pressure", "Taxa de Pressão Gerada", "%"),
         "def_run_stop_rate_avg_5": (True, "run_stop", "Taxa de Parada de Corrida", "%")
     }
+
+    # Definir temporada alvo conforme a regra
+    is_week_1 = week <= 1
+    target_season = (season - 1) if is_week_1 else season
+
+    needed_cols = ["opponent_team", "season", "week"] + list(metrics_config.keys())
+    lf = pl.scan_parquet(features_path)
+    schema = lf.collect_schema()
+    valid_cols = [c for c in needed_cols if c in schema]
+
+    filt = pl.col("season") == target_season
+    if not is_week_1:
+        filt = filt & (pl.col("week") < week)
+
+    df_s = lf.select(valid_cols).filter(filt).collect()
+
+    # Fallback seguro: se na semana 2+ ainda não houver jogos computados da nova temporada
+    if df_s.is_empty():
+        target_season = season - 1
+        df_s = lf.select(valid_cols).filter(pl.col("season") == target_season).collect()
+        source_label = f"Temporada {target_season}-{target_season+1} (Linha de Base Rodada 1)"
+        is_fallback = True
+    else:
+        if is_week_1:
+            source_label = f"Temporada {target_season}-{target_season+1} (Linha de Base Rodada 1)"
+        else:
+            source_label = f"Temporada {target_season}-{target_season+1} (Rodadas 1 a {week - 1})"
+        is_fallback = False
+
+    # Pegar o último snapshot disponível de cada defesa adversária no período
+    latest_opps = df_s.sort(["opponent_team", "week"]).group_by("opponent_team").tail(1)
+
 
     team_data: Dict[str, Dict[str, Any]] = {}
     
