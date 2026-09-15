@@ -680,54 +680,124 @@ def predict(req: PredictRequest):
         }
     }
 
-schedule_cache = None
+schedule_cache = {}
 
-def load_cached_schedule(season: int = 2026) -> List[dict]:
+def get_current_nfl_week(season: int = 2026) -> int:
+    """
+    Detecta a semana ativa da NFL.
+    1. Se houver live_value_bets.parquet com 'week', usa a semana das apostas ao vivo.
+    2. Caso contrário, consulta o calendário da temporada e identifica a menor semana com jogos futuros ou em andamento.
+    """
+    try:
+        if os.path.exists("data/live_value_bets.parquet"):
+            df = pl.read_parquet("data/live_value_bets.parquet")
+            if "week" in df.columns and len(df) > 0:
+                w_val = df["week"].max()
+                if w_val is not None and int(w_val) > 0:
+                    return int(w_val)
+    except Exception as e:
+        print(f"Erro ao detectar semana ativa de live_value_bets: {e}")
+
+    try:
+        from datetime import datetime
+        sched = load_cached_schedule(season)
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        upcoming = [r for r in sched if (r.get("gameday") and str(r["gameday"]) >= today_str) or r.get("status") in ("in_progress", "scheduled")]
+        if upcoming:
+            weeks = [int(r["week"]) for r in upcoming if r.get("week") is not None]
+            if weeks:
+                return min(weeks)
+    except Exception as e:
+        print(f"Erro ao detectar semana ativa pelo calendário: {e}")
+
+    return 2
+
+def load_cached_schedule(season: int = 2026, week: Optional[int] = None) -> List[dict]:
     schedule_file = f"data/schedule_{season}.json"
+    records = []
     if os.path.exists(schedule_file):
         try:
             with open(schedule_file, "r") as f:
-                return json.load(f)
+                records = json.load(f)
         except Exception as err:
             print(f"Error reading {schedule_file}: {err}")
-    try:
-        import nflreadpy as nfl
-        df = nfl.load_schedules([season])
-        if isinstance(df, pd.DataFrame):
-            df = pl.from_pandas(df)
-        week1 = df.filter(pl.col('week') == 1)
-        cols = ['game_id', 'home_team', 'away_team', 'stadium', 'location', 'gameday', 'gametime', 'home_score', 'away_score']
-        avail_cols = [c for c in cols if c in week1.columns]
-        week1 = week1.select(avail_cols)
-        records = week1.to_dicts()
+            records = []
+    
+    if not records:
         try:
-            with open(schedule_file, "w") as f:
-                json.dump(records, f, indent=2)
-        except Exception:
+            import nflreadpy as nfl
+            df = nfl.load_schedules([season])
+            if isinstance(df, pd.DataFrame):
+                df = pl.from_pandas(df)
+            cols = ['game_id', 'season', 'week', 'home_team', 'away_team', 'stadium', 'location', 'gameday', 'gametime', 'home_score', 'away_score']
+            avail_cols = [c for c in cols if c in df.columns]
+            df_sched = df.select(avail_cols)
+            records = df_sched.to_dicts()
+            for r in records:
+                r['week'] = int(r.get('week', 1))
+                r['season'] = int(r.get('season', season))
+                r['status'] = 'finished' if (r.get('home_score') is not None and r.get('away_score') is not None) else 'scheduled'
+                r['status_detail'] = 'Final' if r.get('status') == 'finished' else None
+                r['event_id'] = None
+            try:
+                with open(schedule_file, "w") as f:
+                    json.dump(records, f, indent=2)
+            except Exception:
+                pass
+        except Exception as e:
+            print(f"Error loading schedule via nflreadpy: {e}")
+            return []
+
+    if week is not None and str(week).lower() != "all":
+        try:
+            w_int = int(week)
+            return [r for r in records if int(r.get("week", 0)) == w_int]
+        except ValueError:
             pass
-        return records
-    except Exception as e:
-        print(f"Error loading schedule via nflreadpy: {e}")
-        return []
+
+    return records
+
+@app.get("/api/current-week")
+def get_current_week_endpoint(season: int = 2026):
+    cw = get_current_nfl_week(season)
+    df_live = get_live_bets_df()
+    live_w = int(df_live["week"].iloc[0]) if (not df_live.empty and "week" in df_live.columns) else cw
+    return {
+        "season": season,
+        "current_week": cw,
+        "live_bets_week": live_w,
+        "available_weeks": list(range(1, 19))
+    }
 
 @app.get("/api/schedule")
-def get_schedule(refresh: bool = False):
-    global schedule_cache
-    if schedule_cache is not None and not refresh:
-        return schedule_cache
-        
-    records = load_cached_schedule(2026)
+def get_schedule(season: int = 2026, week: Optional[str] = None, refresh: bool = False):
+    target_week = None
+    if week and week != "all":
+        try:
+            target_week = int(week)
+        except ValueError:
+            target_week = None
+
+    records = load_cached_schedule(season)
     if not records:
         return []
 
-    # Enriquecer com ESPN live scoreboard (placar em tempo real, status de finalizado / em andamento)
+    # Decide quais jogos enriquecer e retornar
+    active_week = target_week if target_week is not None else get_current_nfl_week(season)
+
+    # Enriquecer com ESPN live scoreboard para a semana relevante
     try:
         from nfl_odds.data.live_stats import fetch_espn_scoreboard, clean_team_code
-        espn_games = fetch_espn_scoreboard(2026, 1, force=refresh)
+        weeks_to_fetch = [active_week]
+        if target_week is None and active_week != 1:
+            weeks_to_fetch.append(1) # Também traz week 1 para históricos recentes se tudo for retornado
+
         espn_map = {}
-        for eg in espn_games:
-            key = (clean_team_code(eg.get("away_team")), clean_team_code(eg.get("home_team")))
-            espn_map[key] = eg
+        for w in set(weeks_to_fetch):
+            espn_games = fetch_espn_scoreboard(season, w, force=refresh)
+            for eg in espn_games:
+                key = (clean_team_code(eg.get("away_team")), clean_team_code(eg.get("home_team")))
+                espn_map[key] = eg
             
         for r in records:
             key = (clean_team_code(r.get("away_team")), clean_team_code(r.get("home_team")))
@@ -743,22 +813,19 @@ def get_schedule(refresh: bool = False):
             else:
                 if r.get('home_score') is not None and r.get('away_score') is not None:
                     r['status'] = 'finished'
-                else:
+                    if not r.get('status_detail'):
+                        r['status_detail'] = 'Final'
+                elif not r.get('status'):
                     r['home_score'] = None
                     r['away_score'] = None
                     r['status'] = 'scheduled'
     except Exception as e:
         print(f"Erro ao enriquecer schedule com ESPN: {e}")
-        for r in records:
-            if r.get('home_score') is not None and r.get('away_score') is not None:
-                r['status'] = 'finished'
-            else:
-                r['home_score'] = None
-                r['away_score'] = None
-                r['status'] = 'scheduled'
 
-    schedule_cache = records
-    return schedule_cache
+    if target_week is not None:
+        return [r for r in records if int(r.get("week", 0)) == target_week]
+
+    return records
 
 @app.get("/api/games/{game_id}/boxscore")
 def get_game_boxscore(game_id: str):
@@ -977,34 +1044,38 @@ class PortfolioManualSettleRequest(BaseModel):
 
 stats_cache_global = {}
 
-_locked_cache = {"season": None, "ts": 0.0, "locked_game_ids": set(), "locked_teams": set()}
+_locked_cache = {"season": None, "ts": 0.0, "locked_game_ids": set(), "locked_team_weeks": set()}
 
 def get_locked_games_and_teams(season: int = 2026):
     """
     Identifica jogos cujos horários de início (kickoff) já passaram ou cujos placares oficiais já foram lançados.
-    Qualquer aposta pertencente a esses times/jogos fica 100% bloqueada contra alterações/exclusões/reimportações.
+    Retorna locked_game_ids e locked_team_weeks (conjunto de tuplas (time, semana)).
+    Qualquer aposta pertencente a esses jogos/semanas fica bloqueada contra alterações/exclusões.
     """
     import time
     now_ts = time.time()
     if _locked_cache["season"] == season and (now_ts - _locked_cache["ts"]) < 30.0:
-        return _locked_cache["locked_game_ids"], _locked_cache["locked_teams"]
+        return _locked_cache["locked_game_ids"], _locked_cache["locked_team_weeks"]
         
     locked_game_ids = set()
-    locked_teams = set()
+    locked_team_weeks = set()
     now = datetime.now()
 
-    # 1. ESPN Scoreboard (Tempo Real)
+    # 1. ESPN Scoreboard (Tempo Real para semana ativa e recentes)
     try:
         from nfl_odds.data.live_stats import fetch_espn_scoreboard, clean_team_code
-        espn_sb = fetch_espn_scoreboard(season=season, week=1)
-        for eg in espn_sb:
-            if eg.get("status") in ("finished", "in_progress") or eg.get("completed"):
-                if eg.get("game_id"):
-                    locked_game_ids.add(eg["game_id"])
-                if eg.get("home_team"):
-                    locked_teams.add(clean_team_code(eg["home_team"]))
-                if eg.get("away_team"):
-                    locked_teams.add(clean_team_code(eg["away_team"]))
+        curr_w = get_current_nfl_week(season)
+        weeks_to_check = {1, curr_w}
+        for w in weeks_to_check:
+            espn_sb = fetch_espn_scoreboard(season=season, week=w)
+            for eg in espn_sb:
+                if eg.get("status") in ("finished", "in_progress") or eg.get("completed"):
+                    if eg.get("game_id"):
+                        locked_game_ids.add(eg["game_id"])
+                    if eg.get("home_team"):
+                        locked_team_weeks.add((clean_team_code(eg["home_team"]), w))
+                    if eg.get("away_team"):
+                        locked_team_weeks.add((clean_team_code(eg["away_team"]), w))
     except Exception as e:
         print(f"Erro ao verificar partidas bloqueadas via ESPN: {e}")
 
@@ -1014,16 +1085,18 @@ def get_locked_games_and_teams(season: int = 2026):
         sched = load_cached_schedule(season)
         for row in sched:
             gid = row.get("game_id")
+            w = int(row.get("week", 1))
             h_team = clean_team_code(row.get("home_team"))
             a_team = clean_team_code(row.get("away_team"))
             h_score = row.get("home_score")
             a_score = row.get("away_score")
+            status = row.get("status")
             gameday = row.get("gameday")
             gametime = row.get("gametime")
             
             is_locked = False
             # 1. Jogo concluído com placar oficial
-            if h_score is not None and a_score is not None:
+            if status in ("finished", "in_progress") or (h_score is not None and a_score is not None):
                 is_locked = True
             # 2. Horário do kickoff já passou
             elif gameday:
@@ -1039,19 +1112,17 @@ def get_locked_games_and_teams(season: int = 2026):
                 if gid:
                     locked_game_ids.add(str(gid))
                 if h_team:
-                    locked_teams.add(str(h_team))
+                    locked_team_weeks.add((str(h_team), w))
                 if a_team:
-                    locked_teams.add(str(a_team))
+                    locked_team_weeks.add((str(a_team), w))
     except Exception as e:
         print(f"Erro ao verificar partidas bloqueadas via schedule: {e}")
-        locked_game_ids.add("2026_01_NE_SEA")
-        locked_teams.update(["NE", "SEA"])
         
     _locked_cache["season"] = season
     _locked_cache["ts"] = now_ts
     _locked_cache["locked_game_ids"] = locked_game_ids
-    _locked_cache["locked_teams"] = locked_teams
-    return locked_game_ids, locked_teams
+    _locked_cache["locked_team_weeks"] = locked_team_weeks
+    return locked_game_ids, locked_team_weeks
 
 @app.post("/api/run-pipeline")
 def run_pipeline_api(request: Request):
@@ -1084,7 +1155,7 @@ def run_pipeline_api(request: Request):
         raise HTTPException(status_code=500, detail=f"Pipeline failed: {e}")
 
 @app.get("/api/portfolio")
-def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, response: Response = None):
+def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, game_id: Optional[str] = None, response: Response = None):
     if response:
         response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
         response.headers["Pragma"] = "no-cache"
@@ -1113,6 +1184,10 @@ def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, resp
         
         type_bets = [b for b in all_bets if (b.portfolio_type or "safe") == portfolio_type]
         available_weeks = sorted(list(set(b.week for b in all_bets if b.week is not None)), reverse=True)
+        if not df_live_bets.empty and "week" in df_live_bets.columns:
+            lw = int(df_live_bets["week"].iloc[0])
+            if lw not in available_weeks:
+                available_weeks = sorted(available_weeks + [lw], reverse=True)
 
         if week and week != "all":
             try:
@@ -1122,6 +1197,16 @@ def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, resp
                 bets = type_bets
         else:
             bets = type_bets
+
+        if game_id and game_id != "all":
+            bets = [
+                b for b in bets 
+                if b.game_id == game_id or (
+                    b.team and b.opponent and (
+                        f"_{b.team}_{b.opponent}" in game_id or f"_{b.opponent}_{b.team}" in game_id
+                    )
+                )
+            ]
 
         bets.sort(key=lambda b: b.timestamp or datetime.min)
         
@@ -1162,7 +1247,7 @@ def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, resp
                 "cum_units": round(cum, 2)
             })
             
-        locked_game_ids, locked_teams = get_locked_games_and_teams(2026)
+        locked_game_ids, locked_team_weeks = get_locked_games_and_teams(2026)
 
         bets_data = []
         for b in reversed(bets):
@@ -1170,7 +1255,7 @@ def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, resp
                 b.is_locked
                 or b.result in ('won', 'lost', 'push')
                 or (b.game_id and b.game_id in locked_game_ids)
-                or (b.team and b.team in locked_teams)
+                or (b.team and (b.team, b.week) in locked_team_weeks)
             )
             bets_data.append({
                 "id": b.id,
@@ -1327,8 +1412,9 @@ def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, p
     
     safe_df = df_live_bets[mask]
     target_ptype = "safe_flat" if (flat_stake or portfolio_type == "safe_flat") else "safe"
+    target_week = int(safe_df["week"].iloc[0]) if ("week" in safe_df.columns and not safe_df.empty) else 1
     
-    locked_game_ids, locked_teams = get_locked_games_and_teams(2026)
+    locked_game_ids, locked_team_weeks = get_locked_games_and_teams(2026)
     
     db = SessionLocal()
     imported_count = 0
@@ -1339,10 +1425,9 @@ def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, p
             del_query = db.query(Bet).filter(
                 Bet.result == "pending",
                 Bet.portfolio_type == target_ptype,
+                Bet.week == target_week,
                 Bet.is_locked == False
             )
-            if locked_teams:
-                del_query = del_query.filter(~Bet.team.in_(locked_teams))
             if locked_game_ids:
                 del_query = del_query.filter(~Bet.game_id.in_(locked_game_ids))
             del_query.delete(synchronize_session=False)
@@ -1351,9 +1436,11 @@ def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, p
         for _, row in safe_df.iterrows():
             team = str(row.get("team", "")) if row.get("team") else None
             game_id = str(row.get("game_id", "")) if row.get("game_id") else None
+            season = int(row.get("season", 2026))
+            week = int(row.get("week", target_week))
             
             # SANITY CHECK: Nunca importar ou substituir apostas de partidas iniciadas/encerradas
-            if (team and team in locked_teams) or (game_id and game_id in locked_game_ids):
+            if (game_id and game_id in locked_game_ids) or (team and (team, week) in locked_team_weeks):
                 skipped_locked_count += 1
                 continue
                 
@@ -1494,8 +1581,9 @@ def import_high_risk_picks(replace_pending: bool = False):
     mask = df_live_bets[ev_col] > 20.0
     
     hr_df = df_live_bets[mask]
+    target_week = int(hr_df["week"].iloc[0]) if ("week" in hr_df.columns and not hr_df.empty) else 1
     
-    locked_game_ids, locked_teams = get_locked_games_and_teams(2026)
+    locked_game_ids, locked_team_weeks = get_locked_games_and_teams(2026)
     
     db = SessionLocal()
     imported_count = 0
@@ -1506,10 +1594,9 @@ def import_high_risk_picks(replace_pending: bool = False):
             del_query = db.query(Bet).filter(
                 Bet.result == "pending",
                 Bet.portfolio_type == "high_risk",
+                Bet.week == target_week,
                 Bet.is_locked == False
             )
-            if locked_teams:
-                del_query = del_query.filter(~Bet.team.in_(locked_teams))
             if locked_game_ids:
                 del_query = del_query.filter(~Bet.game_id.in_(locked_game_ids))
             del_query.delete(synchronize_session=False)
@@ -1518,9 +1605,11 @@ def import_high_risk_picks(replace_pending: bool = False):
         for _, row in hr_df.iterrows():
             team = str(row.get("team", "")) if row.get("team") else None
             game_id = str(row.get("game_id", "")) if row.get("game_id") else None
+            season = int(row.get("season", 2026))
+            week = int(row.get("week", target_week))
             
             # SANITY CHECK: Nunca importar ou substituir apostas de partidas iniciadas/encerradas
-            if (team and team in locked_teams) or (game_id and game_id in locked_game_ids):
+            if (game_id and game_id in locked_game_ids) or (team and (team, week) in locked_team_weeks):
                 skipped_locked_count += 1
                 continue
                 
@@ -1615,7 +1704,8 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
         # Padrão: Seleciona o lado mais favorável (maior EV) para cada uma das props do mercado, estritamente com EV > 0
         target_df = df_positive.sort_values(by=ev_col, ascending=False).drop_duplicates(subset=["player_name", "market", "line"])
         
-    locked_game_ids, locked_teams = get_locked_games_and_teams(2026)
+    target_week = int(target_df["week"].iloc[0]) if ("week" in target_df.columns and not target_df.empty) else 1
+    locked_game_ids, locked_team_weeks = get_locked_games_and_teams(2026)
 
     db = SessionLocal()
     imported_count = 0
@@ -1627,10 +1717,9 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
             del_query = db.query(Bet).filter(
                 Bet.result == "pending",
                 Bet.portfolio_type == "all_props",
+                Bet.week == target_week,
                 Bet.is_locked == False
             )
-            if locked_teams:
-                del_query = del_query.filter(~Bet.team.in_(locked_teams))
             if locked_game_ids:
                 del_query = del_query.filter(~Bet.game_id.in_(locked_game_ids))
             del_query.delete(synchronize_session=False)
@@ -1639,9 +1728,11 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
         for _, row in target_df.iterrows():
             team = str(row.get("team", "")) if row.get("team") else None
             game_id = str(row.get("game_id", "")) if row.get("game_id") else None
+            season = int(row.get("season", 2026))
+            week = int(row.get("week", target_week))
             
             # SANITY CHECK: Não importar novas apostas para partidas já iniciadas ou encerradas
-            if (team and team in locked_teams) or (game_id and game_id in locked_game_ids):
+            if (game_id and game_id in locked_game_ids) or (team and (team, week) in locked_team_weeks):
                 skipped_locked_count += 1
                 continue
                 

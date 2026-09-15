@@ -22,7 +22,7 @@ def normalize_name(name: Optional[str]) -> str:
     # Remove all non-alphanumeric characters
     return re.sub(r'[^a-zA-Z0-9]', '', cleaned).lower()
 
-_scoreboard_cache = {"ts": 0.0, "data": []}
+_scoreboard_cache: Dict[Tuple[int, int], Dict[str, Any]] = {}
 
 def fetch_espn_scoreboard(season: int = 2026, week: int = 1, force: bool = False) -> List[Dict[str, Any]]:
     """
@@ -31,17 +31,19 @@ def fetch_espn_scoreboard(season: int = 2026, week: int = 1, force: bool = False
     """
     import time
     now_ts = time.time()
-    if not force and _scoreboard_cache["data"] and (now_ts - _scoreboard_cache["ts"]) < 15.0:
-        return _scoreboard_cache["data"]
+    cache_key = (season, week)
+    cached = _scoreboard_cache.get(cache_key)
+    if not force and cached and (now_ts - cached["ts"]) < 15.0:
+        return cached["data"]
 
-    url = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+    url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={season}&seasontype=2&week={week}"
     try:
         res = requests.get(url, timeout=10)
         res.raise_for_status()
         sb = res.json()
     except Exception as e:
-        print(f"Erro ao consultar ESPN scoreboard: {e}")
-        return _scoreboard_cache["data"]
+        print(f"Erro ao consultar ESPN scoreboard (semana {week}): {e}")
+        return cached["data"] if cached else []
 
     games = []
     events = sb.get("events", [])
@@ -95,8 +97,7 @@ def fetch_espn_scoreboard(season: int = 2026, week: int = 1, force: bool = False
             print(f"Erro ao processar jogo individual da ESPN: {e}")
 
     if games:
-        _scoreboard_cache["ts"] = now_ts
-        _scoreboard_cache["data"] = games
+        _scoreboard_cache[cache_key] = {"ts": now_ts, "data": games}
 
     return games
 

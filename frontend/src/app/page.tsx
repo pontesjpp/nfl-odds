@@ -80,6 +80,9 @@ interface PortfolioSummary {
 
 export default function Home() {
   const [mode, setMode] = useState<Mode>('schedule');
+  const [currentWeek, setCurrentWeek] = useState<number>(2);
+  const [selectedWeek, setSelectedWeek] = useState<number>(2);
+  const [availableWeeks, setAvailableWeeks] = useState<number[]>(Array.from({ length: 18 }, (_, i) => i + 1));
   const [schedule, setSchedule] = useState<any[]>([]);
   const [selectedGame, setSelectedGame] = useState<any>(null);
   const [liveBets, setLiveBets] = useState<any[]>([]);
@@ -114,6 +117,7 @@ export default function Home() {
       if (found) {
         return {
           game_id: found.game_id,
+          week: found.week || bet.week,
           away_team: found.away_team,
           home_team: found.home_team,
           label: `${found.away_team} @ ${found.home_team}`,
@@ -128,10 +132,12 @@ export default function Home() {
     if (bet.game_id && typeof bet.game_id === 'string' && bet.game_id.includes('_')) {
       const parts = bet.game_id.split('_');
       if (parts.length >= 4) {
+        const w = parseInt(parts[1], 10);
         const away = parts[2];
         const home = parts[3];
         return {
           game_id: bet.game_id,
+          week: isNaN(w) ? bet.week : w,
           away_team: away,
           home_team: home,
           label: `${away} @ ${home}`,
@@ -143,12 +149,14 @@ export default function Home() {
     if (bet.team && bet.opponent && schedule && schedule.length > 0) {
       const found = schedule.find(
         (s: any) =>
-          (s.away_team === bet.team && s.home_team === bet.opponent) ||
-          (s.away_team === bet.opponent && s.home_team === bet.team)
+          ((s.away_team === bet.team && s.home_team === bet.opponent) ||
+           (s.away_team === bet.opponent && s.home_team === bet.team)) &&
+          (bet.week ? Number(s.week) === Number(bet.week) : true)
       );
       if (found) {
         return {
           game_id: found.game_id || `${bet.team}_${bet.opponent}`,
+          week: found.week || bet.week,
           away_team: found.away_team,
           home_team: found.home_team,
           label: `${found.away_team} @ ${found.home_team}`,
@@ -163,6 +171,7 @@ export default function Home() {
     if (bet.team && bet.opponent) {
       return {
         game_id: bet.game_id || `${bet.team}_vs_${bet.opponent}`,
+        week: bet.week,
         away_team: bet.opponent,
         home_team: bet.team,
         label: `${bet.opponent} @ ${bet.team}`,
@@ -171,6 +180,7 @@ export default function Home() {
 
     return {
       game_id: bet.game_id || 'unknown',
+      week: bet.week,
       away_team: bet.team || 'NFL',
       home_team: bet.opponent || 'NFL',
       label: bet.game_id || 'Jogo NFL',
@@ -180,9 +190,11 @@ export default function Home() {
   const portfolioGames = useMemo(() => {
     const gameMap = new Map<string, {
       game_id: string;
+      week?: number;
       away_team: string;
       home_team: string;
       label: string;
+      displayLabel: string;
       stadium?: string;
       gameday?: string;
       gametime?: string;
@@ -195,12 +207,16 @@ export default function Home() {
     portfolioBets.forEach((b: any) => {
       const info = getBetGameInfo(b);
       const gid = info.game_id || 'unknown';
+      const bWeek = b.week || info.week;
       if (!gameMap.has(gid)) {
+        const weekTag = bWeek ? ` (Semana ${bWeek})` : '';
         gameMap.set(gid, {
           game_id: gid,
+          week: bWeek,
           away_team: info.away_team,
           home_team: info.home_team,
           label: info.label,
+          displayLabel: `${info.label}${weekTag}`,
           stadium: info.stadium,
           gameday: info.gameday,
           gametime: info.gametime,
@@ -262,6 +278,85 @@ export default function Home() {
       })
       .sort((a: any, b: any) => (b.ev_percent ?? -999) - (a.ev_percent ?? -999));
   }, [portfolioBets, portfolioFilter, portfolioWeekFilter, portfolioGameFilter, portfolioGames, portfolioSearch, getBetGameInfo]);
+
+  const activeSummary = useMemo<PortfolioSummary | null>(() => {
+    const hasSubFilter = portfolioGameFilter !== 'all' || portfolioFilter !== 'all' || portfolioSearch.trim().length > 0;
+    if (!hasSubFilter && portfolioSummary) {
+      return portfolioSummary;
+    }
+
+    const bets = filteredPortfolioBets;
+    const total_bets = bets.length;
+    const settled = bets.filter((b: any) => b.result === 'won' || b.result === 'lost' || b.result === 'push');
+    const pending = bets.filter((b: any) => b.result === 'pending');
+    const won = bets.filter((b: any) => b.result === 'won');
+    const lost = bets.filter((b: any) => b.result === 'lost');
+    const push = bets.filter((b: any) => b.result === 'push');
+
+    const total_staked_units = bets.reduce((acc: number, b: any) => acc + (Number(b.units) || 0), 0);
+    const settled_staked_units = settled.reduce((acc: number, b: any) => acc + (Number(b.units) || 0), 0);
+    const pending_staked_units = pending.reduce((acc: number, b: any) => acc + (Number(b.units) || 0), 0);
+    const net_profit_units = settled.reduce((acc: number, b: any) => acc + (Number(b.profit_units) || 0), 0);
+
+    const roi_percent = settled_staked_units > 0 ? (net_profit_units / settled_staked_units) * 100 : 0;
+    const resolved_count = won.length + lost.length;
+    const win_rate_percent = resolved_count > 0 ? (won.length / resolved_count) * 100 : 0;
+    const hit_rate_percent = settled.length > 0 ? (won.length / settled.length) * 100 : 0;
+
+    const avg_odds = total_staked_units > 0
+      ? bets.reduce((acc: number, b: any) => acc + (Number(b.odds) || 0) * (Number(b.units) || 0), 0) / total_staked_units
+      : 0;
+
+    const gross_profit = won.reduce((acc: number, b: any) => acc + (Number(b.profit_units) || 0), 0);
+    const gross_loss = Math.abs(lost.reduce((acc: number, b: any) => acc + (Number(b.profit_units) || 0), 0));
+    const profit_factor = gross_loss > 0 ? gross_profit / gross_loss : (gross_profit > 0 ? gross_profit : 0);
+
+    const stake_dist: { '0.5u': number; '0.75u': number; '1.0u': number; '1.25u-1.5u': number; '1.75u+': number } = {
+      '0.5u': 0, '0.75u': 0, '1.0u': 0, '1.25u-1.5u': 0, '1.75u+': 0
+    };
+    bets.forEach((b: any) => {
+      const u = Number(b.units) || 1.0;
+      if (u <= 0.5) stake_dist['0.5u']++;
+      else if (u <= 0.75) stake_dist['0.75u']++;
+      else if (u <= 1.0) stake_dist['1.0u']++;
+      else if (u <= 1.5) stake_dist['1.25u-1.5u']++;
+      else stake_dist['1.75u+']++;
+    });
+
+    const bestFilteredPick = bets.length > 0
+      ? [...bets].sort((a: any, b: any) => ((Number(b.units) || 0) * (Number(b.ev_percent) || 0)) - ((Number(a.units) || 0) * (Number(a.ev_percent) || 0)))[0]
+      : null;
+
+    return {
+      total_bets,
+      settled_count: settled.length,
+      pending_count: pending.length,
+      won_count: won.length,
+      lost_count: lost.length,
+      push_count: push.length,
+      total_staked_units,
+      settled_staked_units,
+      pending_staked_units,
+      net_profit_units,
+      roi_percent,
+      win_rate_percent,
+      hit_rate_percent,
+      avg_odds,
+      profit_factor,
+      avg_stake_units: total_bets > 0 ? total_staked_units / total_bets : 1.0,
+      stake_distribution: stake_dist,
+      highest_conviction_pick: bestFilteredPick ? {
+        player_name: bestFilteredPick.player_name,
+        market: bestFilteredPick.market,
+        side: bestFilteredPick.side,
+        line: bestFilteredPick.line,
+        odds: bestFilteredPick.odds,
+        ev_percent: bestFilteredPick.ev_percent,
+        units: bestFilteredPick.units,
+        rationale: bestFilteredPick.ai_rationale || bestFilteredPick.rationale || 'Aposta selecionada pelo modelo de maior convicção.'
+      } : (portfolioSummary?.highest_conviction_pick || null)
+    };
+  }, [portfolioSummary, filteredPortfolioBets, portfolioGameFilter, portfolioFilter, portfolioSearch]);
 
   // Box Score Modal States
   const [boxScoreOpen, setBoxScoreOpen] = useState<boolean>(false);
@@ -676,6 +771,19 @@ export default function Home() {
       .catch(err => console.error("Error checking auth status:", err));
 
     fetchPortfolio();
+    fetch(`/api/current-week?${buster}`, { cache: 'no-store' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.current_week) {
+          setCurrentWeek(data.current_week);
+          setSelectedWeek(data.current_week);
+        }
+        if (data.available_weeks && Array.isArray(data.available_weeks)) {
+          setAvailableWeeks(data.available_weeks);
+        }
+      })
+      .catch(err => console.error("Error loading current week:", err));
+
     fetch(`/api/schedule?${buster}`, { cache: 'no-store' })
       .then(res => res.json())
       .then(data => setSchedule(data))
@@ -844,6 +952,10 @@ export default function Home() {
 
   // Active game props count and filter for Schedule tab (ABSOLUTELY NO EV FILTERS)
   const scheduleFilteredBets = liveBets.filter(bet => {
+    // 0. Match week if present in bet data
+    if (bet.week !== undefined && bet.week !== null && Number(bet.week) !== Number(selectedWeek)) {
+      return false;
+    }
     // 1. Match game if selected
     if (selectedGame) {
       if (bet.team !== selectedGame.away_team && bet.team !== selectedGame.home_team) {
@@ -881,9 +993,15 @@ export default function Home() {
     return 0;
   });
 
-  const activeGameBets = selectedGame
-    ? liveBets.filter(b => b.team === selectedGame.away_team || b.team === selectedGame.home_team)
-    : liveBets;
+  const activeGameBets = liveBets.filter(b => {
+    if (b.week !== undefined && b.week !== null && Number(b.week) !== Number(selectedWeek)) {
+      return false;
+    }
+    if (selectedGame) {
+      return b.team === selectedGame.away_team || b.team === selectedGame.home_team;
+    }
+    return true;
+  });
 
   const marketCounts = {
     all: activeGameBets.length,
@@ -938,7 +1056,7 @@ export default function Home() {
           </span>
           <span className="text-[#2B261D]">/</span>
           <span className="font-mono text-xs tracking-[0.25em] uppercase text-[#D4AF37] font-bold">
-            WEEK 1
+            WEEK {currentWeek}
           </span>
         </div>
 
@@ -1049,14 +1167,55 @@ export default function Home() {
           {/* 1. SCHEDULE TAB (ALL PROPS & MATCHUPS - ZERO EV FILTERS) */}
           {mode === 'schedule' && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {/* Week Selector Bar */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-3 mb-6 scrollbar-none border-b border-[#2B261D]/60 -mx-2 px-2 sm:mx-0 sm:px-0">
+                <span className="text-[11px] font-mono uppercase text-[#D4AF37] font-semibold tracking-wider mr-2 shrink-0 flex items-center gap-1.5">
+                  <span>📅</span> Rodada:
+                </span>
+                {availableWeeks.map((w) => {
+                  const isSel = selectedWeek === w;
+                  const isCurrent = currentWeek === w;
+                  return (
+                    <button
+                      key={w}
+                      onClick={() => {
+                        setSelectedWeek(w);
+                        setSelectedGame(null);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 shrink-0 border ${
+                        isSel
+                          ? 'bg-[#D4AF37] text-black font-bold border-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.35)]'
+                          : isCurrent
+                          ? 'bg-[#15130F] text-[#D4AF37] border-[#D4AF37]/50 hover:bg-[#201C15]'
+                          : 'bg-black text-zinc-400 hover:text-white border-[#2B261D] hover:border-zinc-700'
+                      }`}
+                    >
+                      <span>Semana {w}</span>
+                      {isCurrent && (
+                        <span className={`text-[9px] px-1 py-0.2 rounded font-bold uppercase ${
+                          isSel ? 'bg-black/20 text-black' : 'bg-emerald-500/20 text-emerald-400'
+                        }`}>
+                          Atual
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
               {/* Top Controls & Matchups Summary */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold uppercase tracking-wider">
-                    Agenda de Jogos & Todas as Props (Semana 1)
+                  <h2 className="text-2xl font-bold uppercase tracking-wider flex items-center gap-3">
+                    <span>Agenda de Jogos & Todas as Props (Semana {selectedWeek})</span>
+                    {selectedWeek === currentWeek && (
+                      <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 uppercase tracking-widest font-bold">
+                        Rodada Atual
+                      </span>
+                    )}
                   </h2>
                   <p className="text-zinc-400 text-sm mt-1">
-                    Selecione um jogo para isolar o confronto ou explore abaixo todas as <strong>{liveBets.length} apostas abertas</strong> sem filtros de EV.
+                    Selecione um jogo para isolar o confronto ou explore abaixo todas as apostas abertas sem filtros de EV.
                   </p>
                 </div>
 
@@ -1072,7 +1231,7 @@ export default function Home() {
                       onClick={() => setSelectedGame(null)}
                       className="border border-[#2B261D] hover:bg-[#15130F] text-white font-mono text-xs tracking-wider py-2.5 px-4 rounded-xl transition-colors flex items-center gap-1.5"
                     >
-                      Ver Todos os Jogos ({liveBets.length})
+                      Ver Todos os Jogos da Semana {selectedWeek}
                     </button>
                   )}
                   {isAdmin && (
@@ -1104,124 +1263,139 @@ export default function Home() {
               {/* Games Grid (Expandable/Collapsible) */}
               {showGamesGrid && (
                 <div className="mb-12">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {schedule.length === 0 ? (
-                      <p className="font-mono text-xs tracking-widest text-[#C5A880]/60 uppercase py-12 text-center col-span-full">
-                        Carregando agenda de jogos...
-                      </p>
-                    ) : (
-                      schedule.map((game, i) => {
-                        const isSelected = selectedGame?.game_id === game.game_id || (selectedGame?.away_team === game.away_team && selectedGame?.home_team === game.home_team);
-                        const count = liveBets.filter(b => b.team === game.away_team || b.team === game.home_team).length;
-
-                        return (
-                          <div 
-                            key={game.game_id || i} 
-                            className={`bg-[#0C0C0E] border p-5 rounded-2xl flex flex-col justify-between gap-4 transition-all shadow-lg ${
-                              isSelected 
-                                ? 'border-[#10B981] bg-[#10B981]/10 ring-1 ring-[#10B981]/50 shadow-[0_0_20px_rgba(16,185,129,0.2)]' 
-                                : 'border-[#2B261D] hover:border-[#C5A880]/50 hover:-translate-y-0.5'
-                            }`}
-                          >
-                            <div className="flex justify-between items-start">
-                              <div className="flex items-center gap-3">
-                                <div className="relative w-10 h-10">
-                                  <Image src={`/logos/${game.away_team}.png`} alt={game.away_team} fill className="object-contain" />
-                                </div>
-                                <span className="font-bold text-[#C5A880]/50 text-xs">@</span>
-                                <div className="relative w-10 h-10">
-                                  <Image src={`/logos/${game.home_team}.png`} alt={game.home_team} fill className="object-contain" />
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="font-bold text-base text-white">{game.away_team}</span>
-                                    <span className="text-[#C5A880]/60 text-xs">vs</span>
-                                    <span className="font-bold text-base text-white">{game.home_team}</span>
-                                  </div>
-                                  <div className="text-[11px] text-zinc-500 font-mono mt-0.5 truncate max-w-[150px]">
-                                    {game.stadium || 'Estádio NFL'}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-right flex-shrink-0">
-                                <div className="font-mono text-[11px] tracking-wider uppercase text-[#C5A880] font-semibold">
-                                  {game.gameday}
-                                </div>
-                                <div className="text-zinc-500 text-[11px] font-mono mt-0.5">
-                                  {game.gametime} ET
-                                </div>
-                                <div className={`mt-1.5 inline-flex items-center text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
-                                  count > 0 
-                                    ? 'bg-[#15130F] text-[#C5A880] border-[#D4AF37]/30' 
-                                    : 'bg-[#050505] text-zinc-600 border-[#2B261D]'
-                                }`}>
-                                  {count > 0 ? `${count} props` : 'Sem props'}
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Placar e Status de Jogo Finalizado */}
-                            {(game.status === 'finished' || (game.home_score !== null && game.away_score !== null)) && (
-                              <div className="mt-1 p-2.5 rounded-xl bg-[#10B981]/15 border border-[#10B981]/35 flex items-center justify-between shadow-[0_0_12px_rgba(16,185,129,0.15)]">
-                                <div className="flex items-center gap-2">
-                                  <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
-                                  <span className="text-[11px] font-mono font-bold text-[#10B981] uppercase tracking-wider">FINALIZADO</span>
-                                </div>
-                                <div className="text-xs font-mono font-bold text-white tracking-wide">
-                                  {game.away_team} <span className="text-zinc-300 font-extrabold">{game.away_score}</span> <span className="text-zinc-500 font-normal">@</span> <span className="text-zinc-300 font-extrabold">{game.home_score}</span> {game.home_team}
-                                </div>
-                              </div>
+                  {(() => {
+                    const weekGames = schedule.filter(g => Number(g.week) === Number(selectedWeek));
+                    return (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {weekGames.length === 0 ? (
+                          <div className="col-span-full text-center py-12">
+                            <p className="font-mono text-xs tracking-widest text-[#C5A880]/60 uppercase mb-2">
+                              {schedule.length === 0 ? 'Carregando agenda de jogos...' : `Nenhum confronto cadastrado para a Semana ${selectedWeek}`}
+                            </p>
+                            {selectedWeek !== currentWeek && (
+                              <button
+                                onClick={() => setSelectedWeek(currentWeek)}
+                                className="mt-2 text-xs font-mono text-[#D4AF37] hover:underline"
+                              >
+                                Ir para a Semana {currentWeek} (Atual) →
+                              </button>
                             )}
-
-                            <div className="flex flex-col gap-2 mt-1">
-                              <div className="flex items-center gap-2">
-                                <button 
-                                  onClick={() => {
-                                    if (isSelected) {
-                                      setSelectedGame(null);
-                                    } else {
-                                      setSelectedGame(game);
-                                      const el = document.getElementById('props-section');
-                                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                                    }
-                                  }}
-                                  className={`flex-1 py-2.5 rounded-xl font-mono text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-2 ${
-                                    isSelected
-                                      ? 'bg-[#10B981] text-black font-bold hover:bg-[#10B981]/90 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
-                                      : 'bg-[#15130F] hover:bg-[#201C15] text-[#C5A880] border border-[#2B261D]'
-                                  }`}
-                                >
-                                  {isSelected ? 'SELECIONADO (VER ABAIXO)' : `VER TODAS AS PROPS (${count})`}
-                                </button>
-                                {isSelected && (
-                                  <button
-                                    onClick={() => setSelectedGame(null)}
-                                    className="px-3 py-2.5 bg-[#15130F] hover:bg-[#201C15] text-[#C5A880] rounded-xl font-mono text-xs border border-[#2B261D]"
-                                    title="Limpar seleção e ver todos os jogos"
-                                  >
-                                    Limpar
-                                  </button>
-                                )}
-                              </div>
-
-                              {/* Botão de Box Score e Estatísticas Oficiais */}
-                              {(game.status === 'finished' || (game.home_score !== null && game.away_score !== null)) && (
-                                <button
-                                  onClick={() => handleOpenBoxScore(game)}
-                                  className="w-full py-2 px-3 rounded-xl bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/35 font-mono text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_10px_rgba(212,175,55,0.1)]"
-                                >
-                                  <svg className="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                  </svg>
-                                  <span>Ver Desempenho Real dos Jogadores & Apostas</span>
-                                </button>
-                              )}
-                            </div>
                           </div>
-                        );
-                      })
-                    )}
-                  </div>
+                        ) : (
+                          weekGames.map((game, i) => {
+                            const isSelected = selectedGame?.game_id === game.game_id || (selectedGame?.away_team === game.away_team && selectedGame?.home_team === game.home_team);
+                            const count = liveBets.filter(b => (b.team === game.away_team || b.team === game.home_team) && (b.week === undefined || b.week === null || Number(b.week) === Number(selectedWeek))).length;
+
+                            return (
+                              <div 
+                                key={game.game_id || i} 
+                                className={`bg-[#0C0C0E] border p-5 rounded-2xl flex flex-col justify-between gap-4 transition-all shadow-lg ${
+                                  isSelected 
+                                    ? 'border-[#10B981] bg-[#10B981]/10 ring-1 ring-[#10B981]/50 shadow-[0_0_20px_rgba(16,185,129,0.2)]' 
+                                    : 'border-[#2B261D] hover:border-[#C5A880]/50 hover:-translate-y-0.5'
+                                }`}
+                              >
+                                <div className="flex justify-between items-start">
+                                  <div className="flex items-center gap-3">
+                                    <div className="relative w-10 h-10">
+                                      <Image src={`/logos/${game.away_team}.png`} alt={game.away_team} fill className="object-contain" />
+                                    </div>
+                                    <span className="font-bold text-[#C5A880]/50 text-xs">@</span>
+                                    <div className="relative w-10 h-10">
+                                      <Image src={`/logos/${game.home_team}.png`} alt={game.home_team} fill className="object-contain" />
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="font-bold text-base text-white">{game.away_team}</span>
+                                        <span className="text-[#C5A880]/60 text-xs">vs</span>
+                                        <span className="font-bold text-base text-white">{game.home_team}</span>
+                                      </div>
+                                      <div className="text-[11px] text-zinc-500 font-mono mt-0.5 truncate max-w-[150px]">
+                                        {game.stadium || 'Estádio NFL'}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="text-right flex-shrink-0">
+                                    <div className="font-mono text-[11px] tracking-wider uppercase text-[#C5A880] font-semibold">
+                                      {game.gameday}
+                                    </div>
+                                    <div className="text-zinc-500 text-[11px] font-mono mt-0.5">
+                                      {game.gametime} ET
+                                    </div>
+                                    <div className={`mt-1.5 inline-flex items-center text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
+                                      count > 0 
+                                        ? 'bg-[#15130F] text-[#C5A880] border-[#D4AF37]/30' 
+                                        : 'bg-[#050505] text-zinc-600 border-[#2B261D]'
+                                    }`}>
+                                      {count > 0 ? `${count} props` : 'Sem props'}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Placar e Status de Jogo Finalizado */}
+                                {(game.status === 'finished' || (game.home_score !== null && game.away_score !== null)) && (
+                                  <div className="mt-1 p-2.5 rounded-xl bg-[#10B981]/15 border border-[#10B981]/35 flex items-center justify-between shadow-[0_0_12px_rgba(16,185,129,0.15)]">
+                                    <div className="flex items-center gap-2">
+                                      <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
+                                      <span className="text-[11px] font-mono font-bold text-[#10B981] uppercase tracking-wider">FINALIZADO</span>
+                                    </div>
+                                    <div className="text-xs font-mono font-bold text-white tracking-wide">
+                                      {game.away_team} <span className="text-zinc-300 font-extrabold">{game.away_score}</span> <span className="text-zinc-500 font-normal">@</span> <span className="text-zinc-300 font-extrabold">{game.home_score}</span> {game.home_team}
+                                    </div>
+                                  </div>
+                                )}
+
+                                <div className="flex flex-col gap-2 mt-1">
+                                  <div className="flex items-center gap-2">
+                                    <button 
+                                      onClick={() => {
+                                        if (isSelected) {
+                                          setSelectedGame(null);
+                                        } else {
+                                          setSelectedGame(game);
+                                          const el = document.getElementById('props-section');
+                                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                      }}
+                                      className={`flex-1 py-2.5 rounded-xl font-mono text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-2 ${
+                                        isSelected
+                                          ? 'bg-[#10B981] text-black font-bold hover:bg-[#10B981]/90 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                                          : 'bg-[#15130F] hover:bg-[#201C15] text-[#C5A880] border border-[#2B261D]'
+                                      }`}
+                                    >
+                                      {isSelected ? 'SELECIONADO (VER ABAIXO)' : `VER TODAS AS PROPS (${count})`}
+                                    </button>
+                                    {isSelected && (
+                                      <button
+                                        onClick={() => setSelectedGame(null)}
+                                        className="px-3 py-2.5 bg-[#15130F] hover:bg-[#201C15] text-[#C5A880] rounded-xl font-mono text-xs border border-[#2B261D]"
+                                        title="Limpar seleção e ver todos os jogos"
+                                      >
+                                        Limpar
+                                      </button>
+                                    )}
+                                  </div>
+
+                                  {/* Botão de Box Score e Estatísticas Oficiais */}
+                                  {(game.status === 'finished' || (game.home_score !== null && game.away_score !== null)) && (
+                                    <button
+                                      onClick={() => handleOpenBoxScore(game)}
+                                      className="w-full py-2 px-3 rounded-xl bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/35 font-mono text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_10px_rgba(212,175,55,0.1)]"
+                                    >
+                                      <svg className="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                      </svg>
+                                      <span>Ver Desempenho Real dos Jogadores & Apostas</span>
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 
@@ -1234,7 +1408,7 @@ export default function Home() {
                       <h3 className="text-2xl font-bold uppercase tracking-wider text-white">
                         {selectedGame 
                           ? `Todas as Props: ${selectedGame.away_team} @ ${selectedGame.home_team}` 
-                          : 'Todas as Apostas da Semana 1'}
+                          : `Todas as Apostas da Semana ${selectedWeek}`}
                       </h3>
                       <span className="bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/30 text-xs font-mono px-3 py-1 rounded-full uppercase tracking-wider font-semibold">
                         Sem Filtro de EV ({sortedScheduleBets.length} {sortedScheduleBets.length === 1 ? 'Aposta' : 'Apostas'})
@@ -1243,7 +1417,7 @@ export default function Home() {
                     <p className="text-[#C5A880]/80 text-sm mt-1.5">
                       {selectedGame 
                         ? `Todas as linhas abertas na Betclic para este jogo (Over, Under, positivas, negativas e assimetrias).`
-                        : `Todas as 138+ linhas abertas na Betclic para a Semana 1 da NFL sem qualquer filtro de EV.`}
+                        : `Todas as linhas abertas na Betclic para a Semana ${selectedWeek} da NFL sem qualquer filtro de EV.`}
                     </p>
                   </div>
 
@@ -1252,7 +1426,7 @@ export default function Home() {
                       onClick={() => setSelectedGame(null)}
                       className="border border-[#2B261D] hover:bg-[#15130F] text-[#C5A880] font-mono text-xs tracking-wider py-2.5 px-5 rounded-full transition-colors flex items-center gap-2"
                     >
-                      Ver Todas as {liveBets.length} Props da Semana 1
+                      Ver Todas as Props da Semana {selectedWeek}
                     </button>
                   )}
                 </div>
@@ -1363,7 +1537,7 @@ export default function Home() {
                   <h2 className="text-2xl font-bold tracking-widest text-white">
                     {selectedGame 
                       ? `Recomendações: ${selectedGame.away_team} @ ${selectedGame.home_team}` 
-                      : 'Recomendações Seguras (Semana 1)'}
+                      : `Recomendações Seguras (Semana ${currentWeek})`}
                   </h2>
                   <p className="text-[#C5A880]/80 text-sm mt-2 max-w-2xl leading-relaxed">
                     Filtro ajustado para apostas com Expected Value entre <strong className="text-white">+2.5% e +15.0%</strong> (Titulares e Reservas). Exclui distorções causadas por pequenas amostras ou caudas extremas de probabilidade (data drift).
@@ -1627,7 +1801,7 @@ export default function Home() {
                                 const isScheduled = curPlayer?.opponent_team === t.code;
                                 return (
                                   <option key={t.code} value={t.code}>
-                                    {t.code} — {t.name} {isScheduled ? '(Oficial Semana 1)' : ''}
+                                    {t.code} — {t.name} {isScheduled ? `(Oficial Semana ${currentWeek})` : ''}
                                   </option>
                                 );
                               })}
@@ -1641,7 +1815,7 @@ export default function Home() {
                                 <div className="mt-2.5">
                                   {isOfficial ? (
                                     <span className="text-[10px] font-mono font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-1 rounded-md inline-flex items-center gap-1.5">
-                                      Confronto Oficial da Semana 1 ({curPlayer.team} vs {selectedOpponent})
+                                      Confronto Oficial da Semana {currentWeek} ({curPlayer.team} vs {selectedOpponent})
                                     </span>
                                   ) : (
                                     <span className="text-[10px] font-mono font-semibold text-amber-400 bg-amber-950/60 border border-amber-500/30 px-2.5 py-1 rounded-md inline-flex items-center gap-1.5">
@@ -2295,254 +2469,261 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Top Financial Report: 6 KPI Cards */}
-              <div>
-                <div className="flex justify-between items-center mb-3 sm:mb-4">
-                  <h2 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-zinc-400 truncate">
-                    {portfolioTab === 'safe' 
-                      ? 'Relatório Financeiro • Carteira Conservadora Dinâmica (+EV 2.5% a 15%)' 
-                      : portfolioTab === 'safe_flat'
-                      ? 'Relatório Financeiro • Recomendações Flat 1.0u (+EV 2.5% a 15%)'
-                      : portfolioTab === 'high_risk'
-                      ? 'Relatório Financeiro • Carteira de Alto Risco (Apenas EV > 20%)'
-                      : 'Relatório Financeiro • Carteira All Props (100% das Props)'}
-                  </h2>
-                  <span className="text-[10px] sm:text-[11px] font-mono text-zinc-500 whitespace-nowrap ml-2">
-                    Semana 1 • NFL
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
-                  {/* Card 1: Capital Alocado (Ativo / Em Aberto) */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block">
-                        Capital Alocado
-                      </span>
-                      <span className="text-[8px] sm:text-[9px] font-mono px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
-                        RISCO
-                      </span>
-                    </div>
-                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
-                      {portfolioSummary 
-                        ? `${(portfolioSummary.pending_staked_units !== undefined ? portfolioSummary.pending_staked_units : portfolioSummary.total_staked_units).toFixed(2)} u` 
-                        : '0.00 u'}
-                    </span>
-                    <span 
-                      className="text-zinc-500 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate cursor-help"
-                      title={portfolioSummary ? `Total histórico aportado: ${portfolioSummary.total_staked_units.toFixed(2)} u em ${portfolioSummary.total_bets} apostas (${portfolioSummary.settled_staked_units.toFixed(2)} u já faturadas)` : ''}
-                    >
-                      {portfolioSummary 
-                        ? `${portfolioSummary.pending_count} ativas (${portfolioSummary.avg_stake_units ? `méd ${portfolioSummary.avg_stake_units.toFixed(2)}u` : '1.0 u'})` 
-                        : 'Nenhuma aposta'}
-                    </span>
-                  </div>
-
-                  {/* Card 2: Liquidation Status */}
-                  <div 
-                    className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg"
-                    title={portfolioSummary ? `Detalhamento: ${portfolioSummary.won_count}W (Greens) / ${portfolioSummary.lost_count}L (Reds) / ${portfolioSummary.push_count}P (Pushes/Anuladas)` : ''}
-                  >
-                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
-                      Liquidação
-                    </span>
-                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
-                      {portfolioSummary ? `${portfolioSummary.settled_count}/${portfolioSummary.total_bets}` : '0/0'}
-                    </span>
-                    <span className="text-[#D4AF37] text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
-                      {portfolioSummary ? `${portfolioSummary.settled_staked_units.toFixed(2)} u (${portfolioSummary.pending_count} pend)` : '0 pendentes'}
-                    </span>
-                  </div>
-
-                  {/* Card 3: Net Profit */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
-                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
-                      Resultado Líquido
-                    </span>
-                    <span className={`text-xl sm:text-2xl lg:text-3xl font-bold font-mono tracking-tight ${
-                      (portfolioSummary?.net_profit_units ?? 0) >= 0 ? 'text-[#10B981]' : 'text-rose-400'
-                    }`}>
-                      {portfolioSummary 
-                        ? `${portfolioSummary.net_profit_units >= 0 ? '+' : ''}${portfolioSummary.net_profit_units.toFixed(2)} u`
-                        : '0.00 u'}
-                    </span>
-                    <span className={`text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate ${
-                      (portfolioSummary?.roi_percent ?? 0) >= 0 ? 'text-[#10B981]' : 'text-rose-500'
-                    }`}>
-                      ROI: {portfolioSummary ? `${portfolioSummary.roi_percent >= 0 ? '+' : ''}${portfolioSummary.roi_percent.toFixed(1)}%` : '0.0%'}
-                    </span>
-                  </div>
-
-                  {/* Card 4: Win Rate */}
-                  <div 
-                    className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg"
-                    title={portfolioSummary ? `${portfolioSummary.won_count} vitórias, ${portfolioSummary.lost_count} derrotas, ${portfolioSummary.push_count} pushes/anuladas. Total liquidado: ${portfolioSummary.settled_count}. Decisive Win Rate: ${portfolioSummary.win_rate_percent.toFixed(1)}%. Overall Hit Rate: ${(portfolioSummary.hit_rate_percent ?? ((portfolioSummary.won_count / (portfolioSummary.settled_count || 1)) * 100)).toFixed(1)}%.` : ''}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
-                        Taxa de Acerto
-                      </span>
-                      {portfolioSummary && portfolioSummary.push_count > 0 && (
-                        <span 
-                          className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                          title="Hit rate global sobre todas as liquidadas (inclui empates/pushes)"
-                        >
-                          {(portfolioSummary.hit_rate_percent ?? ((portfolioSummary.won_count / (portfolioSummary.settled_count || 1)) * 100)).toFixed(1)}% tot
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
-                      {portfolioSummary ? `${portfolioSummary.win_rate_percent.toFixed(1)}%` : '0.0%'}
-                    </span>
-                    <span className="text-[#C5A880]/60 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
-                      {portfolioSummary 
-                        ? `${portfolioSummary.won_count}W - ${portfolioSummary.lost_count}L${portfolioSummary.push_count > 0 ? ` - ${portfolioSummary.push_count}P` : ''} (${portfolioSummary.settled_count} liq)` 
-                        : '0W - 0L'}
-                    </span>
-                  </div>
-
-                  {/* Card 5: Average Odds */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
-                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
-                      Odd Média
-                    </span>
-                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
-                      {portfolioSummary && portfolioSummary.avg_odds > 0 ? portfolioSummary.avg_odds.toFixed(2) : '1.82'}
-                    </span>
-                    <span className="text-zinc-500 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
-                      BE: {portfolioSummary && portfolioSummary.avg_odds > 0 ? `${(100 / portfolioSummary.avg_odds).toFixed(1)}%` : '54.9%'}
-                    </span>
-                  </div>
-
-                  {/* Card 6: Profit Factor */}
-                  <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
-                    <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
-                      Profit Factor
-                    </span>
-                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
-                      {portfolioSummary && portfolioSummary.profit_factor !== null && portfolioSummary.profit_factor !== undefined
-                        ? portfolioSummary.profit_factor.toFixed(2)
-                        : 'N/A'}
-                    </span>
-                    <span className="text-zinc-500 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block">
-                      Ganho / Perda
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Dynamic Sizing & AI Conviction Panel */}
-              {portfolioSummary?.stake_distribution && (
-                <div className="bg-[#0C0C0E] border border-[#2B261D] rounded-2xl p-3.5 sm:p-5 shadow-xl grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
-                  {/* Col 1: Sizing Distribution */}
-                  <div className="lg:col-span-2">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[#C5A880] text-sm">⚖️</span>
-                        <h3 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-white">
-                          Distribuição de Unidades Dinâmicas (Apostas Ativas)
-                        </h3>
-                      </div>
-                      <span className="text-[10px] sm:text-[11px] font-mono text-zinc-400">
-                        Stake Médio: <strong className="text-[#D4AF37]">{portfolioSummary.avg_stake_units?.toFixed(2) ?? '1.00'} u</strong>
-                      </span>
-                    </div>
-                    <p className="text-[10px] sm:text-[11px] font-sans text-zinc-400 mb-3 leading-relaxed">
-                      Alocação inteligente calibrada por EV (+2.5% a 15%), desconto de cauda estatística e multiplicador heurístico/IA considerando lesões (Over vs Under) e correlações de elenco.
-                    </p>
-                    <div className="grid grid-cols-5 gap-1 sm:gap-2 font-mono text-center">
-                      <div className="bg-zinc-900/80 border border-zinc-800 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
-                        <div className="text-[8px] sm:text-[10px] text-zinc-500 uppercase tracking-wider truncate">0.50 u</div>
-                        <div className="text-sm sm:text-lg font-bold text-zinc-300 mt-0.5">{portfolioSummary.stake_distribution['0.5u'] || 0}</div>
-                        <div className="text-[8px] sm:text-[9px] text-zinc-500 mt-0.5 truncate">Cauda</div>
-                      </div>
-                      <div className="bg-zinc-900/80 border border-zinc-800 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
-                        <div className="text-[8px] sm:text-[10px] text-zinc-400 uppercase tracking-wider truncate">0.75 u</div>
-                        <div className="text-sm sm:text-lg font-bold text-zinc-200 mt-0.5">{portfolioSummary.stake_distribution['0.75u'] || 0}</div>
-                        <div className="text-[8px] sm:text-[9px] text-zinc-500 mt-0.5 truncate">2.5-5%</div>
-                      </div>
-                      <div className="bg-zinc-900/80 border border-[#2B261D] rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
-                        <div className="text-[8px] sm:text-[10px] text-[#C5A880]/80 uppercase tracking-wider truncate">1.00 u</div>
-                        <div className="text-sm sm:text-lg font-bold text-white mt-0.5">{portfolioSummary.stake_distribution['1.0u'] || 0}</div>
-                        <div className="text-[8px] sm:text-[9px] text-zinc-500 mt-0.5 truncate">5-10%</div>
-                      </div>
-                      <div className="bg-[#C5A880]/10 border border-[#C5A880]/30 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
-                        <div className="text-[8px] sm:text-[10px] text-[#D4AF37] uppercase tracking-wider truncate">1.25-1.5u</div>
-                        <div className="text-sm sm:text-lg font-bold text-[#D4AF37] mt-0.5">{portfolioSummary.stake_distribution['1.25u-1.5u'] || 0}</div>
-                        <div className="text-[8px] sm:text-[9px] text-[#C5A880]/70 mt-0.5 truncate">Alta Convicção</div>
-                      </div>
-                      <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
-                        <div className="text-[8px] sm:text-[10px] text-emerald-400 uppercase tracking-wider truncate">1.75 u+</div>
-                        <div className="text-sm sm:text-lg font-bold text-emerald-300 mt-0.5">{portfolioSummary.stake_distribution['1.75u+'] || 0}</div>
-                        <div className="text-[8px] sm:text-[9px] text-emerald-500/70 mt-0.5 truncate">Edge Máx</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Col 2: Highest Conviction Bet */}
-                  <div 
-                    onClick={() => {
-                      if (portfolioSummary.highest_conviction_pick) {
-                        const match = portfolioBets.find(b => 
-                          b.player_name === portfolioSummary.highest_conviction_pick?.player_name && 
-                          b.market === portfolioSummary.highest_conviction_pick?.market
-                        );
-                        if (match) setSelectedAiBet(match);
-                      }
-                    }}
-                    className={`bg-zinc-900/50 border border-zinc-800 rounded-xl p-3.5 sm:p-4 flex flex-col justify-between transition-all ${
-                      portfolioSummary.highest_conviction_pick ? 'cursor-pointer hover:border-[#C5A880]/60 hover:bg-zinc-900/80 group' : ''
-                    }`}
-                    title={portfolioSummary.highest_conviction_pick ? "Clique para abrir a justificativa completa da IA" : ""}
-                  >
+              {/* Top Financial Report: 6 KPI Cards & Dynamic Distribution */}
+              {(() => {
+                const summary = activeSummary || portfolioSummary;
+                return (
+                  <>
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-[#C5A880] flex items-center gap-1.5">
-                          <span className="inline-block w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
-                          Maior Convicção do Modelo
+                      <div className="flex justify-between items-center mb-3 sm:mb-4">
+                        <h2 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-zinc-400 truncate">
+                          {portfolioTab === 'safe' 
+                            ? 'Relatório Financeiro • Carteira Conservadora Dinâmica (+EV 2.5% a 15%)' 
+                            : portfolioTab === 'safe_flat'
+                            ? 'Relatório Financeiro • Recomendações Flat 1.0u (+EV 2.5% a 15%)'
+                            : portfolioTab === 'high_risk'
+                            ? 'Relatório Financeiro • Carteira de Alto Risco (Apenas EV > 20%)'
+                            : 'Relatório Financeiro • Carteira All Props (100% das Props)'}
+                        </h2>
+                        <span className="text-[10px] sm:text-[11px] font-mono text-zinc-500 whitespace-nowrap ml-2">
+                          {portfolioWeekFilter === 'all' ? 'Todas as Semanas • NFL' : `Semana ${portfolioWeekFilter} • NFL`}
                         </span>
-                        {portfolioSummary.highest_conviction_pick && (
-                          <span className="px-2 py-0.5 rounded-full bg-[#C5A880]/20 text-[#D4AF37] border border-[#C5A880]/40 text-[9px] sm:text-[10px] font-mono font-bold">
-                            {portfolioSummary.highest_conviction_pick.units.toFixed(2)} u
-                          </span>
-                        )}
                       </div>
-                      {portfolioSummary.highest_conviction_pick ? (
-                        <>
-                          <div className="text-sm font-bold text-white font-sans mt-1 group-hover:text-[#D4AF37] transition-colors flex items-center justify-between">
-                            <span>{portfolioSummary.highest_conviction_pick.player_name}</span>
-                            <span className="text-[10px] sm:text-[11px] font-mono text-[#C5A880]/70 group-hover:text-[#D4AF37] transition-colors">🧠 Análise ↗</span>
-                          </div>
-                          <div className="text-[11px] sm:text-xs font-mono text-zinc-300 mt-1.5 flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                            <span className={`px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold ${
-                              portfolioSummary.highest_conviction_pick.side.toLowerCase() === 'over'
-                                ? 'bg-sky-500/15 text-sky-300 border border-sky-500/30'
-                                : 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
-                            }`}>
-                              {portfolioSummary.highest_conviction_pick.side.toUpperCase()} {portfolioSummary.highest_conviction_pick.line}
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
+                        {/* Card 1: Capital Alocado (Ativo / Em Aberto) */}
+                        <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                          <div className="flex justify-between items-start mb-1">
+                            <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block">
+                              Capital Alocado
                             </span>
-                            <span className="text-zinc-400">
-                              {portfolioSummary.highest_conviction_pick.market === 'rushing_yards' ? 'Jardas Terrestres' :
-                               portfolioSummary.highest_conviction_pick.market === 'receiving_yards' ? 'Jardas Recepção' :
-                               portfolioSummary.highest_conviction_pick.market === 'passing_yards' ? 'Jardas Passe' : portfolioSummary.highest_conviction_pick.market}
-                            </span>
-                            <span className="text-emerald-400 font-bold">
-                              +{portfolioSummary.highest_conviction_pick.ev_percent.toFixed(1)}% EV
+                            <span className="text-[8px] sm:text-[9px] font-mono px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
+                              RISCO
                             </span>
                           </div>
-                          <p className="text-[10px] sm:text-[11px] font-sans text-zinc-400 mt-2 line-clamp-2 italic">
-                            &ldquo;{portfolioSummary.highest_conviction_pick.rationale}&rdquo;
-                          </p>
-                        </>
-                      ) : (
-                        <div className="text-xs text-zinc-500 font-mono mt-4">
-                          Nenhuma aposta com stake calculada.
+                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                            {summary 
+                              ? `${(summary.pending_staked_units !== undefined ? summary.pending_staked_units : summary.total_staked_units).toFixed(2)} u` 
+                              : '0.00 u'}
+                          </span>
+                          <span 
+                            className="text-zinc-500 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate cursor-help"
+                            title={summary ? `Total histórico aportado: ${summary.total_staked_units.toFixed(2)} u em ${summary.total_bets} apostas (${summary.settled_staked_units.toFixed(2)} u já faturadas)` : ''}
+                          >
+                            {summary 
+                              ? `${summary.pending_count} ativas (${summary.avg_stake_units ? `méd ${summary.avg_stake_units.toFixed(2)}u` : '1.0 u'})` 
+                              : 'Nenhuma aposta'}
+                          </span>
                         </div>
-                      )}
+
+                        {/* Card 2: Liquidation Status */}
+                        <div 
+                          className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg"
+                          title={summary ? `Detalhamento: ${summary.won_count}W (Greens) / ${summary.lost_count}L (Reds) / ${summary.push_count}P (Pushes/Anuladas)` : ''}
+                        >
+                          <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
+                            Liquidação
+                          </span>
+                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                            {summary ? `${summary.settled_count}/${summary.total_bets}` : '0/0'}
+                          </span>
+                          <span className="text-[#D4AF37] text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
+                            {summary ? `${summary.settled_staked_units.toFixed(2)} u (${summary.pending_count} pend)` : '0 pendentes'}
+                          </span>
+                        </div>
+
+                        {/* Card 3: Net Profit */}
+                        <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                          <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
+                            Resultado Líquido
+                          </span>
+                          <span className={`text-xl sm:text-2xl lg:text-3xl font-bold font-mono tracking-tight ${
+                            (summary?.net_profit_units ?? 0) >= 0 ? 'text-[#10B981]' : 'text-rose-400'
+                          }`}>
+                            {summary 
+                              ? `${summary.net_profit_units >= 0 ? '+' : ''}${summary.net_profit_units.toFixed(2)} u`
+                              : '0.00 u'}
+                          </span>
+                          <span className={`text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate ${
+                            (summary?.roi_percent ?? 0) >= 0 ? 'text-[#10B981]' : 'text-rose-500'
+                          }`}>
+                            ROI: {summary ? `${summary.roi_percent >= 0 ? '+' : ''}${summary.roi_percent.toFixed(1)}%` : '0.0%'}
+                          </span>
+                        </div>
+
+                        {/* Card 4: Win Rate */}
+                        <div 
+                          className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg"
+                          title={summary ? `${summary.won_count} vitórias, ${summary.lost_count} derrotas, ${summary.push_count} pushes/anuladas. Total liquidado: ${summary.settled_count}. Decisive Win Rate: ${summary.win_rate_percent.toFixed(1)}%. Overall Hit Rate: ${(summary.hit_rate_percent ?? ((summary.won_count / (summary.settled_count || 1)) * 100)).toFixed(1)}%.` : ''}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
+                              Taxa de Acerto
+                            </span>
+                            {summary && summary.push_count > 0 && (
+                              <span 
+                                className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                                title="Hit rate global sobre todas as liquidadas (inclui empates/pushes)"
+                              >
+                                {(summary.hit_rate_percent ?? ((summary.won_count / (summary.settled_count || 1)) * 100)).toFixed(1)}% tot
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                            {summary ? `${summary.win_rate_percent.toFixed(1)}%` : '0.0%'}
+                          </span>
+                          <span className="text-[#C5A880]/60 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
+                            {summary 
+                              ? `${summary.won_count}W - ${summary.lost_count}L${summary.push_count > 0 ? ` - ${summary.push_count}P` : ''} (${summary.settled_count} liq)` 
+                              : '0W - 0L'}
+                          </span>
+                        </div>
+
+                        {/* Card 5: Average Odds */}
+                        <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                          <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
+                            Odd Média
+                          </span>
+                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                            {summary && summary.avg_odds > 0 ? summary.avg_odds.toFixed(2) : '1.82'}
+                          </span>
+                          <span className="text-zinc-500 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block truncate">
+                            BE: {summary && summary.avg_odds > 0 ? `${(100 / summary.avg_odds).toFixed(1)}%` : '54.9%'}
+                          </span>
+                        </div>
+
+                        {/* Card 6: Profit Factor */}
+                        <div className="bg-[#0C0C0E] border border-[#2B261D] hover:border-[#C5A880]/40 transition-colors p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between shadow-lg">
+                          <span className="text-[#C5A880]/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider block mb-1">
+                            Profit Factor
+                          </span>
+                          <span className="text-xl sm:text-2xl lg:text-3xl font-bold font-mono text-white tracking-tight">
+                            {summary && summary.profit_factor !== null && summary.profit_factor !== undefined
+                              ? summary.profit_factor.toFixed(2)
+                              : 'N/A'}
+                          </span>
+                          <span className="text-zinc-500 text-[10px] sm:text-[11px] font-mono mt-1 sm:mt-2 block">
+                            Ganho / Perda
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
+
+                    {/* Dynamic Sizing & AI Conviction Panel */}
+                    {summary?.stake_distribution && (
+                      <div className="bg-[#0C0C0E] border border-[#2B261D] rounded-2xl p-3.5 sm:p-5 shadow-xl grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+                        {/* Col 1: Sizing Distribution */}
+                        <div className="lg:col-span-2">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[#C5A880] text-sm">⚖️</span>
+                              <h3 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-white">
+                                Distribuição de Unidades Dinâmicas (Apostas Ativas)
+                              </h3>
+                            </div>
+                            <span className="text-[10px] sm:text-[11px] font-mono text-zinc-400">
+                              Stake Médio: <strong className="text-[#D4AF37]">{summary.avg_stake_units?.toFixed(2) ?? '1.00'} u</strong>
+                            </span>
+                          </div>
+                          <p className="text-[10px] sm:text-[11px] font-sans text-zinc-400 mb-3 leading-relaxed">
+                            Alocação inteligente calibrada por EV (+2.5% a 15%), desconto de cauda estatística e multiplicador heurístico/IA considerando lesões (Over vs Under) e correlações de elenco.
+                          </p>
+                          <div className="grid grid-cols-5 gap-1 sm:gap-2 font-mono text-center">
+                            <div className="bg-zinc-900/80 border border-zinc-800 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                              <div className="text-[8px] sm:text-[10px] text-zinc-500 uppercase tracking-wider truncate">0.50 u</div>
+                              <div className="text-sm sm:text-lg font-bold text-zinc-300 mt-0.5">{summary.stake_distribution['0.5u'] || 0}</div>
+                              <div className="text-[8px] sm:text-[9px] text-zinc-500 mt-0.5 truncate">Cauda</div>
+                            </div>
+                            <div className="bg-zinc-900/80 border border-zinc-800 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                              <div className="text-[8px] sm:text-[10px] text-zinc-400 uppercase tracking-wider truncate">0.75 u</div>
+                              <div className="text-sm sm:text-lg font-bold text-zinc-200 mt-0.5">{summary.stake_distribution['0.75u'] || 0}</div>
+                              <div className="text-[8px] sm:text-[9px] text-zinc-500 mt-0.5 truncate">2.5-5%</div>
+                            </div>
+                            <div className="bg-zinc-900/80 border border-[#2B261D] rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                              <div className="text-[8px] sm:text-[10px] text-[#C5A880]/80 uppercase tracking-wider truncate">1.00 u</div>
+                              <div className="text-sm sm:text-lg font-bold text-white mt-0.5">{summary.stake_distribution['1.0u'] || 0}</div>
+                              <div className="text-[8px] sm:text-[9px] text-zinc-500 mt-0.5 truncate">5-10%</div>
+                            </div>
+                            <div className="bg-[#C5A880]/10 border border-[#C5A880]/30 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                              <div className="text-[8px] sm:text-[10px] text-[#D4AF37] uppercase tracking-wider truncate">1.25-1.5u</div>
+                              <div className="text-sm sm:text-lg font-bold text-[#D4AF37] mt-0.5">{summary.stake_distribution['1.25u-1.5u'] || 0}</div>
+                              <div className="text-[8px] sm:text-[9px] text-[#C5A880]/70 mt-0.5 truncate">Alta Convicção</div>
+                            </div>
+                            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5">
+                              <div className="text-[8px] sm:text-[10px] text-emerald-400 uppercase tracking-wider truncate">1.75 u+</div>
+                              <div className="text-sm sm:text-lg font-bold text-emerald-300 mt-0.5">{summary.stake_distribution['1.75u+'] || 0}</div>
+                              <div className="text-[8px] sm:text-[9px] text-emerald-500/70 mt-0.5 truncate">Edge Máx</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Col 2: Highest Conviction Bet */}
+                        <div 
+                          onClick={() => {
+                            if (summary.highest_conviction_pick) {
+                              const match = portfolioBets.find(b => 
+                                b.player_name === summary.highest_conviction_pick?.player_name && 
+                                b.market === summary.highest_conviction_pick?.market
+                              );
+                              if (match) setSelectedAiBet(match);
+                            }
+                          }}
+                          className={`bg-zinc-900/50 border border-zinc-800 rounded-xl p-3.5 sm:p-4 flex flex-col justify-between transition-all ${
+                            summary.highest_conviction_pick ? 'cursor-pointer hover:border-[#C5A880]/60 hover:bg-zinc-900/80 group' : ''
+                          }`}
+                          title={summary.highest_conviction_pick ? "Clique para abrir a justificativa completa da IA" : ""}
+                        >
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-[#C5A880] flex items-center gap-1.5">
+                                <span className="inline-block w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+                                Maior Convicção do Modelo
+                              </span>
+                              {summary.highest_conviction_pick && (
+                                <span className="px-2 py-0.5 rounded-full bg-[#C5A880]/20 text-[#D4AF37] border border-[#C5A880]/40 text-[9px] sm:text-[10px] font-mono font-bold">
+                                  {summary.highest_conviction_pick.units.toFixed(2)} u
+                                </span>
+                              )}
+                            </div>
+                            {summary.highest_conviction_pick ? (
+                              <>
+                                <div className="text-sm font-bold text-white font-sans mt-1 group-hover:text-[#D4AF37] transition-colors flex items-center justify-between">
+                                  <span>{summary.highest_conviction_pick.player_name}</span>
+                                  <span className="text-[10px] sm:text-[11px] font-mono text-[#C5A880]/70 group-hover:text-[#D4AF37] transition-colors">🧠 Análise ↗</span>
+                                </div>
+                                <div className="text-[11px] sm:text-xs font-mono text-zinc-300 mt-1.5 flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                  <span className={`px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold ${
+                                    summary.highest_conviction_pick.side.toLowerCase() === 'over'
+                                      ? 'bg-sky-500/15 text-sky-300 border border-sky-500/30'
+                                      : 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
+                                  }`}>
+                                    {summary.highest_conviction_pick.side.toUpperCase()} {summary.highest_conviction_pick.line}
+                                  </span>
+                                  <span className="text-zinc-400">
+                                    {summary.highest_conviction_pick.market === 'rushing_yards' ? 'Jardas Terrestres' :
+                                     summary.highest_conviction_pick.market === 'receiving_yards' ? 'Jardas Recepção' :
+                                     summary.highest_conviction_pick.market === 'passing_yards' ? 'Jardas Passe' : summary.highest_conviction_pick.market}
+                                  </span>
+                                  <span className="text-emerald-400 font-bold">
+                                    +{summary.highest_conviction_pick.ev_percent.toFixed(1)}% EV
+                                  </span>
+                                </div>
+                                <p className="text-[10px] sm:text-[11px] font-sans text-zinc-400 mt-2 line-clamp-2 italic">
+                                  &ldquo;{summary.highest_conviction_pick.rationale}&rdquo;
+                                </p>
+                              </>
+                            ) : (
+                              <div className="text-xs text-zinc-500 font-mono mt-4">
+                                Nenhuma aposta com stake calculada.
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
 
               {/* Equity Curve SVG Chart */}
               {(() => {
@@ -2909,6 +3090,7 @@ export default function Home() {
                               onChange={(e) => {
                                 const val = e.target.value;
                                 setPortfolioWeekFilter(val);
+                                setPortfolioGameFilter('all');
                                 fetchPortfolio(portfolioTab, val);
                               }}
                               className={`w-full sm:w-auto bg-[#000000] border text-xs font-mono rounded-xl pl-3 pr-8 py-2 focus:outline-none transition-all cursor-pointer ${
@@ -2946,7 +3128,7 @@ export default function Home() {
                             <option value="all">🏈 Todos os Jogos ({portfolioBets.length})</option>
                             {portfolioGames.map((g) => (
                               <option key={g.game_id} value={g.game_id}>
-                                {g.label} ({g.count})
+                                {g.displayLabel || g.label} ({g.count})
                               </option>
                             ))}
                           </select>
@@ -2983,6 +3165,7 @@ export default function Home() {
                       <button
                         onClick={() => {
                           setPortfolioWeekFilter('all');
+                          setPortfolioGameFilter('all');
                           fetchPortfolio(portfolioTab, 'all');
                         }}
                         className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-mono tracking-wider transition-all whitespace-nowrap shrink-0 shadow-sm ${
@@ -3001,6 +3184,7 @@ export default function Home() {
                             onClick={() => {
                               const val = isSelected ? 'all' : String(w);
                               setPortfolioWeekFilter(val);
+                              setPortfolioGameFilter('all');
                               fetchPortfolio(portfolioTab, val);
                             }}
                             className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-mono tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 sm:gap-2 border shadow-sm shrink-0 ${
@@ -3062,6 +3246,83 @@ export default function Home() {
                           </button>
                         );
                       })}
+                    </div>
+                  )}
+
+                  {/* Active Filters Summary Bar */}
+                  {(portfolioWeekFilter !== 'all' || portfolioGameFilter !== 'all' || portfolioFilter !== 'all' || portfolioSearch.trim().length > 0) && (
+                    <div className="pt-2 sm:pt-2.5 border-t border-[#2B261D]/60 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <span className="text-[10px] uppercase tracking-wider text-zinc-500 mr-1">Filtros:</span>
+                        
+                        {portfolioWeekFilter !== 'all' && (
+                          <button
+                            onClick={() => {
+                              setPortfolioWeekFilter('all');
+                              setPortfolioGameFilter('all');
+                              fetchPortfolio(portfolioTab, 'all');
+                            }}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#D4AF37]/15 border border-[#D4AF37]/40 text-[#D4AF37] text-[11px] font-bold hover:bg-[#D4AF37]/25 transition-colors"
+                            title="Remover filtro de semana"
+                          >
+                            <span>📅 Semana {portfolioWeekFilter}</span>
+                            <span className="text-xs">✕</span>
+                          </button>
+                        )}
+
+                        {portfolioGameFilter !== 'all' && (() => {
+                          const activeGame = portfolioGames.find(g => g.game_id === portfolioGameFilter);
+                          return (
+                            <button
+                              onClick={() => setPortfolioGameFilter('all')}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold hover:bg-emerald-500/25 transition-colors"
+                              title="Remover filtro de jogo"
+                            >
+                              <span>🏈 {activeGame ? `${activeGame.away_team} @ ${activeGame.home_team}` : 'Jogo'}</span>
+                              <span className="text-xs">✕</span>
+                            </button>
+                          );
+                        })()}
+
+                        {portfolioFilter !== 'all' && (
+                          <button
+                            onClick={() => setPortfolioFilter('all')}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-200 text-[11px] hover:bg-zinc-700 transition-colors"
+                            title="Remover filtro de status"
+                          >
+                            <span>
+                              {portfolioFilter === 'pending' ? '⏳ Pendentes' :
+                               portfolioFilter === 'won' ? '✅ Greens' :
+                               portfolioFilter === 'lost' ? '❌ Reds' : '🔄 Pushes'}
+                            </span>
+                            <span className="text-xs">✕</span>
+                          </button>
+                        )}
+
+                        {portfolioSearch.trim().length > 0 && (
+                          <button
+                            onClick={() => setPortfolioSearch('')}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-200 text-[11px] hover:bg-zinc-700 transition-colors"
+                            title="Limpar busca textual"
+                          >
+                            <span>🔍 &ldquo;{portfolioSearch}&rdquo;</span>
+                            <span className="text-xs">✕</span>
+                          </button>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setPortfolioWeekFilter('all');
+                          setPortfolioGameFilter('all');
+                          setPortfolioFilter('all');
+                          setPortfolioSearch('');
+                          fetchPortfolio(portfolioTab, 'all');
+                        }}
+                        className="text-[11px] text-zinc-400 hover:text-white underline underline-offset-2 transition-colors ml-auto"
+                      >
+                        Limpar Todos os Filtros
+                      </button>
                     </div>
                   )}
 
@@ -3676,7 +3937,7 @@ export default function Home() {
                 </div>
 
                 <div className="hidden sm:block pl-4 border-l border-zinc-800">
-                  <div className="text-xs font-bold text-white uppercase tracking-wider">NFL 2026 • Semana 1 (Ontem)</div>
+                  <div className="text-xs font-bold text-white uppercase tracking-wider">NFL 2026 • Semana {boxScoreData?.week || currentWeek}</div>
                   <div className="text-[11px] font-mono text-zinc-400">{boxScoreData?.stadium || 'Lumen Field'} • {boxScoreData?.gameday || '09/09/2026'}</div>
                 </div>
               </div>
@@ -3742,7 +4003,7 @@ export default function Home() {
               </div>
 
               <div className="text-[10px] sm:text-xs font-mono text-zinc-500 hidden sm:block">
-                Oficial NFLReadPy • Semana 1 / 2026
+                Oficial NFLReadPy • Semana {boxScoreData?.week || currentWeek} / 2026
               </div>
             </div>
 
@@ -3978,7 +4239,7 @@ export default function Home() {
             {/* Modal Footer */}
             <div className="p-4 border-t border-[#2B261D] bg-[#15130F] flex items-center justify-between">
               <div className="text-[11px] font-mono text-zinc-500">
-                Dados oficiais apurados da súmula da NFL • Temporada 2026 Semana 1
+                Dados oficiais apurados da súmula da NFL • Temporada 2026 Semana {boxScoreData?.week || currentWeek}
               </div>
               <button
                 onClick={() => setBoxScoreOpen(false)}
