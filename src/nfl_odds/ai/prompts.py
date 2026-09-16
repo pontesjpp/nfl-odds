@@ -76,7 +76,16 @@ Deve conter exatamente 4 tópicos em formato Markdown:
 * **Tese de Valor**: Discrepância matemática entre a linha oferecida pela casa e a probabilidade calculada pelo modelo, citando o papel hierárquico no depth chart.
 * **Métrica-Chave**: O dado estatístico mais contundente do jogador ou da defesa adversária — priorize métricas avançadas (WOPR, CPOE, EPA, Target Share).
 * **Cenário de Jogo**: Como o matchup tático, ritmo, script do jogo E os treinos/notícias recentes (incluindo alvos/companheiros) favorecem o lado da entrada (Over ou Under).
-* **Fatores de Risco / Contraponto**: Pelo menos um fator concreto que poderia enfraquecer a tese, integrando explicitamente qualquer incerteza clínica ou divisão de volume apurada na semana.
+* **Fatores de Risco / Contraponto**: OBRIGATÓRIO: Forneça um fator de risco EXTREMAMENTE ESPECÍFICO, ÚNICO e TATICAMENTE EMBASADO para este atleta, este mercado e este confronto.
+  - NUNCA use clichês genéricos como "uma jogada explosiva isolada", "desvios no plano de jogo", "mudança de script" ou fórmulas repetitivas.
+  - Para QB Under de passe: script negativo precoce forçando modo hurry-up com 45+ dropbacks no 2º tempo ou screen curta que vire big play por falha de tackle.
+  - Para QB Over de passe: pass-rush com blitz agressivo gerando sacks, ou script de vitória folgada onde a equipe corre 25+ vezes no 2º tempo (four-minute offense).
+  - Para QB Under de corrida baixa (ex: 6.5 a 14.5): scramble improvisado em 3rd & long contra cobertura man-to-man ou sneak na linha de 1 jarda.
+  - Para RB Under de corrida: volume bruto de 18+ toques desgastando a defesa ou dobras de outside zone com quebra de tackle para ganho de 30+ jardas.
+  - Para RB Over de corrida: defesa com 8 homens na caixa (stacked box), déficits rápidos no placar abandonando o jogo terrestre, ou rotação em comitê.
+  - Para WR/TE Under: conexões profundas no mano a mano contra cornerback reserva, ou target share concentrado acima de 25%.
+  - Para WR/TE Over: cobertura individual dobrada (shadow/bracket), rotação situacional de alvos ou clima com ventos fortes.
+  - Sempre integre quaisquer boletins médicos, dores nos treinos ou disputas de posição da semana.
 """
 
 
