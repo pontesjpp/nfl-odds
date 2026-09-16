@@ -50,6 +50,19 @@ def test_get_player_features(client):
     data = response.json()
     assert isinstance(data, dict)
 
+def test_get_player_features_jared_goff_season_stats(client):
+    """
+    Regression test: Jared Goff played Game 1 in 2026 with 206 yds, 39 att, 26 cmp.
+    Ensures that current season (2026) features are returned instead of 2025 week 18 (264.56 yds).
+    """
+    response = client.get("/api/players/Jared Goff/features?market=passing_yards")
+    assert response.status_code == 200
+    data = response.json()
+    assert "passing_yards_season_avg" in data
+    assert data["passing_yards_season_avg"]["value"] == 206.0
+    assert data["attempts_season_avg"]["value"] == 39.0
+    assert data["completions_season_avg"]["value"] == 26.0
+
 def test_predict_prop(client):
     payload = {
         "player_name": "Patrick Mahomes",

@@ -216,7 +216,13 @@ def patch_week1_teams(df_test_base: pl.DataFrame, week: int = 2) -> pl.DataFrame
         if shrunk_col in df.columns and shrunk_col not in handled_cols:
             handled_cols.add(shrunk_col)
             s_val = pl.col(s_col) if s_col in df.columns else pl.lit(0.0)
-            fill_exprs.append(pl.col(shrunk_col).fill_null(s_val).fill_null(0.0))
+            fill_exprs.append(
+                pl.when(pl.col(shrunk_col).is_null() | (pl.col(shrunk_col) == 0.0))
+                .then(s_val)
+                .otherwise(pl.col(shrunk_col))
+                .fill_null(0.0)
+                .alias(shrunk_col)
+            )
 
     other_feature_defaults = {
         "role_stability_score": 1.0,

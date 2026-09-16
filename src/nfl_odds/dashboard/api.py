@@ -332,7 +332,7 @@ def query_live_player(player_name: str, espn_id: Optional[str] = None) -> pl.Dat
         print(f"Error querying live player: {e}")
         return pl.DataFrame()
 
-def query_team_defense(opp_code: str, features: Optional[List[str]] = None) -> pl.DataFrame:
+def query_team_defense(opp_code: str, features: Optional[List[str]] = None, season: Optional[int] = None) -> pl.DataFrame:
     path = "data/live_features.parquet"
     if not os.path.exists(path):
         return pl.DataFrame()
@@ -345,6 +345,8 @@ def query_team_defense(opp_code: str, features: Optional[List[str]] = None) -> p
             cols += [f for f in features if f in schema and f not in cols]
             lf = lf.select(cols)
         filt = (pl.col("opponent_team") == opp_code) | (pl.col("team") == opp_code)
+        if season is not None:
+            filt = filt & (pl.col("season") == season)
         return lf.filter(filt).collect()
     except Exception as e:
         print(f"Error querying team defense: {e}")
@@ -418,8 +420,8 @@ def get_player_features(
     espn_id: str = None, 
     opponent: str = None,
     side: str = None,
-    season: int = 2026,
-    week: int = 1
+    season: Optional[int] = None,
+    week: Optional[int] = None
 ):
     if not is_live_features_available():
         raise HTTPException(status_code=400, detail="Data not loaded")
@@ -428,19 +430,34 @@ def get_player_features(
     if player_data_all.is_empty():
         raise HTTPException(status_code=404, detail="Player not found")
         
-    latest_week = player_data_all["week"].max()
-    player_data = player_data_all.filter(pl.col("week") == latest_week)
+    # Priorizar a temporada solicitada se existir nos dados do jogador, senão a temporada mais recente
+    if season is not None and season in player_data_all["season"].to_list():
+        target_season = season
+        season_data = player_data_all.filter(pl.col("season") == target_season)
+    else:
+        target_season = int(player_data_all["season"].max())
+        season_data = player_data_all.filter(pl.col("season") == target_season)
+        
+    # Dentro da temporada resolvida, priorizar a semana solicitada ou a última semana disponível
+    if week is not None and week in season_data["week"].to_list():
+        target_week = week
+        player_data = season_data.filter(pl.col("week") == target_week)
+    else:
+        target_week = int(season_data["week"].max())
+        player_data = season_data.filter(pl.col("week") == target_week)
     
     # Position fallback if multiple players share the name
     if len(player_data) > 1 and market:
         if market == "passing_yards":
             player_data = player_data.filter(pl.col("position") == "QB")
         elif market == "rushing_yards":
-            player_data = player_data.filter(pl.col("position").is_in(["RB", "QB", "WR"]))
+            player_data = player_data.filter(pl.col("position").is_in(["RB", "QB", "WR", "FB"]))
         elif market == "receiving_yards":
             player_data = player_data.filter(pl.col("position").is_in(["WR", "TE", "RB"]))
         if player_data.is_empty():
-            player_data = player_data_all.filter(pl.col("week") == latest_week)
+            player_data = season_data.filter(pl.col("week") == target_week)
+    if len(player_data) > 1:
+        player_data = player_data.head(1)
         
     features_to_return = []
     importances = {}
@@ -462,10 +479,14 @@ def get_player_features(
         opp_code = opponent.upper().strip()
         if opp_code != active_opponent:
             def_features = [c for c in features_to_return if c.startswith("def_") or "opp" in c]
-            opp_rows = query_team_defense(opp_code, def_features)
+            opp_rows = query_team_defense(opp_code, def_features, season=target_season)
+            if opp_rows.is_empty():
+                opp_rows = query_team_defense(opp_code, def_features)
             if not opp_rows.is_empty():
-                latest_opp_week = opp_rows["week"].max()
-                opp_def_data = opp_rows.filter(pl.col("week") == latest_opp_week).head(1)
+                opp_season_max = opp_rows["season"].max()
+                opp_season_rows = opp_rows.filter(pl.col("season") == opp_season_max)
+                latest_opp_week = opp_season_rows["week"].max()
+                opp_def_data = opp_season_rows.filter(pl.col("week") == latest_opp_week).head(1)
                 for c in def_features:
                     if c in opp_def_data.columns and c in player_data.columns:
                         val = opp_def_data[c][0]
@@ -477,10 +498,11 @@ def get_player_features(
     opp_profile = None
     if active_opponent:
         try:
+            active_week = week or get_current_nfl_week(season=target_season)
             opp_profile = get_team_defense_profile(
                 active_opponent, 
-                season=season, 
-                week=week, 
+                season=target_season, 
+                week=active_week, 
                 market=market, 
                 side=side
             )
@@ -491,6 +513,14 @@ def get_player_features(
     for f in features_to_return:
         if f in player_data.columns:
             val = player_data[f][0]
+            # Fallback para métricas bayesianas estabilizadas se estiverem zeradas e a métrica base existir
+            if f.endswith("_shrunk_season_avg"):
+                base_f = f.replace("_shrunk_season_avg", "_season_avg")
+                if (val is None or val == 0.0) and base_f in player_data.columns:
+                    base_val = player_data[base_f][0]
+                    if base_val is not None and base_val != 0.0:
+                        val = base_val
+
             if isinstance(val, (np.floating, float)):
                 stats_dict[f] = {"value": None if math.isnan(val) else float(val)}
             elif isinstance(val, (np.integer, int)):
@@ -581,8 +611,10 @@ def predict(req: PredictRequest):
         if player_data_all.is_empty():
             raise HTTPException(status_code=404, detail=f"Player '{req.player_name}' not found")
             
-        latest_week = player_data_all["week"].max()
-        player_data = player_data_all.filter(pl.col("week") == latest_week)
+        target_season = int(player_data_all["season"].max())
+        season_data = player_data_all.filter(pl.col("season") == target_season)
+        latest_week = int(season_data["week"].max())
+        player_data = season_data.filter(pl.col("week") == latest_week)
         
         if len(player_data) > 1:
             if req.market == "passing_yards":
@@ -603,10 +635,14 @@ def predict(req: PredictRequest):
             opp_code = req.opponent.upper().strip()
             if opp_code != active_opponent:
                 def_features = [c for c in model_to_use.features if c.startswith("def_") or "opp" in c]
-                opp_rows = query_team_defense(opp_code, def_features)
+                opp_rows = query_team_defense(opp_code, def_features, season=target_season)
+                if opp_rows.is_empty():
+                    opp_rows = query_team_defense(opp_code, def_features)
                 if not opp_rows.is_empty():
-                    latest_opp_week = opp_rows["week"].max()
-                    opp_def_data = opp_rows.filter(pl.col("week") == latest_opp_week).head(1)
+                    opp_season_max = opp_rows["season"].max()
+                    opp_season_rows = opp_rows.filter(pl.col("season") == opp_season_max)
+                    latest_opp_week = opp_season_rows["week"].max()
+                    opp_def_data = opp_season_rows.filter(pl.col("week") == latest_opp_week).head(1)
                     for c in def_features:
                         if c in opp_def_data.columns and c in player_data.columns:
                             val = opp_def_data[c][0]

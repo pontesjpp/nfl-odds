@@ -836,7 +836,8 @@ export default function Home() {
     if (selectedPlayer && calcMethod === 'xgboost') {
       setLoadingFeatures(true);
       const oppParam = selectedOpponent ? `&opponent=${encodeURIComponent(selectedOpponent)}` : '';
-      fetch(`/api/players/${encodeURIComponent(selectedPlayer)}/features?market=${market}${oppParam}`)
+      const weekParam = currentWeek ? `&week=${currentWeek}` : '';
+      fetch(`/api/players/${encodeURIComponent(selectedPlayer)}/features?market=${market}${oppParam}&season=2026${weekParam}`)
         .then(res => {
           if (!res.ok) throw new Error("Falha ao carregar estatísticas");
           return res.json();
@@ -946,6 +947,8 @@ export default function Home() {
         newsContext: bet.news_context,
         impactAssessment: bet.impact_assessment,
         recommendationAdjustment: bet.recommendation_adjustment,
+        season: bet.season,
+        week: bet.week,
       };
     });
   };

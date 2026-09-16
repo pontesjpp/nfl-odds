@@ -41,6 +41,8 @@ export type PropBet = {
   newsContext?: string;
   impactAssessment?: string;
   recommendationAdjustment?: string;
+  season?: number;
+  week?: number;
 };
 
 import { formatStatName, getStatDescription } from '@/lib/statExplanations';
@@ -119,7 +121,9 @@ export function PropCard({ propBet, selectedPick = null, onSelectPick, onAddToPo
     alertHeadline,
     newsContext,
     impactAssessment,
-    recommendationAdjustment
+    recommendationAdjustment,
+    season,
+    week
   } = propBet;
 
   const imageUrl = imgError || !espnId
@@ -142,7 +146,9 @@ export function PropCard({ propBet, selectedPick = null, onSelectPick, onAddToPo
       setLoadingStats(true);
       const oppParam = opponent ? `&opponent=${encodeURIComponent(opponent)}` : '';
       const sideParam = side ? `&side=${encodeURIComponent(side)}` : '';
-      fetch(`/api/players/${encodeURIComponent(playerName)}/features?market=${metric}&espn_id=${espnId}${oppParam}${sideParam}`)
+      const seasonParam = season ? `&season=${season}` : '';
+      const weekParam = week ? `&week=${week}` : '';
+      fetch(`/api/players/${encodeURIComponent(playerName)}/features?market=${metric}&espn_id=${espnId}${oppParam}${sideParam}${seasonParam}${weekParam}`)
         .then(res => res.json())
         .then(data => {
           setStats(data);
