@@ -1654,6 +1654,10 @@ def import_high_risk_picks(replace_pending: bool = False):
                     side=side,
                     odds=odds,
                     units=1.0,
+                    ai_multiplier=float(row.get("ai_unit_multiplier", 1.0)) if row.get("ai_unit_multiplier") is not None else 1.0,
+                    ai_sizing_rationale=str(row.get("ai_sizing_rationale", "")) if row.get("ai_sizing_rationale") else None,
+                    side_favorability=str(row.get("side_favorability", "NEUTRAL")) if row.get("side_favorability") else None,
+                    ai_summary=str(row.get("ai_summary", "")) if row.get("ai_summary") else None,
                     model_probability=win_prob,
                     implied_probability=implied_p,
                     edge=edge_v,
@@ -1674,6 +1678,10 @@ def import_high_risk_picks(replace_pending: bool = False):
                     existing.implied_probability = implied_p
                     existing.edge = edge_v
                     existing.ev_percent = ev_v
+                    existing.ai_multiplier = float(row.get("ai_unit_multiplier", 1.0)) if row.get("ai_unit_multiplier") is not None else 1.0
+                    existing.ai_sizing_rationale = str(row.get("ai_sizing_rationale", "")) if row.get("ai_sizing_rationale") else None
+                    existing.side_favorability = str(row.get("side_favorability", "NEUTRAL")) if row.get("side_favorability") else None
+                    existing.ai_summary = str(row.get("ai_summary", "")) if row.get("ai_summary") else None
                     updated_count += 1
                 
         db.commit()
@@ -1777,6 +1785,10 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
                     side=side,
                     odds=odds,
                     units=1.0,
+                    ai_multiplier=float(row.get("ai_unit_multiplier", 1.0)) if row.get("ai_unit_multiplier") is not None else 1.0,
+                    ai_sizing_rationale=str(row.get("ai_sizing_rationale", "")) if row.get("ai_sizing_rationale") else None,
+                    side_favorability=str(row.get("side_favorability", "NEUTRAL")) if row.get("side_favorability") else None,
+                    ai_summary=str(row.get("ai_summary", "")) if row.get("ai_summary") else None,
                     model_probability=win_prob,
                     implied_probability=implied_p,
                     edge=edge_v,
@@ -1798,6 +1810,10 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
                     existing.implied_probability = implied_p
                     existing.edge = edge_v
                     existing.ev_percent = ev_v
+                    existing.ai_multiplier = float(row.get("ai_unit_multiplier", 1.0)) if row.get("ai_unit_multiplier") is not None else 1.0
+                    existing.ai_sizing_rationale = str(row.get("ai_sizing_rationale", "")) if row.get("ai_sizing_rationale") else None
+                    existing.side_favorability = str(row.get("side_favorability", "NEUTRAL")) if row.get("side_favorability") else None
+                    existing.ai_summary = str(row.get("ai_summary", "")) if row.get("ai_summary") else None
                     updated_count += 1
                 
         db.commit()
