@@ -50,52 +50,55 @@ def extract_key_stats(row: dict, player_feats: Optional[dict]) -> dict:
         return {}
         
     market = row.get("market", "")
+    target_opp = row.get("opponent") or row.get("opponent_team")
     stats = {}
     
-    if "opponent_team" in player_feats:
-        stats["Adversário"] = player_feats["opponent_team"]
-    if "implied_team_total" in player_feats and player_feats["implied_team_total"] is not None:
-        stats["Pontos Projetados do Time"] = player_feats["implied_team_total"]
-    if "implied_spread" in player_feats and player_feats["implied_spread"] is not None:
-        margin = player_feats["implied_spread"]
-        if isinstance(margin, (int, float)):
-            betting_spread = -margin
-            if margin > 0.5:
-                stats["Favoritismo / Spread"] = f"FAVORITO por {margin:.1f} pontos (Spread Vegas: {betting_spread:+.1f})"
-            elif margin < -0.5:
-                stats["Favoritismo / Spread"] = f"UNDERDOG / ZEBRA por {abs(margin):.1f} pontos (Spread Vegas: {betting_spread:+.1f})"
-            else:
-                stats["Favoritismo / Spread"] = "Equilibrado (Pickem 0.0)"
-        else:
-            stats["Favoritismo / Spread"] = str(margin)
-        
+    # 1. Market-specific production & defense metrics (primary focus)
     if market == "rushing_yards":
-        if "rushing_yards_avg_5" in player_feats:
-            stats["Média Jardas Corridas (Últimos 5J)"] = player_feats["rushing_yards_avg_5"]
-        if "carries_avg_5" in player_feats:
-            stats["Média de Tentativas/Corridas (5J)"] = player_feats["carries_avg_5"]
-        if "def_rush_yds_allowed_season_avg" in player_feats:
-            stats["Defesa Rival: Jardas Terrestres Cedidas/Jogo"] = player_feats["def_rush_yds_allowed_season_avg"]
-        if "def_rush_yds_allowed_avg_5" in player_feats:
-            stats["Defesa Rival: Jardas Cedidas (Tendência Recente 5J)"] = player_feats["def_rush_yds_allowed_avg_5"]
+        if "rushing_yards_avg_5" in player_feats and player_feats["rushing_yards_avg_5"] is not None:
+            stats["Média Jardas Corridas (Últimos 5J)"] = f"{float(player_feats['rushing_yards_avg_5']):.1f}"
+        if "carries_avg_5" in player_feats and player_feats["carries_avg_5"] is not None:
+            stats["Média de Tentativas/Corridas (5J)"] = f"{float(player_feats['carries_avg_5']):.1f}"
+        if "def_rush_yds_allowed_season_avg" in player_feats and player_feats["def_rush_yds_allowed_season_avg"] is not None:
+            stats["Defesa Rival: Jardas Terrestres Cedidas/Jogo"] = f"{float(player_feats['def_rush_yds_allowed_season_avg']):.1f}"
+        if "def_rush_yds_allowed_avg_5" in player_feats and player_feats["def_rush_yds_allowed_avg_5"] is not None:
+            stats["Defesa Rival: Jardas Cedidas (Tendência Recente 5J)"] = f"{float(player_feats['def_rush_yds_allowed_avg_5']):.1f}"
             
     elif market == "receiving_yards":
-        if "receiving_yards_avg_5" in player_feats:
-            stats["Média Jardas Recebidas (Últimos 5J)"] = player_feats["receiving_yards_avg_5"]
-        if "targets_avg_5" in player_feats:
-            stats["Média de Alvos/Targets (5J)"] = player_feats["targets_avg_5"]
-        if "def_pass_yds_allowed_season_avg" in player_feats:
-            stats["Defesa Rival: Jardas Aéreas Cedidas/Jogo"] = player_feats["def_pass_yds_allowed_season_avg"]
-        if "def_pass_yds_allowed_avg_5" in player_feats:
-            stats["Defesa Rival: Jardas Passe Cedidas (5J)"] = player_feats["def_pass_yds_allowed_avg_5"]
+        if "receiving_yards_avg_5" in player_feats and player_feats["receiving_yards_avg_5"] is not None:
+            stats["Média Jardas Recebidas (Últimos 5J)"] = f"{float(player_feats['receiving_yards_avg_5']):.1f}"
+        if "targets_avg_5" in player_feats and player_feats["targets_avg_5"] is not None:
+            stats["Média de Alvos/Targets (5J)"] = f"{float(player_feats['targets_avg_5']):.1f}"
+        if "def_pass_yds_allowed_season_avg" in player_feats and player_feats["def_pass_yds_allowed_season_avg"] is not None:
+            stats["Defesa Rival: Jardas Aéreas Cedidas/Jogo"] = f"{float(player_feats['def_pass_yds_allowed_season_avg']):.1f}"
+        if "def_pass_yds_allowed_avg_5" in player_feats and player_feats["def_pass_yds_allowed_avg_5"] is not None:
+            stats["Defesa Rival: Jardas Passe Cedidas (5J)"] = f"{float(player_feats['def_pass_yds_allowed_avg_5']):.1f}"
             
     elif market == "passing_yards":
-        if "passing_yards_avg_5" in player_feats:
-            stats["Média Jardas Passe (Últimos 5J)"] = player_feats["passing_yards_avg_5"]
-        if "attempts_avg_5" in player_feats:
-            stats["Média Passes Tentados (5J)"] = player_feats["attempts_avg_5"]
-        if "def_pass_yds_allowed_season_avg" in player_feats:
-            stats["Defesa Rival: Jardas Aéreas Cedidas/Jogo"] = player_feats["def_pass_yds_allowed_season_avg"]
+        if "passing_yards_avg_5" in player_feats and player_feats["passing_yards_avg_5"] is not None:
+            stats["Média Jardas Passe (Últimos 5J)"] = f"{float(player_feats['passing_yards_avg_5']):.1f}"
+        if "attempts_avg_5" in player_feats and player_feats["attempts_avg_5"] is not None:
+            stats["Média Passes Tentados (5J)"] = f"{float(player_feats['attempts_avg_5']):.1f}"
+        if "def_pass_yds_allowed_season_avg" in player_feats and player_feats["def_pass_yds_allowed_season_avg"] is not None:
+            stats["Defesa Rival: Jardas Aéreas Cedidas/Jogo"] = f"{float(player_feats['def_pass_yds_allowed_season_avg']):.1f}"
+
+    # 2. Matchup Vegas Context (only if the features row corresponds to the current opponent)
+    feats_opp = player_feats.get("opponent_team")
+    if target_opp and feats_opp and feats_opp.upper() == target_opp.upper():
+        if "implied_team_total" in player_feats and player_feats["implied_team_total"] is not None:
+            stats["Pontos Projetados do Time"] = player_feats["implied_team_total"]
+        if "implied_spread" in player_feats and player_feats["implied_spread"] is not None:
+            margin = player_feats["implied_spread"]
+            if isinstance(margin, (int, float)):
+                betting_spread = -margin
+                if margin > 0.5:
+                    stats["Favoritismo / Spread"] = f"FAVORITO por {margin:.1f} pontos (Spread Vegas: {betting_spread:+.1f})"
+                elif margin < -0.5:
+                    stats["Favoritismo / Spread"] = f"UNDERDOG / ZEBRA por {abs(margin):.1f} pontos (Spread Vegas: {betting_spread:+.1f})"
+                else:
+                    stats["Favoritismo / Spread"] = "Equilibrado (Pickem 0.0)"
+            else:
+                stats["Favoritismo / Spread"] = str(margin)
             
     return stats
 
@@ -280,8 +283,21 @@ def generate_summaries_for_recommended(
         
     feats_by_player = {}
     if df_feats is not None:
-        latest_feats = df_feats.sort("week").group_by("player_name").last()
-        feats_by_player = {row["player_name"]: row for row in latest_feats.iter_rows(named=True)}
+        sort_cols = [c for c in ["season", "week"] if c in df_feats.columns]
+        df_sorted = df_feats.sort(sort_cols) if sort_cols else df_feats
+        
+        group_cols = ["player_name"]
+        if "team" in df_feats.columns:
+            group_cols.append("team")
+            
+        latest_feats = df_sorted.group_by(group_cols).last()
+        for r in latest_feats.iter_rows(named=True):
+            p_name = r["player_name"]
+            p_team = r.get("team")
+            if p_team:
+                feats_by_player[(p_name, p_team)] = r
+            if p_name not in feats_by_player:
+                feats_by_player[p_name] = r
         
     has_news_alerts = []
     alert_severities = []
@@ -346,7 +362,7 @@ def generate_summaries_for_recommended(
             summaries.append(cached_item.get("ai_summary", ""))
             continue
             
-        p_feats = feats_by_player.get(player, {})
+        p_feats = feats_by_player.get((player, team)) or feats_by_player.get(player, {})
         key_stats = extract_key_stats(row, p_feats)
         
         depth_info = {
@@ -377,10 +393,11 @@ def generate_summaries_for_recommended(
         
         if client:
             try:
+                actual_opp = row.get("opponent") or row.get("opponent_team") or p_feats.get("opponent_team", "Adversário")
                 prompt = build_analysis_prompt(
                     player_name=display_player,
                     team=team,
-                    opponent=p_feats.get("opponent_team", "Adversário"),
+                    opponent=actual_opp,
                     market=market,
                     line=line,
                     side=side,

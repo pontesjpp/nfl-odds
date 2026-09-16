@@ -906,10 +906,10 @@ export default function Home() {
   // Helper to group bets for PropCard
   const groupBetsToProps = (bets: any[]): PropBet[] => {
     return bets.map(bet => {
-      const game = schedule.find((g: any) => g.away_team === bet.team || g.home_team === bet.team);
-      const isAway = game?.away_team === bet.team;
-      const opponent = game ? (isAway ? game.home_team : game.away_team) : undefined;
-      const matchupStr = game ? `${game.away_team} @ ${game.home_team}` : 'NFL Matchup';
+      const gameInfo = getBetGameInfo(bet);
+      const isAway = gameInfo ? gameInfo.away_team === bet.team : false;
+      const opponent = bet.opponent || (gameInfo ? (isAway ? gameInfo.home_team : gameInfo.away_team) : undefined);
+      const matchupStr = gameInfo ? gameInfo.label : (opponent ? `${bet.team} vs ${opponent}` : 'NFL Matchup');
       return {
         id: `${bet.player_name}-${bet.market}-${bet.line}-${bet.side}`,
         playerName: bet.player_name,
