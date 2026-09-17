@@ -110,6 +110,28 @@ export default function Home() {
   const [portfolioGameFilter, setPortfolioGameFilter] = useState<string>('all');
   const [portfolioSearch, setPortfolioSearch] = useState<string>('');
 
+  interface WorkflowRunState {
+    isTriggering: boolean;
+    isRunning: boolean;
+    runId: number | null;
+    runUrl: string | null;
+    status: 'idle' | 'queued' | 'in_progress' | 'completed' | 'failed' | 'error';
+    conclusion: string | null;
+    message: string | null;
+    startedAt: number | null;
+  }
+
+  const [workflowState, setWorkflowState] = useState<WorkflowRunState>({
+    isTriggering: false,
+    isRunning: false,
+    runId: null,
+    runUrl: null,
+    status: 'idle',
+    conclusion: null,
+    message: null,
+    startedAt: null,
+  });
+
   const getBetGameInfo = useCallback((bet: any) => {
     // 1. Direct match with schedule via game_id
     if (bet.game_id && schedule && schedule.length > 0) {
@@ -435,6 +457,112 @@ export default function Home() {
     setIsReadOnly(true);
     setPortfolioMessage('Modo Visitante (somente leitura) ativado.');
     await fetchPortfolio(portfolioTab);
+  };
+
+  const startWorkflowPolling = (initialRunId: number | null, fallbackUrl: string | null) => {
+    let activeRunId = initialRunId;
+    const pollInterval = setInterval(async () => {
+      try {
+        const q = activeRunId ? `?run_id=${activeRunId}` : '';
+        const res = await fetch(`/api/workflow-status${q}${q ? '&' : '?'}_t=${Date.now()}`);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        if (data.run_id && !activeRunId) activeRunId = data.run_id;
+
+        if (data.status === 'completed') {
+          clearInterval(pollInterval);
+          const isSuccess = data.conclusion === 'success';
+          setWorkflowState(prev => ({
+            ...prev,
+            isRunning: false,
+            status: isSuccess ? 'completed' : 'failed',
+            conclusion: data.conclusion,
+            runUrl: data.html_url || fallbackUrl,
+            message: isSuccess
+              ? '✅ Pipeline concluída com sucesso! Novas odds consolidadas e disponíveis.'
+              : `❌ Workflow falhou (${data.conclusion}). Verifique os logs no GitHub.`,
+          }));
+
+          if (isSuccess) {
+            const betsRes = await fetch(`/api/live-bets?_t=${Date.now()}`, { cache: 'no-store' });
+            if (betsRes.ok) setLiveBets(await betsRes.json());
+          }
+        } else if (data.status === 'in_progress' || data.status === 'queued') {
+          setWorkflowState(prev => ({
+            ...prev,
+            runUrl: data.html_url || prev.runUrl,
+            status: data.status,
+            message: data.status === 'queued'
+              ? 'Aguardando runner do GitHub Actions iniciar...'
+              : 'Executando scraper Playwright e pipeline XGBoost no GitHub...',
+          }));
+        }
+      } catch (e) {
+        console.error('Polling error:', e);
+      }
+    }, 8000);
+
+    // Auto-timeout polling after 20 minutes
+    setTimeout(() => clearInterval(pollInterval), 20 * 60 * 1000);
+  };
+
+  const handleTriggerRemotePipeline = async (fastMode: boolean = false) => {
+    if (!isAdmin) {
+      setAdminModalOpen(true);
+      return;
+    }
+
+    setWorkflowState(prev => ({
+      ...prev,
+      isTriggering: true,
+      status: 'queued',
+      message: 'Disparando workflow remoto no GitHub Actions...',
+      startedAt: Date.now(),
+    }));
+
+    try {
+      const res = await authFetch('/api/trigger-workflow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          week: Number(selectedWeek) || 2,
+          fast: fastMode,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setWorkflowState(prev => ({
+          ...prev,
+          isTriggering: false,
+          isRunning: false,
+          status: 'error',
+          message: data.detail || 'Falha ao disparar workflow no GitHub Actions.',
+        }));
+        return;
+      }
+
+      setWorkflowState(prev => ({
+        ...prev,
+        isTriggering: false,
+        isRunning: true,
+        runId: data.run_id,
+        runUrl: data.run_url,
+        status: 'in_progress',
+        message: data.message || 'Workflow disparado com sucesso no GitHub Actions.',
+      }));
+
+      startWorkflowPolling(data.run_id, data.run_url);
+    } catch (err: any) {
+      setWorkflowState(prev => ({
+        ...prev,
+        isTriggering: false,
+        isRunning: false,
+        status: 'error',
+        message: `Erro ao conectar com o servidor: ${err.message}`,
+      }));
+    }
   };
 
   const handleOpenBoxScore = async (game?: any) => {
@@ -1167,6 +1295,79 @@ export default function Home() {
             })}
           </div>
 
+          {/* Non-blocking Visual Feedback Banner for Remote Workflow */}
+          {(workflowState.isRunning || workflowState.isTriggering || workflowState.message) && (
+            <div className="mb-8 p-4 rounded-xl border border-[#D4AF37]/40 bg-[#12100C]/95 backdrop-blur-md shadow-[0_0_25px_rgba(212,175,55,0.15)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="flex items-center gap-3.5">
+                {workflowState.isTriggering && (
+                  <div className="w-5 h-5 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                )}
+                {workflowState.isRunning && (
+                  <div className="relative flex items-center justify-center w-5 h-5 flex-shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF37] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-[#D4AF37]"></span>
+                  </div>
+                )}
+                {workflowState.status === 'completed' && <span className="text-xl">✅</span>}
+                {workflowState.status === 'failed' && <span className="text-xl">❌</span>}
+                {workflowState.status === 'error' && <span className="text-xl">⚠️</span>}
+
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs tracking-wider uppercase font-bold text-[#F4E8D1]">
+                      {workflowState.status === 'in_progress' ? 'Execução em Nuvem (GitHub Actions)' :
+                       workflowState.status === 'queued' ? 'Fila do GitHub Actions' :
+                       workflowState.status === 'completed' ? 'Processamento Concluído' :
+                       workflowState.status === 'failed' ? 'Falha na Execução' :
+                       workflowState.status === 'error' ? 'Erro de Disparo' : 'Status da Atualização'}
+                    </span>
+                    {workflowState.runId && (
+                      <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[#2B261D] text-[#C5A880]">
+                        Run #{workflowState.runId}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-[#A89F91] font-mono mt-0.5">
+                    {workflowState.message}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 self-end md:self-center">
+                {workflowState.runUrl && (
+                  <a 
+                    href={workflowState.runUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs font-mono text-[#D4AF37] hover:text-[#F4E8D1] underline underline-offset-4 flex items-center gap-1 transition-colors"
+                  >
+                    Ver Logs no GitHub ↗
+                  </a>
+                )}
+                {workflowState.status === 'completed' && (
+                  <button
+                    onClick={async () => {
+                      const res = await fetch(`/api/live-bets?_t=${Date.now()}`, { cache: 'no-store' });
+                      if (res.ok) setLiveBets(await res.json());
+                      setWorkflowState(prev => ({ ...prev, message: null }));
+                    }}
+                    className="bg-[#D4AF37] text-black font-mono text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-[#F4E8D1] transition-all"
+                  >
+                    Recarregar Painel
+                  </button>
+                )}
+                {!workflowState.isRunning && !workflowState.isTriggering && (
+                  <button
+                    onClick={() => setWorkflowState(prev => ({ ...prev, message: null }))}
+                    className="text-[#888] hover:text-white font-mono text-xs px-2 py-1"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* 1. SCHEDULE TAB (ALL PROPS & MATCHUPS - ZERO EV FILTERS) */}
           {mode === 'schedule' && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -1239,25 +1440,28 @@ export default function Home() {
                   )}
                   {isAdmin && (
                     <button 
-                      className="bg-[#FFFFFF] text-[#000000] hover:bg-[#F4E8D1] border border-[#D4AF37]/50 font-bold font-mono text-xs tracking-wider py-2.5 px-5 rounded-xl transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center gap-2"
-                      onClick={async () => {
-                        alert("Iniciando scraper Stealth Playwright e geração de IA... Isso pode levar ~25 segundos.");
-                        try {
-                          const pRes = await authFetch('/api/run-pipeline', { method: 'POST' });
-                          if (!pRes.ok) {
-                            const errData = await pRes.json();
-                            alert(errData.detail || "Erro ao rodar pipeline.");
-                            return;
-                          }
-                          const res = await fetch(`/api/live-bets?_t=${Date.now()}`, { cache: 'no-store' });
-                          setLiveBets(await res.json());
-                          alert("Odds e análises de IA atualizadas com sucesso!");
-                        } catch (e) {
-                          alert("Erro ao rodar scraper e IA.");
-                        }
-                      }}
+                      disabled={workflowState.isTriggering || workflowState.isRunning}
+                      className={`bg-[#FFFFFF] text-[#000000] hover:bg-[#F4E8D1] border border-[#D4AF37]/50 font-bold font-mono text-xs tracking-wider py-2.5 px-5 rounded-xl transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center gap-2 ${
+                        workflowState.isTriggering || workflowState.isRunning ? 'opacity-60 cursor-not-allowed' : ''
+                      }`}
+                      onClick={() => handleTriggerRemotePipeline(false)}
                     >
-                      ATUALIZAR ODDS & IA
+                      {workflowState.isTriggering ? (
+                        <>
+                          <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                          <span>DISPARANDO...</span>
+                        </>
+                      ) : workflowState.isRunning ? (
+                        <>
+                          <div className="w-2 h-2 rounded-full bg-[#D4AF37] animate-ping" />
+                          <span>EXECUTANDO NA NUVEM...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>⚡</span>
+                          <span>ATUALIZAR ODDS & IA (REMOTO)</span>
+                        </>
+                      )}
                     </button>
                   )}
                 </div>
@@ -1558,25 +1762,28 @@ export default function Home() {
                   )}
                   {isAdmin && (
                     <button 
-                      className="bg-[#FFFFFF] text-[#000000] hover:bg-[#F4E8D1] border border-[#D4AF37]/50 font-bold font-mono text-xs tracking-widest py-3 px-8 rounded-full transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center gap-2"
-                      onClick={async () => {
-                        alert("Iniciando scraper Stealth Playwright e geração de IA... Isso pode levar ~25 segundos.");
-                        try {
-                          const pRes = await authFetch('/api/run-pipeline', { method: 'POST' });
-                          if (!pRes.ok) {
-                            const errData = await pRes.json();
-                            alert(errData.detail || "Erro ao rodar pipeline.");
-                            return;
-                          }
-                          const res = await fetch(`/api/live-bets?_t=${Date.now()}`, { cache: 'no-store' });
-                          setLiveBets(await res.json());
-                          alert("Odds e análises de IA atualizadas com sucesso!");
-                        } catch (e) {
-                          alert("Erro ao rodar scraper e IA.");
-                        }
-                      }}
+                      disabled={workflowState.isTriggering || workflowState.isRunning}
+                      className={`bg-[#FFFFFF] text-[#000000] hover:bg-[#F4E8D1] border border-[#D4AF37]/50 font-bold font-mono text-xs tracking-widest py-3 px-8 rounded-full transition-all shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center gap-2 ${
+                        workflowState.isTriggering || workflowState.isRunning ? 'opacity-60 cursor-not-allowed' : ''
+                      }`}
+                      onClick={() => handleTriggerRemotePipeline(false)}
                     >
-                      ATUALIZAR ODDS & IA
+                      {workflowState.isTriggering ? (
+                        <>
+                          <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                          <span>DISPARANDO...</span>
+                        </>
+                      ) : workflowState.isRunning ? (
+                        <>
+                          <div className="w-2 h-2 rounded-full bg-[#D4AF37] animate-ping" />
+                          <span>EXECUTANDO NA NUVEM...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>⚡</span>
+                          <span>ATUALIZAR ODDS & IA (REMOTO)</span>
+                        </>
+                      )}
                     </button>
                   )}
                 </div>

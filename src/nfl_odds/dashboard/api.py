@@ -6,6 +6,10 @@ os.environ.setdefault("MKL_NUM_THREADS", "1")
 os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
 os.environ.setdefault("MALLOC_ARENA_MAX", "2")
 
+import sys
+import asyncio
+import subprocess
+import httpx
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -53,6 +57,7 @@ PROTECTED_PREFIXES = (
     "/api/portfolio/clear",
     "/api/portfolio",
     "/api/run-pipeline",
+    "/api/trigger-workflow",
 )
 
 class LoginRequest(BaseModel):
@@ -1160,24 +1165,229 @@ def get_locked_games_and_teams(season: int = 2026):
     _locked_cache["locked_team_weeks"] = locked_team_weeks
     return locked_game_ids, locked_team_weeks
 
+class TriggerWorkflowRequest(BaseModel):
+    week: Optional[int] = 2
+    fast: Optional[bool] = False
+    workflow_id: Optional[str] = "update_odds.yml"
+
+
+def get_github_repo_info() -> tuple[str, str]:
+    """Resolves owner and repository name from environment or git remote."""
+    owner = os.getenv("GITHUB_REPO_OWNER")
+    repo = os.getenv("GITHUB_REPO_NAME")
+    if not owner or not repo:
+        repo_full = os.getenv("GITHUB_REPOSITORY")
+        if repo_full and "/" in repo_full:
+            owner, repo = repo_full.split("/", 1)
+    if not owner or not repo:
+        try:
+            out = subprocess.check_output(
+                ["git", "config", "--get", "remote.origin.url"],
+                text=True,
+                stderr=subprocess.DEVNULL,
+            ).strip()
+            if "github.com" in out:
+                clean = out.split("github.com")[-1].lstrip("/:").rstrip(".git")
+                if "/" in clean:
+                    owner, repo = clean.split("/", 1)
+        except Exception:
+            pass
+    return owner or "pontesjpp", repo or "nfl-odds"
+
+
+def get_github_branch() -> str:
+    """Resolves active git branch from environment or git status."""
+    branch = os.getenv("GITHUB_BRANCH")
+    if not branch:
+        try:
+            branch = subprocess.check_output(
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                text=True,
+                stderr=subprocess.DEVNULL,
+            ).strip()
+        except Exception:
+            branch = None
+    return branch or "master"
+
+
+@app.post("/api/trigger-workflow")
+async def trigger_remote_workflow(
+    request: Request,
+    req: TriggerWorkflowRequest = TriggerWorkflowRequest(),
+):
+    # 1. Admin Authorization Guard
+    if not is_request_admin(request):
+        raise HTTPException(
+            status_code=403,
+            detail="🔒 Apenas o Administrador autenticado com MFA pode acionar a atualização remota."
+        )
+
+    # 2. Upfront GITHUB_TOKEN Validation (Returns 400 instead of 500 error)
+    github_token = (
+        os.getenv("GITHUB_TOKEN")
+        or os.getenv("GH_PAT")
+        or os.getenv("GITHUB_PAT")
+    )
+    if not github_token or not github_token.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="⚠️ GITHUB_TOKEN não configurado no servidor. Configure a variável de ambiente no Render com escopo 'actions:write'."
+        )
+
+    owner, repo = get_github_repo_info()
+    branch = get_github_branch()
+    workflow_file = req.workflow_id or "update_odds.yml"
+
+    url = f"https://api.github.com/repos/{owner}/{repo}/actions/workflows/{workflow_file}/dispatches"
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {github_token.strip()}",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "nfl-odds-dashboard"
+    }
+    payload = {
+        "ref": branch,
+        "inputs": {
+            "week": str(req.week or 2),
+            "fast": "true" if req.fast else "false"
+        }
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.post(url, json=payload, headers=headers)
+
+            if resp.status_code == 204:
+                actions_url = f"https://github.com/{owner}/{repo}/actions/workflows/{workflow_file}"
+                run_id = None
+                run_url = actions_url
+
+                try:
+                    await asyncio.sleep(1.0)
+                    runs_api = f"https://api.github.com/repos/{owner}/{repo}/actions/workflows/{workflow_file}/runs?per_page=1"
+                    r_runs = await client.get(runs_api, headers=headers)
+                    if r_runs.status_code == 200:
+                        runs_list = r_runs.json().get("workflow_runs", [])
+                        if runs_list:
+                            run_id = runs_list[0].get("id")
+                            run_url = runs_list[0].get("html_url") or actions_url
+                except Exception:
+                    pass
+
+                return {
+                    "status": "success",
+                    "message": f"Workflow '{workflow_file}' disparado com sucesso para a Semana {req.week} no branch '{branch}'.",
+                    "run_id": run_id,
+                    "run_url": run_url,
+                    "actions_url": actions_url,
+                    "owner": owner,
+                    "repo": repo,
+                    "branch": branch,
+                }
+            elif resp.status_code == 401:
+                raise HTTPException(status_code=401, detail="Token do GitHub inválido ou expirado. Verifique GITHUB_TOKEN.")
+            elif resp.status_code == 403:
+                raise HTTPException(status_code=403, detail="GITHUB_TOKEN não possui permissão para disparar workflows (escopo 'actions:write' necessário).")
+            elif resp.status_code == 404:
+                raise HTTPException(status_code=404, detail=f"Workflow '{workflow_file}' ou repositório '{owner}/{repo}' não encontrado no branch '{branch}'.")
+            elif resp.status_code == 422:
+                err_body = resp.json() if resp.text else {}
+                raise HTTPException(status_code=422, detail=f"Parâmetros de workflow inválidos: {err_body.get('message', resp.text)}")
+            else:
+                raise HTTPException(status_code=resp.status_code, detail=f"Erro do GitHub ({resp.status_code}): {resp.text}")
+
+    except httpx.RequestError as e:
+        raise HTTPException(status_code=502, detail=f"Falha de rede ao contatar a API do GitHub Actions: {e}")
+
+
+@app.get("/api/workflow-status")
+async def get_workflow_status(
+    workflow_id: Optional[str] = "update_odds.yml",
+    run_id: Optional[int] = None,
+):
+    github_token = (
+        os.getenv("GITHUB_TOKEN")
+        or os.getenv("GH_PAT")
+        or os.getenv("GITHUB_PAT")
+    )
+    owner, repo = get_github_repo_info()
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "nfl-odds-dashboard"
+    }
+    if github_token and github_token.strip():
+        headers["Authorization"] = f"Bearer {github_token.strip()}"
+
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        try:
+            if run_id:
+                url = f"https://api.github.com/repos/{owner}/{repo}/actions/runs/{run_id}"
+                resp = await client.get(url, headers=headers)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    return {
+                        "run_id": data.get("id"),
+                        "status": data.get("status"),          # 'queued', 'in_progress', 'completed'
+                        "conclusion": data.get("conclusion"),  # 'success', 'failure', 'cancelled'
+                        "html_url": data.get("html_url"),
+                        "created_at": data.get("created_at"),
+                        "updated_at": data.get("updated_at"),
+                    }
+                elif resp.status_code == 404:
+                    return {"status": "not_found", "message": f"Run {run_id} não encontrada."}
+                else:
+                    return {"status": "error", "code": resp.status_code, "message": resp.text}
+            else:
+                url = f"https://api.github.com/repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs?per_page=3"
+                resp = await client.get(url, headers=headers)
+                if resp.status_code == 200:
+                    runs = resp.json().get("workflow_runs", [])
+                    if runs:
+                        latest = runs[0]
+                        return {
+                            "run_id": latest.get("id"),
+                            "status": latest.get("status"),
+                            "conclusion": latest.get("conclusion"),
+                            "html_url": latest.get("html_url"),
+                            "created_at": latest.get("created_at"),
+                            "updated_at": latest.get("updated_at"),
+                        }
+                    return {"status": "none", "message": "Nenhuma execução recente encontrada."}
+                elif resp.status_code == 404:
+                    return {"status": "not_found", "message": "Workflow ou repositório não encontrado."}
+                else:
+                    return {"status": "error", "code": resp.status_code, "message": resp.text}
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
+
+
 @app.post("/api/run-pipeline")
-def run_pipeline_api(request: Request):
+async def run_pipeline_api(request: Request):
     if not is_request_admin(request):
         raise HTTPException(
             status_code=403,
             detail="🔒 Apenas o Administrador autenticado com MFA pode atualizar odds e acionar a IA."
         )
-    if os.getenv("RENDER") == "true" or os.getenv("IS_RENDER") == "true":
+    is_render = os.getenv("RENDER") == "true" or os.getenv("IS_RENDER") == "true"
+    has_token = bool(os.getenv("GITHUB_TOKEN") or os.getenv("GH_PAT") or os.getenv("GITHUB_PAT"))
+
+    # If running on Render or when GITHUB_TOKEN is present, auto-delegate to GitHub Actions
+    if has_token:
+        return await trigger_remote_workflow(request=request, req=TriggerWorkflowRequest(week=2, fast=False))
+
+    if is_render:
         raise HTTPException(
             status_code=400,
-            detail="⚠️ O scraper e pipeline consomem mais de 512MB de RAM e não podem ser executados diretamente no container web do Render. Execute './scripts/update_odds.sh' localmente na sua máquina e faça git push para sincronizar."
+            detail="⚠️ O scraper e pipeline consomem mais de 512MB de RAM e não podem ser executados diretamente no container web do Render. Configure a variável GITHUB_TOKEN no Render para acionamento remoto automático via GitHub Actions, ou execute './scripts/update_odds.sh' localmente."
         )
+
     try:
         # Run the scraper
         subprocess.run([sys.executable, "scripts/run_scraper.py"], check=True)
         # Run the pipeline
         subprocess.run([sys.executable, "pipeline.py", "--live"], check=True)
-        
+
         # Auto-sync portfolios for pending bets so recommendations and portfolio stay 100% aligned
         try:
             import_safe_picks(replace_pending=True)
@@ -1185,8 +1395,8 @@ def run_pipeline_api(request: Request):
             import_all_props(replace_pending=True)
         except Exception as sync_err:
             print(f"Auto-sync warning: {sync_err}")
-            
-        return {"status": "success"}
+
+        return {"status": "success", "mode": "local"}
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=500, detail=f"Pipeline failed: {e}")
 

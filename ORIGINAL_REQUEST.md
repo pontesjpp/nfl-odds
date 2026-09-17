@@ -72,3 +72,50 @@ Build an end-to-end regression test suite verifying that odds parsing, probabili
 ### Verification & Robustness
 - [ ] A dedicated test command (e.g. pytest or equivalent test runner) executes all unit and pipeline verification tests with exit code 0.
 - [ ] No regression is introduced to existing dashboard API endpoints (`/api/predict`, `/api/portfolio`, `/api/top-picks`).
+
+## Follow-up — 2026-09-17T22:29:44Z
+
+Implementar a automação completa do pipeline de captura e modelagem de odds da NFL com acionamento remoto online via GitHub Actions, dotado de lógica de raspagem incremental inteligente que valida a presença de mercados de jardas e um mínimo de 3 props por partida para evitar execuções redundantes.
+
+Working directory: /home/jppontes/nfl-odds
+Integrity mode: demo
+
+## Requirements
+
+### R1. Disparador Remoto no Dashboard e Backend (Botão Online)
+- Disponibilizar na interface e na API um botão/endpoint funcional para acionar a atualização de longe.
+- O endpoint deve acionar a API do GitHub (`workflow_dispatch`) para executar o processamento pesado na nuvem (GitHub Actions), evitando estouro de memória no Render e dispensando manter o computador pessoal ligado.
+- Exibir feedback visual de status na interface (sucesso no disparo, link ou status da execução).
+
+### R2. Workflow do GitHub Actions para Scraping e Pipeline
+- Criar/configurar um workflow seguro em `.github/workflows/` habilitado para `workflow_dispatch`.
+- Instalar dependências (Python, uv, Playwright com Chromium).
+- Executar o scraper incremental e em seguida a pipeline preditiva (`pipeline.py --live`).
+- Efetuar commit e push dos arquivos de dados atualizados (`data/*.parquet`) de volta ao repositório para sincronização automática com o Render/Vercel.
+
+### R3. Lógica de Scraping Incremental Inteligente (Betclic)
+- Ao ler `data/links.txt`, avaliar o estado atual de cada partida antes de realizar a requisição Playwright:
+  - Um jogo só é considerado **completamente computado** se tiver **no mínimo 3 props** captadas E **mercados de jardas** (passing yards, rushing yards ou receiving yards) já disponíveis e captados.
+  - Se um jogo possui apenas aba 'Joueurs' sem mercados de jardas (ou possui menos de 3 props), ele **deve** ser re-raspado a cada execução para checar se a casa abriu as linhas de jardas.
+  - Partidas já consolidadas com >= 3 props (incluindo jardas) devem ser ignoradas (skip) para otimizar tempo e prevenir rate-limit/bloqueios.
+
+### R4. Execução do Pipeline Preditivo e Persistência
+- Integrar os novos dados capturados ao dataset existente.
+- Rodar os modelos XGBoost/EV de ponta a ponta.
+- Salvar os parquets de inferência (`live_value_bets.parquet`, etc.) prontos para consumo no dashboard.
+
+## Acceptance Criteria
+
+### Botão e Acionamento Remoto
+- [ ] O botão na interface faz a requisição autenticada e recebe confirmação de disparo do workflow remoto sem erro 500 ou 403 indevido.
+- [ ] O workflow no GitHub Actions inicia e executa com sucesso em runner do GitHub sem depender de máquina local.
+
+### Regra de Jogo Concluído e Re-raspagem
+- [ ] Jogos com < 3 props são reprocessados pelo scraper.
+- [ ] Jogos que possuem props mas não contêm nenhum mercado de jardas são reprocessados para reavaliar abertura de jardas.
+- [ ] Jogos que atendem simultaneamente a: (1) >= 3 props e (2) presença de mercado de jardas são pulados (skip), registrando log explicativo.
+
+### Integridade do Pipeline e Dados
+- [ ] O pipeline de IA (`pipeline.py --live`) executa sem falhas com o dataset resultante.
+- [ ] Testes automatizados cobrem a lógica de decisão incremental (cenários: jogo não visto, jogo incompleto sem jardas, jogo com <3 props, jogo completo).
+- [ ] Os dados consolidados são comitados e enviados via Git com credenciais seguras.

@@ -717,7 +717,9 @@ def generate_summaries_for_recommended(
         pl.Series("ai_summary", summaries, dtype=pl.Utf8)
     ])
     
-    df_bets.write_parquet(bets_path)
+    tmp_bets_path = bets_path + ".tmp"
+    df_bets.write_parquet(tmp_bets_path)
+    os.replace(tmp_bets_path, bets_path)
     print(f"-> Successfully updated {bets_path} with dual-polarity news alerts, multipliers, and rationales.")
     
     return df_bets

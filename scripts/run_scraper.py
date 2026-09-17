@@ -21,12 +21,23 @@ def main():
         default="data/links.txt",
         help="Caminho do arquivo com as URLs da Betclic (padrão: data/links.txt)"
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Força re-raspagem mesmo de jogos consolidados como completos."
+    )
     args = parser.parse_args()
 
     # O padrão é slow_mode a menos que o usuário passe explicitamente --fast
     slow_mode = not args.fast
 
-    asyncio.run(run_betclic_scraping(slow_mode=slow_mode, links_file=args.links))
+    asyncio.run(
+        run_betclic_scraping(
+            slow_mode=slow_mode,
+            links_file=args.links,
+            force_rescrape=args.force,
+        )
+    )
 
 if __name__ == "__main__":
     main()

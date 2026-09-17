@@ -7,6 +7,19 @@ import re
 import os
 import sys
 import argparse
+from datetime import datetime
+
+from nfl_odds.scraper.incremental import (
+    MatchStatus,
+    MatchStatusType,
+    YARDS_MARKETS,
+    evaluate_match_status,
+    extract_match_id,
+    normalize_url,
+    load_and_migrate_odds,
+    save_consolidated_odds,
+    upsert_match_odds,
+)
 
 async def scrape_match(url: str):
     print(f"Scraping {url}...")
@@ -168,7 +181,10 @@ async def scrape_match(url: str):
                     "side": side,
                     "line": line_val,
                     "odds": odd_val,
-                    "bookmaker": "Betclic"
+                    "bookmaker": "Betclic",
+                    "match_url": normalize_url(url),
+                    "match_id": extract_match_id(url),
+                    "scraped_at": datetime.now().isoformat(),
                 })
             else:
                 if "Touchdown" in market_name:
@@ -178,25 +194,34 @@ async def scrape_match(url: str):
                         "side": "over",
                         "line": 0.5,
                         "odds": odd_val,
-                        "bookmaker": "Betclic"
+                        "bookmaker": "Betclic",
+                        "match_url": normalize_url(url),
+                        "match_id": extract_match_id(url),
+                        "scraped_at": datetime.now().isoformat(),
                     })
                     
     df = pl.DataFrame(data)
     
     if len(df) > 0:
+        dedup_cols = [c for c in ["player_name", "market", "side", "line"] if c in df.columns]
+        df = df.unique(subset=dedup_cols)
         print(f"Loaded {len(df)} player props.")
     else:
         print("Warning: Scraped data is empty after navigating to 'Joueurs'. Anti-bot triggered or format changed.")
         
     return df
 
-async def run_betclic_scraping(slow_mode: bool = True, links_file: str = "data/links.txt") -> pl.DataFrame:
+async def run_betclic_scraping(
+    slow_mode: bool = True,
+    links_file: str = "data/links.txt",
+    force_rescrape: bool = False,
+) -> pl.DataFrame:
     if not os.path.exists(links_file):
         print(f"Error: {links_file} not found. Please create it with Betclic URLs.")
         return pl.DataFrame()
 
     with open(links_file, "r") as f:
-        links = [line.strip() for line in f if line.strip()]
+        links = [normalize_url(line) for line in f if line.strip()]
 
     # Preserve original order while deduplicating
     links = list(dict.fromkeys(links))
@@ -205,27 +230,44 @@ async def run_betclic_scraping(slow_mode: bool = True, links_file: str = "data/l
         print(f"No links found in {links_file}")
         return pl.DataFrame()
 
+    out_path = "data/betclic_parsed_odds.parquet"
+    consolidated_df = load_and_migrate_odds(out_path, links_file)
+
     mode_text = "🐢 Slow Scrape (recomendado anti-bot: 30-60s de intervalo)" if slow_mode else "⚡ Fast Scrape (5-12s de intervalo)"
-    print(f"Encontrados {len(links)} jogos únicos para raspar. Modo: {mode_text}")
-    
-    all_dfs = []
-    
+    print(f"Encontrados {len(links)} jogos únicos para avaliar. Modo: {mode_text}")
+    print(f"Base de dados inicial contém {len(consolidated_df)} props consolidadas.")
+
+    skipped_count = 0
+    scraped_count = 0
+
     for i, url in enumerate(links, 1):
-        print(f"\n--- Processando jogo {i}/{len(links)} ---")
+        status = evaluate_match_status(consolidated_df, url)
+
+        # Rule 3: Skip complete matches with explanatory log
+        if not status.should_scrape and not force_rescrape:
+            print(f"⏩ [SKIP] [{i}/{len(links)}] {status.reason}")
+            skipped_count += 1
+            continue
+
+        print(f"\n--- [{i}/{len(links)}] Processando: {status.reason} ---")
+        scraped_count += 1
+
         try:
             df = await scrape_match(url)
-            
+
             if df is None:
                 print("🚨 Abortando jogos restantes devido a bloqueio do anti-bot para proteger seu IP.")
                 break
-                
+
             if not df.is_empty():
-                all_dfs.append(df)
+                consolidated_df = upsert_match_odds(consolidated_df, df, url)
+                save_consolidated_odds(consolidated_df, out_path)
+                print(f"💾 Consolidado jogo no parquet ({len(df)} props captadas). Total no banco: {len(consolidated_df)} props.")
             else:
-                print("Nenhum dado retornado para este jogo.")
+                print("ℹ️ Nenhum dado retornado para este jogo no momento.")
         except Exception as e:
             print(f"Erro ao processar o jogo: {e}")
-            
+
         if i < len(links):
             import random
             if slow_mode:
@@ -235,28 +277,28 @@ async def run_betclic_scraping(slow_mode: bool = True, links_file: str = "data/l
                 wait_time = random.uniform(5.0, 12.0)
                 print(f"⚡ Fast Scrape: Esperando {wait_time:.1f}s para evitar bloqueio de IP...")
             await asyncio.sleep(wait_time)
-            
-    if all_dfs:
-        final_df = pl.concat(all_dfs)
-        os.makedirs("data", exist_ok=True)
-        out_path = "data/betclic_parsed_odds.parquet"
-        final_df.write_parquet(out_path)
-        print(f"\n✅ Scraping concluído! Foram salvas {len(final_df)} props totais em '{out_path}'.")
+
+    print(f"\n📊 Resumo da Execução:")
+    print(f"   Total de partidas avaliadas: {len(links)}")
+    print(f"   Partidas puladas (já completas): {skipped_count}")
+    print(f"   Partidas raspadas/reprocessadas: {scraped_count}")
+    print(f"   Total de props consolidadas: {len(consolidated_df)}")
+    if len(consolidated_df) > 0:
+        print(f"Arquivo salvo com sucesso em '{out_path}'.")
         print("Agora você pode rodar: uv run python pipeline.py --live")
-        return final_df
-    else:
-        print("\n❌ Nenhuma prop foi encontrada/raspada em nenhum jogo (mercados ainda fechados na Betclic).")
-        return pl.DataFrame()
+    return consolidated_df
 
 async def main():
     parser = argparse.ArgumentParser(description="Scraper de Player Props da Betclic")
     parser.add_argument("--fast", action="store_true", help="Executa no modo rápido (5-12s delay)")
     parser.add_argument("--slow", action="store_true", default=True, help="Executa no modo slow human-like (30-60s delay, padrão)")
+    parser.add_argument("--force", action="store_true", help="Força re-raspagem mesmo de jogos completos")
     parser.add_argument("--links", default="data/links.txt", help="Caminho para arquivo de links")
     args = parser.parse_args()
 
     slow_mode = not args.fast
-    await run_betclic_scraping(slow_mode=slow_mode, links_file=args.links)
+    await run_betclic_scraping(slow_mode=slow_mode, links_file=args.links, force_rescrape=args.force)
 
 if __name__ == "__main__":
     asyncio.run(main())
+

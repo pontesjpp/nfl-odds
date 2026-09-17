@@ -65,6 +65,7 @@ yarn-error.log*
 # Scraper raw dumps, cache files, and runtime state
 data/*.html
 data/*.txt
+!data/links.txt
 data/ng_state.json
 data/*_cache.json
 !data/ai_summaries_cache.json

@@ -50,13 +50,17 @@ def run_pipeline(live=False, week=2):
         df_odds = pl.read_parquet("data/betclic_parsed_odds.parquet")
         
         mapping_df = df_test_base.select(["player_id", "player_display_name"]).drop_nulls().unique()
-        mapping_df = mapping_df.with_columns(pl.col("player_display_name").str.to_lowercase().alias("name_lower"))
+        mapping_df = mapping_df.with_columns(
+            pl.col("player_display_name").str.to_lowercase().str.replace_all(r"[.\s']", "").alias("name_clean")
+        )
         
-        df_odds = df_odds.with_columns(pl.col("player_name").str.to_lowercase().alias("name_lower"))
+        df_odds = df_odds.with_columns(
+            pl.col("player_name").str.to_lowercase().str.replace_all(r"[.\s']", "").alias("name_clean")
+        )
         
         df_odds = df_odds.join(
             mapping_df, 
-            on="name_lower", 
+            on="name_clean", 
             how="inner"
         )
         

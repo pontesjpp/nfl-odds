@@ -1,0 +1,107 @@
+name: NFL Odds - Scraper & Predictive Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'NFL Week number to scrape and model (e.g. 2)'
+        required: false
+        default: '2'
+      fast:
+        description: 'Run scraper in fast mode (5-12s delay between matches)'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: nfl-odds-scrape-pipeline
+  cancel-in-progress: false
+
+jobs:
+  scrape-and-predict:
+    name: Scrape Betclic & Run Predictive Pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: master
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Cache Playwright Browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+          restore-keys: |
+            playwright-browsers-${{ runner.os }}-
+
+      - name: Install Playwright Chromium & System Dependencies
+        run: uv run playwright install --with-deps chromium
+
+      - name: Run Betclic Scraper
+        env:
+          PYTHONPATH: src
+        run: |
+          WEEK="${{ github.event.inputs.week || '2' }}"
+          FAST="${{ github.event.inputs.fast || 'false' }}"
+          echo "🕷️ Iniciando raspagem Betclic (Semana $WEEK, fast=$FAST)..."
+          if [ "$FAST" = "true" ]; then
+            uv run python scripts/run_scraper.py --fast
+          else
+            uv run python scripts/run_scraper.py
+          fi
+
+      - name: Run Predictive Pipeline (+EV & XGBoost)
+        env:
+          PYTHONPATH: src
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          WEEK="${{ github.event.inputs.week || '2' }}"
+          echo "🧠 Executando pipeline preditivo para a Semana $WEEK..."
+          uv run python pipeline.py --live --week "$WEEK"
+
+      - name: Commit and push updated parquet files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Stage parquet datasets and cache artifacts allowed by .gitignore
+          git add data/betclic_parsed_odds.parquet \
+                  data/live_value_bets.parquet \
+                  data/live_features.parquet \
+                  data/ai_summaries_cache.json \
+                  data/player_news_cache.json 2>/dev/null || true
+
+          if git diff --staged --quiet; then
+            echo "ℹ️ Nenhuma alteração nos arquivos de dados. Nada para comitar."
+          else
+            WEEK="${{ github.event.inputs.week || '2' }}"
+            TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+            git commit -m "chore(data): update live odds and value bets week $WEEK ($TIMESTAMP) [skip ci]"
+            
+            # Rebase against remote master in case of any concurrent changes
+            git pull --rebase origin master
+            git push origin master
+            echo "✅ Dados sincronizados e enviados para o repositório com sucesso!"
+          fi
