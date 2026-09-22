@@ -577,7 +577,7 @@ def get_team_defense_endpoint(
     return profile
 
 @app.get("/api/defense-rankings")
-def get_league_defense_rankings(season: int = 2026, week: int = 1):
+def get_league_defense_rankings(season: int = 2026, week: int = 3):
     return compute_defense_rankings(season=season, week=week)
 
 class PredictRequest(BaseModel):
@@ -751,7 +751,7 @@ def get_current_nfl_week(season: int = 2026) -> int:
     except Exception as e:
         print(f"Erro ao detectar semana ativa pelo calendário: {e}")
 
-    return 2
+    return 3
 
 def load_cached_schedule(season: int = 2026, week: Optional[int] = None) -> List[dict]:
     schedule_file = f"data/schedule_{season}.json"
@@ -1166,7 +1166,7 @@ def get_locked_games_and_teams(season: int = 2026):
     return locked_game_ids, locked_team_weeks
 
 class TriggerWorkflowRequest(BaseModel):
-    week: Optional[int] = 2
+    week: Optional[int] = 3
     fast: Optional[bool] = False
     workflow_id: Optional[str] = "update_odds.yml"
 
@@ -1374,7 +1374,8 @@ async def run_pipeline_api(request: Request):
 
     # If running on Render or when GITHUB_TOKEN is present, auto-delegate to GitHub Actions
     if has_token:
-        return await trigger_remote_workflow(request=request, req=TriggerWorkflowRequest(week=2, fast=False))
+        active_w = get_current_nfl_week()
+        return await trigger_remote_workflow(request=request, req=TriggerWorkflowRequest(week=active_w, fast=False))
 
     if is_render:
         raise HTTPException(
@@ -2095,7 +2096,7 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
         )
 
         # 1. Carregar catálogo completo de jogos finalizados e estatísticas oficiais (ESPN + nflreadpy)
-        candidate_weeks = list(set(b.week for b in candidate_bets if b.week)) or [2]
+        candidate_weeks = list(set(b.week for b in candidate_bets if b.week)) or [3]
         finished_games_dict = {}
         all_players = []
         for w in candidate_weeks:

@@ -12,7 +12,7 @@ from nfl_odds.features.patch_week1 import patch_week1_teams
 from nfl_odds.models.train import PlayerPropModel, split_temporal
 from nfl_odds.betting.ev_calc import analyze_opportunities
 
-def run_pipeline(live=False, week=2):
+def run_pipeline(live=False, week=3):
     print(f"1. Collecting NFL Data (2022-2026) for Week {week}...")
     years_to_load = [2022, 2023, 2024, 2025, 2026]
     
@@ -32,6 +32,24 @@ def run_pipeline(live=False, week=2):
     df_inj = load_injuries(years_to_load)
     df_dc = load_depth_charts(years_to_load)
     df_ids = load_player_ids()
+
+    if week > 1 and 2026 in years_to_load:
+        df_2026 = df_stats.filter(pl.col("season") == 2026)
+        if len(df_2026) > 0 and df_2026["week"].max() < week:
+            latest_active = df_2026.sort(["player_id", "week"]).group_by("player_id").last()
+            w_placeholder = latest_active.with_columns([
+                pl.lit(week).alias("week"),
+                pl.lit(None).alias("game_id")
+            ])
+            stat_cols = [
+                "passing_yards", "attempts", "completions", "rushing_yards", "carries", 
+                "receiving_yards", "receptions", "targets", "receiving_yards_after_catch", 
+                "passing_epa", "passing_cpoe", "sacks_suffered", "passing_air_yards", 
+                "wopr", "target_share", "air_yards_share", "receiving_air_yards"
+            ]
+            null_exprs = [pl.lit(None).cast(latest_active[c].dtype).alias(c) for c in stat_cols if c in latest_active.columns]
+            w_placeholder = w_placeholder.with_columns(null_exprs)
+            df_stats = pl.concat([df_stats, w_placeholder], how="diagonal_relaxed")
     
     print("2. Building Features...")
     df_features = build_player_features(
@@ -159,10 +177,14 @@ def run_pipeline(live=False, week=2):
         train_df = df_features.filter(pl.col("season") != latest_season).filter(pl.col("position").is_in(config["positions"]))
         test_df = df_test_base.filter(pl.col("position").is_in(config["positions"]))
         
-        # Apply time-decay sample weights: 2024: 1.0, 2023: 0.85, 2022: 0.70
+        # Apply time-decay sample weights: 2025: 1.0, 2024: 0.90, 2023: 0.80, 2022: 0.70
         import numpy as np
         train_seasons = train_df.select("season").to_series().to_numpy()
-        sample_weights = np.where(train_seasons == 2024, 1.0, np.where(train_seasons == 2023, 0.85, 0.70))
+        sample_weights = np.where(
+            train_seasons == 2025, 1.0,
+            np.where(train_seasons == 2024, 0.90,
+                     np.where(train_seasons == 2023, 0.80, 0.70))
+        )
         
         model = PlayerPropModel(target=market)
         model.fit(train_df, config["features"], sample_weight=sample_weights)
@@ -240,7 +262,7 @@ def run_pipeline(live=False, week=2):
 def main():
     parser = argparse.ArgumentParser(description="NFL Odds EV Pipeline")
     parser.add_argument("--live", action="store_true", help="Use live/extracted Betclic odds")
-    parser.add_argument("--week", type=int, default=2, help="NFL Week number (default: 2)")
+    parser.add_argument("--week", type=int, default=3, help="NFL Week number (default: 3)")
     args = parser.parse_args()
     run_pipeline(live=args.live, week=args.week)
 

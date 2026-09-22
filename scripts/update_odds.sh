@@ -18,13 +18,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-WEEK="${1:-2}"
+WEEK="${1:-3}"
 FAST_FLAG=""
 
 if [[ "${2:-}" == "--fast" ]] || [[ "${1:-}" == "--fast" ]]; then
     FAST_FLAG="--fast"
     if [[ "$WEEK" == "--fast" ]]; then
-        WEEK=2
+        WEEK=3
     fi
 fi
 

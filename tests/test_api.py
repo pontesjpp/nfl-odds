@@ -54,14 +54,25 @@ def test_get_player_features_jared_goff_season_stats(client):
     """
     Regression test: Jared Goff played Game 1 in 2026 with 206 yds, 39 att, 26 cmp.
     Ensures that current season (2026) features are returned instead of 2025 week 18 (264.56 yds).
+    Also validates that by Week 3, season stats correctly average both Week 1 and Week 2 (266.5 yds, 38.5 att, 26 cmp).
     """
-    response = client.get("/api/players/Jared Goff/features?market=passing_yards")
-    assert response.status_code == 200
-    data = response.json()
-    assert "passing_yards_season_avg" in data
-    assert data["passing_yards_season_avg"]["value"] == 206.0
-    assert data["attempts_season_avg"]["value"] == 39.0
-    assert data["completions_season_avg"]["value"] == 26.0
+    # Week 1 stats check
+    response_w1 = client.get("/api/players/Jared Goff/features?market=passing_yards&week=1")
+    assert response_w1.status_code == 200
+    data_w1 = response_w1.json()
+    assert "passing_yards_season_avg" in data_w1
+    assert data_w1["passing_yards_season_avg"]["value"] == 206.0
+    assert data_w1["attempts_season_avg"]["value"] == 39.0
+    assert data_w1["completions_season_avg"]["value"] == 26.0
+
+    # Week 3 latest season stats check (Game 1 206 yds + Game 2 327 yds -> avg 266.5)
+    response_w3 = client.get("/api/players/Jared Goff/features?market=passing_yards&week=3")
+    assert response_w3.status_code == 200
+    data_w3 = response_w3.json()
+    assert "passing_yards_season_avg" in data_w3
+    assert data_w3["passing_yards_season_avg"]["value"] == 266.5
+    assert data_w3["attempts_season_avg"]["value"] == 38.5
+    assert data_w3["completions_season_avg"]["value"] == 26.0
 
 def test_predict_prop(client):
     payload = {

@@ -8,7 +8,7 @@ TEAM_MAP = {
     "JAC": "JAX", "OAK": "LV", "SDC": "LAC", "STL": "LA", "RAM": "LA"
 }
 
-def patch_week1_teams(df_test_base: pl.DataFrame, week: int = 2) -> pl.DataFrame:
+def patch_week1_teams(df_test_base: pl.DataFrame, week: int = 3) -> pl.DataFrame:
     """
     Overwrites the 'team' and team/opponent features in the latest player row 
     based on the 2026 depth charts / df_ids and upcoming NFL schedule.

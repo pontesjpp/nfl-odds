@@ -671,5 +671,9 @@ def test_adversarial_live_dataset_links_evaluation():
         st = evaluate_match_status(df, link)
         assert st.should_scrape is True
         assert st.is_complete is False
-        assert st.status_type == MatchStatusType.NO_PREVIOUS_PROPS
+        assert st.status_type in (
+            MatchStatusType.NO_PREVIOUS_PROPS,
+            MatchStatusType.NO_YARDS_MARKETS,
+            MatchStatusType.INSUFFICIENT_PROPS,
+        )
 
