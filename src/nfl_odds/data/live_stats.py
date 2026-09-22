@@ -290,16 +290,25 @@ def get_all_finished_game_stats(season: int = 2026, week: int = 1) -> Tuple[Dict
 
     return finished_games_dict, all_players
 
-def match_player_in_stats(bet_player_name: str, bet_team: str, players_list: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+def match_player_in_stats(
+    bet_player_name: str, 
+    bet_team: str, 
+    players_list: List[Dict[str, Any]], 
+    week: Optional[int] = None
+) -> Optional[Dict[str, Any]]:
     """
-    Realiza matching robusto de jogador GARANTINDO isolamento total de time (Team Scoping).
-    NUNCA aceita match de um jogador de outro time.
+    Realiza matching robusto de jogador GARANTINDO isolamento total de time (Team Scoping)
+    e isolamento rigoroso por rodada (Week Scoping).
+    NUNCA aceita match de um jogador de outro time ou de outra semana.
     """
     if not bet_team or not players_list:
         return None
 
     clean_bet_team = clean_team_code(bet_team)
-    team_players = [p for p in players_list if p.get("team") == clean_bet_team]
+    team_players = [
+        p for p in players_list 
+        if p.get("team") == clean_bet_team and (week is None or p.get("week") is None or p.get("week") == week)
+    ]
     if not team_players:
         return None
 

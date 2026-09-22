@@ -2076,10 +2076,19 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
         db.close()
 
 @app.post("/api/portfolio/settle")
-def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str] = None, re_settle_pushes: bool = True):
+def settle_portfolio(
+    portfolio_type: Optional[str] = None, 
+    game_id: Optional[str] = None, 
+    re_settle_pushes: bool = True,
+    re_settle_all: bool = False
+):
     db = SessionLocal()
     try:
-        results_to_check = ["pending", "push"] if re_settle_pushes else ["pending"]
+        if re_settle_all:
+            results_to_check = ["pending", "push", "won", "lost"]
+        else:
+            results_to_check = ["pending", "push"] if re_settle_pushes else ["pending"]
+
         query = db.query(Bet).filter(Bet.result.in_(results_to_check))
         if portfolio_type:
             query = query.filter(Bet.portfolio_type == portfolio_type)
@@ -2095,28 +2104,31 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
             clean_team_code
         )
 
-        # 1. Carregar catálogo completo de jogos finalizados e estatísticas oficiais (ESPN + nflreadpy)
+        # 1. Carregar catálogo completo de jogos finalizados e estatísticas oficiais (ESPN + nflreadpy) POR SEMANA
         candidate_weeks = list(set(b.week for b in candidate_bets if b.week)) or [3]
-        finished_games_dict = {}
-        all_players = []
+        finished_games_by_week: Dict[int, Dict[str, Any]] = {}
+        players_by_week: Dict[int, List[Dict[str, Any]]] = {}
         for w in candidate_weeks:
             w_games, w_players = get_all_finished_game_stats(season=2026, week=w)
-            finished_games_dict.update(w_games)
-            all_players.extend(w_players)
-
-        finished_game_ids = set(finished_games_dict.keys())
-        finished_teams = set()
-        for g in finished_games_dict.values():
-            if g.get("home_team"):
-                finished_teams.add(clean_team_code(g["home_team"]))
-            if g.get("away_team"):
-                finished_teams.add(clean_team_code(g["away_team"]))
+            finished_games_by_week[w] = w_games
+            players_by_week[w] = w_players
 
         settled_count = 0
         updated_push_count = 0
         settled_game_names = set()
         
         for bet in candidate_bets:
+            b_week = bet.week or 2
+            w_games = finished_games_by_week.get(b_week, {})
+            w_players = players_by_week.get(b_week, [])
+            finished_game_ids = set(w_games.keys())
+            finished_teams = set()
+            for g in w_games.values():
+                if g.get("home_team"):
+                    finished_teams.add(clean_team_code(g["home_team"]))
+                if g.get("away_team"):
+                    finished_teams.add(clean_team_code(g["away_team"]))
+
             clean_b_team = clean_team_code(bet.team)
             
             # Se o jogo do time da aposta ainda não terminou, mantém o estado atual!
@@ -2130,21 +2142,21 @@ def settle_portfolio(portfolio_type: Optional[str] = None, game_id: Optional[str
                 # O jogo deste jogador ainda não terminou ou não iniciou
                 continue
                 
-            # Verifica se temos as estatísticas oficiais carregadas para este time
-            team_has_stats = any(p.get("team") == clean_b_team for p in all_players)
+            # Verifica se temos as estatísticas oficiais carregadas para este time na semana correspondente
+            team_has_stats = any(p.get("team") == clean_b_team for p in w_players)
             if not team_has_stats:
                 # Jogo finalizado mas estatísticas ainda em processamento; preserva
                 continue
 
-            # Matching robusto estritamente dentro do time do jogador (Sem falso-match com outros times!)
-            matched = match_player_in_stats(bet.player_name, clean_b_team, all_players)
+            # Matching robusto estritamente dentro do time E DA SEMANA do jogador
+            matched = match_player_in_stats(bet.player_name, clean_b_team, w_players, week=b_week)
             
             # Identificar nome amigável do jogo
             g_name = None
-            if bet.game_id and bet.game_id in finished_games_dict:
-                g_name = finished_games_dict[bet.game_id].get("name")
+            if bet.game_id and bet.game_id in w_games:
+                g_name = w_games[bet.game_id].get("name")
             if not g_name and clean_b_team:
-                for fg in finished_games_dict.values():
+                for fg in w_games.values():
                     if clean_b_team in (clean_team_code(fg.get("home_team")), clean_team_code(fg.get("away_team"))):
                         g_name = fg.get("name")
                         break
