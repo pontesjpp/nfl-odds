@@ -265,11 +265,11 @@
     "location": "Home",
     "gameday": "2026-09-17",
     "gametime": "20:15",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 41,
+    "away_score": 31,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872932"
   },
   {
     "game_id": "2026_02_CAR_ATL",
@@ -281,11 +281,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "13:00",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 3,
+    "away_score": 34,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872933"
   },
   {
     "game_id": "2026_02_NO_BAL",
@@ -297,11 +297,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "13:00",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 17,
+    "away_score": 24,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872938"
   },
   {
     "game_id": "2026_02_MIN_CHI",
@@ -313,11 +313,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "13:00",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 3,
+    "away_score": 9,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872937"
   },
   {
     "game_id": "2026_02_CIN_HOU",
@@ -329,11 +329,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "13:00",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 6,
+    "away_score": 20,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872934"
   },
   {
     "game_id": "2026_02_PIT_NE",
@@ -345,11 +345,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "13:00",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 20,
+    "away_score": 3,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872946"
   },
   {
     "game_id": "2026_02_GB_NYJ",
@@ -361,11 +361,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "13:00",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 17,
+    "away_score": 20,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872936"
   },
   {
     "game_id": "2026_02_CLE_TB",
@@ -377,11 +377,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "13:00",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 19,
+    "away_score": 23,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872935"
   },
   {
     "game_id": "2026_02_PHI_TEN",
@@ -393,11 +393,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "13:00",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 20,
+    "away_score": 24,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872939"
   },
   {
     "game_id": "2026_02_JAX_DEN",
@@ -409,11 +409,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "16:05",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 20,
+    "away_score": 13,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872940"
   },
   {
     "game_id": "2026_02_LV_LAC",
@@ -425,11 +425,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "16:05",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 14,
+    "away_score": 26,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872941"
   },
   {
     "game_id": "2026_02_SEA_ARI",
@@ -441,11 +441,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "16:25",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 7,
+    "away_score": 31,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872943"
   },
   {
     "game_id": "2026_02_WAS_DAL",
@@ -457,11 +457,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "16:25",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 37,
+    "away_score": 20,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872944"
   },
   {
     "game_id": "2026_02_MIA_SF",
@@ -473,11 +473,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "16:25",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 35,
+    "away_score": 13,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872942"
   },
   {
     "game_id": "2026_02_IND_KC",
@@ -489,11 +489,11 @@
     "location": "Home",
     "gameday": "2026-09-20",
     "gametime": "20:20",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 33,
+    "away_score": 30,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872945"
   },
   {
     "game_id": "2026_02_NYG_LA",
@@ -505,11 +505,11 @@
     "location": "Home",
     "gameday": "2026-09-21",
     "gametime": "20:15",
-    "home_score": null,
-    "away_score": null,
-    "status": "scheduled",
-    "status_detail": null,
-    "event_id": null
+    "home_score": 28,
+    "away_score": 6,
+    "status": "finished",
+    "status_detail": "Final",
+    "event_id": "401872947"
   },
   {
     "game_id": "2026_03_ATL_GB",

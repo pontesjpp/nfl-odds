@@ -67,9 +67,6 @@ def fetch_espn_scoreboard(season: int = 2026, week: int = 1, force: bool = False
             home_team = clean_team_code(home_comp.get("team", {}).get("abbreviation"))
             away_team = clean_team_code(away_comp.get("team", {}).get("abbreviation"))
             
-            home_score = int(home_comp["score"]) if home_comp.get("score") is not None else None
-            away_score = int(away_comp["score"]) if away_comp.get("score") is not None else None
-            
             if completed or status_name == "STATUS_FINAL":
                 status = "finished"
             elif status_name == "STATUS_IN_PROGRESS" or "In Progress" in status_desc:
@@ -77,10 +74,21 @@ def fetch_espn_scoreboard(season: int = 2026, week: int = 1, force: bool = False
             else:
                 status = "scheduled"
 
+            # Para jogos agendados que ainda não começaram, a ESPN pode retornar "0" no campo score,
+            # mas o jogo ainda não iniciou e não tem placar real.
+            if status == "scheduled":
+                home_score = None
+                away_score = None
+            else:
+                home_score = int(home_comp["score"]) if home_comp.get("score") is not None else None
+                away_score = int(away_comp["score"]) if away_comp.get("score") is not None else None
+
             game_id = f"{season}_{week:02d}_{away_team}_{home_team}"
 
             games.append({
                 "game_id": game_id,
+                "season": season,
+                "week": week,
                 "event_id": str(ev.get("id")),
                 "name": ev.get("name"),
                 "home_team": home_team,

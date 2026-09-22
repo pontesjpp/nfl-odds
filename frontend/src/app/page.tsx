@@ -1493,6 +1493,9 @@ export default function Home() {
                             const isSelected = selectedGame?.game_id === game.game_id || (selectedGame?.away_team === game.away_team && selectedGame?.home_team === game.home_team);
                             const count = liveBets.filter(b => (b.team === game.away_team || b.team === game.home_team) && (b.week === undefined || b.week === null || Number(b.week) === Number(selectedWeek))).length;
 
+                            const isFinished = (game.status === 'finished' || game.status_detail?.toLowerCase()?.includes('final')) && game.status !== 'scheduled' && game.status !== 'in_progress';
+                            const isInProgress = (game.status === 'in_progress' || game.status === 'live' || game.status_detail?.toLowerCase()?.includes('progress')) && game.status !== 'scheduled';
+
                             return (
                               <div 
                                 key={game.game_id || i} 
@@ -1540,14 +1543,30 @@ export default function Home() {
                                 </div>
 
                                 {/* Placar e Status de Jogo Finalizado */}
-                                {(game.status === 'finished' || (game.home_score !== null && game.away_score !== null)) && (
+                                {isFinished && (
                                   <div className="mt-1 p-2.5 rounded-xl bg-[#10B981]/15 border border-[#10B981]/35 flex items-center justify-between shadow-[0_0_12px_rgba(16,185,129,0.15)]">
                                     <div className="flex items-center gap-2">
-                                      <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
+                                      <span className="w-2 h-2 rounded-full bg-[#10B981]"></span>
                                       <span className="text-[11px] font-mono font-bold text-[#10B981] uppercase tracking-wider">FINALIZADO</span>
                                     </div>
                                     <div className="text-xs font-mono font-bold text-white tracking-wide">
                                       {game.away_team} <span className="text-zinc-300 font-extrabold">{game.away_score}</span> <span className="text-zinc-500 font-normal">@</span> <span className="text-zinc-300 font-extrabold">{game.home_score}</span> {game.home_team}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Placar e Status de Jogo Ao Vivo */}
+                                {isInProgress && (
+                                  <div className="mt-1 p-2.5 rounded-xl bg-red-500/15 border border-red-500/35 flex items-center justify-between shadow-[0_0_12px_rgba(239,68,68,0.15)] animate-pulse">
+                                    <div className="flex items-center gap-2">
+                                      <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                                      <span className="text-[11px] font-mono font-bold text-red-400 uppercase tracking-wider">AO VIVO</span>
+                                      {game.status_detail && (
+                                        <span className="text-[10px] font-mono text-zinc-400">({game.status_detail})</span>
+                                      )}
+                                    </div>
+                                    <div className="text-xs font-mono font-bold text-white tracking-wide">
+                                      {game.away_team} <span className="text-zinc-300 font-extrabold">{game.away_score ?? 0}</span> <span className="text-zinc-500 font-normal">@</span> <span className="text-zinc-300 font-extrabold">{game.home_score ?? 0}</span> {game.home_team}
                                     </div>
                                   </div>
                                 )}
@@ -1584,7 +1603,7 @@ export default function Home() {
                                   </div>
 
                                   {/* Botão de Box Score e Estatísticas Oficiais */}
-                                  {(game.status === 'finished' || (game.home_score !== null && game.away_score !== null)) && (
+                                  {(isFinished || isInProgress) && (
                                     <button
                                       onClick={() => handleOpenBoxScore(game)}
                                       className="w-full py-2 px-3 rounded-xl bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/35 font-mono text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_10px_rgba(212,175,55,0.1)]"
@@ -1592,7 +1611,7 @@ export default function Home() {
                                       <svg className="w-4 h-4 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                       </svg>
-                                      <span>Ver Desempenho Real dos Jogadores & Apostas</span>
+                                      <span>{isFinished ? 'Ver Desempenho Real dos Jogadores & Apostas' : 'Acompanhar Estatísticas ao Vivo'}</span>
                                     </button>
                                   )}
                                 </div>
@@ -4130,8 +4149,12 @@ export default function Home() {
                 </div>
 
                 <div className="text-center px-2">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 uppercase tracking-widest">
-                    FINALIZADO
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border uppercase tracking-widest ${
+                    boxScoreData?.status === 'in_progress'
+                      ? 'bg-red-500/20 text-red-400 border-red-500/40 animate-pulse'
+                      : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+                  }`}>
+                    {boxScoreData?.status === 'in_progress' ? 'AO VIVO' : 'FINALIZADO'}
                   </span>
                   <div className="text-xs font-mono text-zinc-500 mt-1">@</div>
                 </div>

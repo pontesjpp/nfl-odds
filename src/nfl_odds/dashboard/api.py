@@ -830,33 +830,39 @@ def get_schedule(season: int = 2026, week: Optional[str] = None, refresh: bool =
     try:
         from nfl_odds.data.live_stats import fetch_espn_scoreboard, clean_team_code
         weeks_to_fetch = [active_week]
-        if target_week is None and active_week != 1:
-            weeks_to_fetch.append(1) # Também traz week 1 para históricos recentes se tudo for retornado
+        if target_week is None:
+            # Se chamou sem week (agenda completa), busca semanas passadas/ativas para enriquecer
+            for w in range(1, active_week + 1):
+                weeks_to_fetch.append(w)
 
         espn_map = {}
         for w in set(weeks_to_fetch):
             espn_games = fetch_espn_scoreboard(season, w, force=refresh)
             for eg in espn_games:
-                key = (clean_team_code(eg.get("away_team")), clean_team_code(eg.get("home_team")))
+                key = (int(eg.get("week", w)), clean_team_code(eg.get("away_team")), clean_team_code(eg.get("home_team")))
                 espn_map[key] = eg
             
         for r in records:
-            key = (clean_team_code(r.get("away_team")), clean_team_code(r.get("home_team")))
+            r_week = int(r.get("week", 0))
+            key = (r_week, clean_team_code(r.get("away_team")), clean_team_code(r.get("home_team")))
             eg = espn_map.get(key)
             if eg:
-                if eg.get("home_score") is not None:
-                    r["home_score"] = eg["home_score"]
-                if eg.get("away_score") is not None:
-                    r["away_score"] = eg["away_score"]
-                r["status"] = eg.get("status", "scheduled")
+                st = eg.get("status", "scheduled")
+                r["status"] = st
                 r["status_detail"] = eg.get("status_detail")
                 r["event_id"] = eg.get("event_id")
+                if st == "scheduled":
+                    r["home_score"] = None
+                    r["away_score"] = None
+                else:
+                    r["home_score"] = eg.get("home_score")
+                    r["away_score"] = eg.get("away_score")
             else:
-                if r.get('home_score') is not None and r.get('away_score') is not None:
+                if r.get('status') == 'finished' or (r.get('home_score') is not None and r.get('away_score') is not None and r.get('status') != 'scheduled'):
                     r['status'] = 'finished'
                     if not r.get('status_detail'):
                         r['status_detail'] = 'Final'
-                elif not r.get('status'):
+                elif not r.get('status') or r.get('status') == 'scheduled':
                     r['home_score'] = None
                     r['away_score'] = None
                     r['status'] = 'scheduled'
@@ -896,51 +902,53 @@ def get_game_boxscore(game_id: str):
         away_players = []
         home_score = game_info.get("home_score")
         away_score = game_info.get("away_score")
-        status = "finished" if home_score is not None else "scheduled"
+        game_week = int(game_info.get("week", 1))
 
         # 1. Tenta carregar do ESPN Box Score em tempo real
         try:
-            espn_sb = fetch_espn_scoreboard(2026, 1)
-            target_eg = next(
-                (eg for eg in espn_sb if clean_team_code(eg.get("away_team")) == away_team and clean_team_code(eg.get("home_team")) == home_team),
-                None
-            )
-            if target_eg:
-                if target_eg.get("home_score") is not None:
-                    home_score = target_eg["home_score"]
-                if target_eg.get("away_score") is not None:
-                    away_score = target_eg["away_score"]
-                status = target_eg.get("status", status)
+            event_id = game_info.get("event_id")
+            if not event_id:
+                espn_sb = fetch_espn_scoreboard(2026, game_week)
+                target_eg = next(
+                    (eg for eg in espn_sb if clean_team_code(eg.get("away_team")) == away_team and clean_team_code(eg.get("home_team")) == home_team),
+                    None
+                )
+                if target_eg:
+                    if target_eg.get("home_score") is not None:
+                        home_score = target_eg["home_score"]
+                    if target_eg.get("away_score") is not None:
+                        away_score = target_eg["away_score"]
+                    status = target_eg.get("status", status)
+                    event_id = target_eg.get("event_id")
                 
-                event_id = target_eg.get("event_id")
-                if event_id:
-                    bdata = fetch_espn_game_boxscore(event_id)
-                    if bdata and bdata.get("athletes"):
-                        for a in bdata["athletes"]:
-                            p_dict = {
-                                "player_id": a.get("player_id"),
-                                "player_name": a.get("player_name"),
-                                "player_display_name": a.get("player_display_name"),
-                                "team": a.get("team"),
-                                "position": a.get("position"),
-                                "headshot_url": a.get("headshot_url"),
-                                "completions": a.get("completions", 0),
-                                "attempts": a.get("attempts", 0),
-                                "passing_yards": a.get("passing_yards", 0.0),
-                                "passing_tds": a.get("passing_tds", 0),
-                                "passing_interceptions": a.get("passing_interceptions", 0),
-                                "carries": a.get("carries", 0),
-                                "rushing_yards": a.get("rushing_yards", 0.0),
-                                "rushing_tds": a.get("rushing_tds", 0),
-                                "receptions": a.get("receptions", 0),
-                                "targets": a.get("targets", 0),
-                                "receiving_yards": a.get("receiving_yards", 0.0),
-                                "receiving_tds": a.get("receiving_tds", 0),
-                            }
-                            if a.get("team") == home_team:
-                                home_players.append(p_dict)
-                            elif a.get("team") == away_team:
-                                away_players.append(p_dict)
+            if event_id:
+                bdata = fetch_espn_game_boxscore(event_id)
+                if bdata and bdata.get("athletes"):
+                    for a in bdata["athletes"]:
+                        p_dict = {
+                            "player_id": a.get("player_id"),
+                            "player_name": a.get("player_name"),
+                            "player_display_name": a.get("player_display_name"),
+                            "team": a.get("team"),
+                            "position": a.get("position"),
+                            "headshot_url": a.get("headshot_url"),
+                            "completions": a.get("completions", 0),
+                            "attempts": a.get("attempts", 0),
+                            "passing_yards": a.get("passing_yards", 0.0),
+                            "passing_tds": a.get("passing_tds", 0),
+                            "passing_interceptions": a.get("passing_interceptions", 0),
+                            "carries": a.get("carries", 0),
+                            "rushing_yards": a.get("rushing_yards", 0.0),
+                            "rushing_tds": a.get("rushing_tds", 0),
+                            "receptions": a.get("receptions", 0),
+                            "targets": a.get("targets", 0),
+                            "receiving_yards": a.get("receiving_yards", 0.0),
+                            "receiving_tds": a.get("receiving_tds", 0),
+                        }
+                        if a.get("team") == home_team:
+                            home_players.append(p_dict)
+                        elif a.get("team") == away_team:
+                            away_players.append(p_dict)
         except Exception as e:
             print(f"Erro ao buscar boxscore na ESPN: {e}")
 
@@ -1106,7 +1114,7 @@ def get_locked_games_and_teams(season: int = 2026):
     try:
         from nfl_odds.data.live_stats import fetch_espn_scoreboard, clean_team_code
         curr_w = get_current_nfl_week(season)
-        weeks_to_check = {1, curr_w}
+        weeks_to_check = set(range(1, curr_w + 1))
         for w in weeks_to_check:
             espn_sb = fetch_espn_scoreboard(season=season, week=w)
             for eg in espn_sb:
@@ -1137,7 +1145,7 @@ def get_locked_games_and_teams(season: int = 2026):
             
             is_locked = False
             # 1. Jogo concluído com placar oficial
-            if status in ("finished", "in_progress") or (h_score is not None and a_score is not None):
+            if status in ("finished", "in_progress") or (status != "scheduled" and h_score is not None and a_score is not None):
                 is_locked = True
             # 2. Horário do kickoff já passou
             elif gameday:
