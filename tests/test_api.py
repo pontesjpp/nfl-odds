@@ -94,16 +94,23 @@ def test_predict_prop(client):
 def test_live_bets(client):
     response = client.get("/api/live-bets")
     assert response.status_code == 200
-    assert isinstance(response.json(), list)
+    assert "NaN" not in response.text
+    assert "-Infinity" not in response.text and "Infinity" not in response.text
+    bets = response.json()
+    assert isinstance(bets, list)
+    assert len(bets) > 0
+    assert any(b.get("week") == 3 for b in bets)
 
 def test_bets_alias(client):
     response = client.get("/api/bets")
     assert response.status_code == 200
+    assert "NaN" not in response.text
     assert isinstance(response.json(), list)
 
 def test_top_picks(client):
     response = client.get("/api/top-picks?limit=5")
     assert response.status_code == 200
+    assert "NaN" not in response.text
     picks = response.json()
     assert isinstance(picks, list)
     assert len(picks) <= 5

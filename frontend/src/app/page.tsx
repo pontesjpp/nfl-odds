@@ -1040,7 +1040,7 @@ export default function Home() {
       const opponent = bet.opponent || (gameInfo ? (isAway ? gameInfo.home_team : gameInfo.away_team) : undefined);
       const matchupStr = gameInfo ? gameInfo.label : (opponent ? `${bet.team} vs ${opponent}` : 'NFL Matchup');
       return {
-        id: `${bet.player_name}-${bet.market}-${bet.line}-${bet.side}`,
+        id: `${bet.player_name}-${bet.market}-${bet.line}-${bet.side}-${bet.odds}`,
         playerName: bet.player_name,
         fullPlayerName: bet.full_player_name || bet.player_name,
         playerPosition: bet.depth_chart_pos || bet.position || '',

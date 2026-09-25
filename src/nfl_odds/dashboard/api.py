@@ -238,19 +238,36 @@ def get_live_bets_df(force: bool = False) -> pd.DataFrame:
     global _live_bets_cache
     path = "data/live_value_bets.parquet"
     if not os.path.exists(path):
+        _live_bets_cache["records"] = []
+        _live_bets_cache["df"] = pd.DataFrame()
         return pd.DataFrame()
     try:
         mtime = os.path.getmtime(path)
         if not force and mtime == _live_bets_cache["mtime"] and not _live_bets_cache["df"].empty:
             return _live_bets_cache["df"]
-        df = pl.read_parquet(path).to_pandas()
-        if "ev_percent" in df.columns:
-            df = df.sort_values(by="ev_percent", ascending=False)
+
+        pl_df = pl.read_parquet(path)
+        if "ev_percent" in pl_df.columns:
+            pl_df = pl_df.sort("ev_percent", descending=True)
+
+        raw_records = pl_df.to_dicts()
+        cleaned_records = []
+        for row in raw_records:
+            cleaned_row = {}
+            for k, v in row.items():
+                if isinstance(v, float) and (math.isnan(v) or math.isinf(v)):
+                    cleaned_row[k] = None
+                else:
+                    cleaned_row[k] = v
+            cleaned_records.append(cleaned_row)
+
+        df = pl_df.to_pandas()
         df = df.replace([np.inf, -np.inf], None)
         df = df.where(pd.notnull(df), None)
+
         _live_bets_cache["mtime"] = mtime
         _live_bets_cache["df"] = df
-        _live_bets_cache["records"] = df.to_dict(orient="records")
+        _live_bets_cache["records"] = cleaned_records
         return df
     except Exception as e:
         print(f"Error loading live bets: {e}")
@@ -1046,17 +1063,13 @@ def get_top_picks(limit: int = 10, response: Response = None):
         response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-    df_live_bets = get_live_bets_df()
-    if df_live_bets.empty:
+    get_live_bets_df()
+    records = _live_bets_cache.get("records", [])
+    if not records:
         return []
-        
-    # Assegura que tem as colunas ev para ordenar
-    sort_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-    
-    # Filtra apenas picks com EV > 0, ordena e pega o top N
-    top_picks = df_live_bets[df_live_bets[sort_col] > 0].sort_values(by=sort_col, ascending=False).head(limit)
-    
-    return top_picks.to_dict(orient="records")
+
+    pos_picks = [r for r in records if (r.get("ev_percent") or 0) > 0]
+    return pos_picks[:limit]
 
 import subprocess
 import sys
@@ -1705,7 +1718,7 @@ def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, p
             side = str(row.get("side", "over")).lower()
             odds = float(row.get("odds", 1.85))
             season = int(row.get("season", 2026))
-            week = int(row.get("week", 1))
+            week = int(row.get("week", target_week))
 
             # Win probability
             if "prob_win" in row and row.get("prob_win") is not None:
@@ -1874,7 +1887,7 @@ def import_high_risk_picks(replace_pending: bool = False):
             side = str(row.get("side", "over")).lower()
             odds = float(row.get("odds", 1.85))
             season = int(row.get("season", 2026))
-            week = int(row.get("week", 1))
+            week = int(row.get("week", target_week))
 
             if "prob_win" in row and row.get("prob_win") is not None:
                 win_prob = float(row["prob_win"])
@@ -2005,7 +2018,7 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
             side = str(row.get("side", "over")).lower()
             odds = float(row.get("odds", 1.85))
             season = int(row.get("season", 2026))
-            week = int(row.get("week", 1))
+            week = int(row.get("week", target_week))
 
             if "prob_win" in row and row.get("prob_win") is not None:
                 win_prob = float(row["prob_win"])
