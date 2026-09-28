@@ -1141,7 +1141,7 @@ export default function Home() {
     passing_yards: activeGameBets.filter(b => b.market === 'passing_yards').length,
   };
 
-  const safeCount = liveBets.filter(b => b.ev_percent >= 2.5 && b.ev_percent <= 15.0).length;
+  const safeCount = liveBets.filter(b => b.ev_percent >= 1.0 && b.ev_percent <= 11.5).length;
 
   const navTabs: { id: Mode; label: string; badge?: string }[] = [
     { id: 'schedule', label: 'Agenda & Todas as Props' },
@@ -1766,7 +1766,7 @@ export default function Home() {
                       : `Recomendações Seguras (Semana ${currentWeek})`}
                   </h2>
                   <p className="text-[#C5A880]/80 text-sm mt-2 max-w-2xl leading-relaxed">
-                    Filtro ajustado para apostas com Expected Value entre <strong className="text-white">+2.5% e +15.0%</strong> (Titulares e Reservas). Exclui distorções causadas por pequenas amostras ou caudas extremas de probabilidade (data drift).
+                    Filtro ajustado para apostas com Expected Value entre <strong className="text-white">+1.0% e +11.5%</strong> (Sweet Spot empírico de maior ROI). Exclui distorções causadas por pequenas amostras ou caudas extremas de probabilidade (data drift).
                   </p>
                 </div>
                 
@@ -1819,7 +1819,7 @@ export default function Home() {
                     const filtered = liveBets
                       .filter(bet => {
                         const matchGame = !selectedGame || bet.team === selectedGame.away_team || bet.team === selectedGame.home_team;
-                        const matchEV = bet.ev_percent >= 2.5 && bet.ev_percent <= 15.0;
+                        const matchEV = bet.ev_percent >= 1.0 && bet.ev_percent <= 11.5;
                         return matchGame && matchEV;
                       })
                       .sort((a, b) => (b.ev_percent ?? -999) - (a.ev_percent ?? -999));
@@ -1827,7 +1827,7 @@ export default function Home() {
                     if (filtered.length === 0) {
                       return (
                         <div className="col-span-full text-center py-20 bg-[#0C0C0E] border border-[#2B261D] rounded-2xl text-zinc-400 font-mono text-sm tracking-wider flex flex-col items-center justify-center gap-4">
-                          <p>Nenhuma aposta encontrada na faixa de segurança (+2.5% a +15% EV) para este filtro.</p>
+                          <p>Nenhuma aposta encontrada na faixa de segurança (+1.0% a +11.5% EV) para este filtro.</p>
                           <button
                             onClick={() => setMode('schedule')}
                             className="px-6 py-2.5 bg-[#15130F] hover:bg-[#201C15] text-[#C5A880] border border-[#2B261D] rounded-xl text-xs uppercase tracking-wider transition-colors font-mono"
@@ -3629,9 +3629,9 @@ export default function Home() {
                           <td colSpan={11} className="py-16 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
                             {portfolioBets.length === 0 
                               ? (portfolioTab === 'safe'
-                                  ? 'A carteira conservadora dinâmica está vazia. Clique em "Sincronizar Dinâmica" para importar apostas (+EV 2.5% a 15%).'
+                                  ? 'A carteira conservadora dinâmica está vazia. Clique em "Sincronizar Dinâmica" para importar apostas (+EV 1.0% a 11.5%).'
                                   : portfolioTab === 'safe_flat'
-                                  ? 'A carteira flat 1.0u está vazia. Clique em "Sincronizar Flat 1.0u" para importar recomendações (+EV 2.5% a 15%).'
+                                  ? 'A carteira flat 1.0u está vazia. Clique em "Sincronizar Flat 1.0u" para importar recomendações (+EV 1.0% a 11.5%).'
                                   : portfolioTab === 'high_risk'
                                   ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas" para importar apostas (EV > 20%).'
                                   : 'A carteira All Props está vazia. Clique em "Sincronizar Props" para importar todas as props com valor esperado positivo (+EV > 0).')
@@ -4590,7 +4590,7 @@ export default function Home() {
                     <span className="text-base font-bold text-white mt-1 block">
                       {(selectedAiBet.base_units || 1.0).toFixed(2)} u
                     </span>
-                    <span className="text-[9px] text-zinc-500 mt-0.5 block">Faixa EV {selectedAiBet.ev_percent >= 10 ? '10-15%' : selectedAiBet.ev_percent >= 5 ? '5-10%' : '2.5-5%'}</span>
+                    <span className="text-[9px] text-zinc-500 mt-0.5 block">Faixa EV {selectedAiBet.ev_percent >= 8 ? '8-11.5%' : selectedAiBet.ev_percent >= 3 ? '3-8%' : '1-3%'}</span>
                   </div>
 
                   <div className="bg-zinc-900/80 border border-zinc-800 rounded-lg p-2.5">

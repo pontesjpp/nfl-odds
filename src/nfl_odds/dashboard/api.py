@@ -1437,7 +1437,7 @@ def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, game
         live_all_props_count = 0
         if not df_live_bets.empty:
             ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-            live_safe_count = int(((df_live_bets[ev_col] >= 2.5) & (df_live_bets[ev_col] <= 15.0)).sum())
+            live_safe_count = int(((df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 11.5)).sum())
             live_safe_flat_count = live_safe_count
             live_high_risk_count = int((df_live_bets[ev_col] > 20.0).sum())
             # All props com EV positivo estrito
@@ -1676,7 +1676,7 @@ def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, p
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         
     ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-    mask = (df_live_bets[ev_col] >= 2.5) & (df_live_bets[ev_col] <= 15.0)
+    mask = (df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 11.5)
     
     safe_df = df_live_bets[mask]
     target_ptype = "safe_flat" if (flat_stake or portfolio_type == "safe_flat") else "safe"

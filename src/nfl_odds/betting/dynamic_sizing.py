@@ -1,22 +1,26 @@
 """
 dynamic_sizing.py — Motor de Dimensionamento Dinâmico e Inteligente de Unidades
 
-Princípios Quantitativos & Regras de Negócio:
-1. Filtro Estrito: Apenas apostas com 2.5% <= EV <= 15.0% são elegíveis.
+Princípios Quantitativos & Regras de Negócio (Atualizado Semana 4+):
+1. Filtro Estrito: Apenas apostas com 1.0% <= EV <= 11.5% são elegíveis (Sweet Spot empírico: 58.2% WR, +5.95% ROI).
 2. Unidades Base (U_base):
-   - EV entre 2.5% e 4.9%: 0.75u
-   - EV entre 5.0% e 9.9%: 1.00u
-   - EV entre 10.0% e 15.0%: 1.25u
+   - EV entre 1.0% e 2.9%: 0.75u
+   - EV entre 3.0% e 7.9%: 1.00u
+   - EV entre 8.0% e 11.5%: 1.00u com Haircut prudencial (ou 1.25u sem haircut)
    - Odds Adjustment: Leve amortecimento em odds longas (> 2.20) para conter variância.
-3. Penalidade de Cauda / Z-Distance (P_cauda):
+3. Ponderação Convicção por Mercado (W_mercado):
+   - Rushing Yards: 1.25x (Motor de Alpha: 63.3% Win Rate histórico, +15.4% ROI)
+   - Receiving Yards: 1.00x (Baseline estável)
+   - Passing Yards: 0.65x (Proteção de volatilidade por jardas residuais / garbage time)
+4. Penalidade de Cauda / Z-Distance (P_cauda):
    - z > 1.5 sigma: 0.75x (proteção contra extrapolação de quantis)
    - z > 1.0 sigma: 0.90x
    - z <= 1.0 sigma: 1.00x
-4. Multiplicador Semântico da IA (M_IA):
+5. Multiplicador Semântico da IA (M_IA):
    - Avalia a polaridade OVER vs UNDER:
      * No Over: lesões/comitês penalizam (0.50x a 0.75x ou AVOID 0.0x); saúde plena alavanca (1.20x a 1.35x).
      * No Under: lesões/comitês/desfalques de recebedores favorecem o Under (1.20x a 1.35x); saúde plena modera (0.80x a 0.90x).
-5. Travas Operacionais:
+6. Travas Operacionais:
    - Piso: 0.50u (apostas que resultarem em < 0.50u são descartadas ou arredondadas).
    - Teto: 2.50u (preservação de banca contra eventos de cauda).
    - Discretização: Arredondamento para múltiplos exatos de 0.25u (0.50u, 0.75u, 1.00u, 1.25u, 1.50u, 1.75u, 2.00u, 2.50u).
@@ -24,6 +28,12 @@ Princípios Quantitativos & Regras de Negócio:
 
 from typing import Dict, Any, Optional, List, Tuple
 import math
+
+MARKET_WEIGHTS = {
+    "rushing_yards": 1.25,
+    "receiving_yards": 1.00,
+    "passing_yards": 0.65,
+}
 
 
 def calculate_smart_units(
@@ -36,25 +46,30 @@ def calculate_smart_units(
     ai_multiplier: Optional[float] = 1.0,
     recommendation_adjustment: str = "MAINTAIN",
     ai_sizing_rationale: Optional[str] = None,
-    apply_high_ev_haircut: bool = True
+    apply_high_ev_haircut: bool = True,
+    apply_market_weight: bool = True,
+    min_ev: float = 1.0,
+    max_ev: float = 11.5,
 ) -> Dict[str, Any]:
     """
     Calcula a alocação dinâmica de unidades para uma aposta específica.
     Aplica haircut prudencial de 0.75x para picks com EV > 8.0% para conter
     sobre-alocação em probabilidades extremas potencialmente descalibradas.
+    Pondera alocação pelo histórico de alpha do mercado (Rushing 1.25x, Receiving 1.00x, Passing 0.65x).
     """
     # -------------------------------------------------------------
-    # 1. Filtro Estrito de EV (2.5% a 15.0%)
+    # 1. Filtro Estrito de EV (Sweet Spot: 1.0% a 11.5%)
     # -------------------------------------------------------------
-    if ev_percent is None or ev_percent < 2.5 or ev_percent > 15.0:
+    if ev_percent is None or ev_percent < min_ev or ev_percent > max_ev:
         return {
             "final_units": 0.0,
             "base_units": 0.0,
             "tail_penalty": 1.0,
             "high_ev_haircut": 1.0,
+            "market_weight": 1.0,
             "ai_multiplier": 0.0,
             "status": "EXCLUDED_BY_EV_FILTER",
-            "reason": f"EV de {ev_percent:.1f}% fora do intervalo estrito de 2.5% a 15.0%."
+            "reason": f"EV de {ev_percent:.1f}% fora do intervalo de {min_ev:.1f}% a {max_ev:.1f}%."
         }
 
     # -------------------------------------------------------------
@@ -79,9 +94,9 @@ def calculate_smart_units(
     # -------------------------------------------------------------
     high_ev_haircut = 0.75 if (apply_high_ev_haircut and ev_percent > 8.0) else 1.00
 
-    if ev_percent < 5.0:
+    if ev_percent < 3.0:
         base_units = 0.75
-    elif ev_percent < 10.0:
+    elif ev_percent < 8.0:
         base_units = 1.00
     else:
         base_units = 1.00 if apply_high_ev_haircut else 1.25
@@ -113,9 +128,15 @@ def calculate_smart_units(
         ai_mult = max(0.40, min(1.40, m_val))
 
     # -------------------------------------------------------------
-    # 6. Produto Híbrido, Clamping e Discretização
+    # 6. Ponderação Convicção por Mercado (W_mercado)
     # -------------------------------------------------------------
-    raw_units = base_units * tail_penalty * ai_mult * high_ev_haircut
+    market_clean = (market or "receiving_yards").lower().strip()
+    mkt_weight = MARKET_WEIGHTS.get(market_clean, 1.00) if apply_market_weight else 1.00
+
+    # -------------------------------------------------------------
+    # 7. Produto Híbrido, Clamping e Discretização
+    # -------------------------------------------------------------
+    raw_units = base_units * tail_penalty * ai_mult * high_ev_haircut * mkt_weight
 
     # Clamp operacional: Mínimo 0.50u, Máximo 2.50u
     clamped = max(0.50, min(2.50, raw_units))
@@ -127,14 +148,16 @@ def calculate_smart_units(
     mult_pct = int(round((ai_mult - 1.0) * 100))
     mult_sign = f"+{mult_pct}%" if mult_pct > 0 else (f"{mult_pct}%" if mult_pct < 0 else "Neutro")
     haircut_note = " (Haircut prudencial 0.75x para EV > 8%)" if high_ev_haircut < 1.0 else ""
+    mkt_note = f" (Ponderação Mercado {mkt_weight:.2f}x)" if mkt_weight != 1.0 else ""
     
-    rationale = ai_sizing_rationale or f"Alocação base {base_units:.2f}u com ajuste IA de {mult_sign}{haircut_note}."
+    rationale = ai_sizing_rationale or f"Alocação base {base_units:.2f}u com ajuste IA de {mult_sign}{haircut_note}{mkt_note}."
 
     return {
         "final_units": float(final_units),
         "base_units": float(round(base_units, 2)),
         "tail_penalty": float(round(tail_penalty, 2)),
         "high_ev_haircut": float(round(high_ev_haircut, 2)),
+        "market_weight": float(round(mkt_weight, 2)),
         "ai_multiplier": float(round(ai_mult, 2)),
         "recommendation_adjustment": adj_clean,
         "sizing_rationale": rationale,

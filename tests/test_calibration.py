@@ -65,6 +65,16 @@ class TestProbabilityCalibratorUnit:
         # At 0.5, output must be exactly 0.5
         assert np.isclose(cal.calibrate(np.array([0.5]))[0], 0.5, atol=1e-6)
 
+    def test_max_slope_ceiling(self):
+        cal = ProbabilityCalibrator(method="platt", max_slope=1.0)
+        # Steep training outcomes that would yield slope > 1.0 without ceiling
+        p_tr = np.array([0.45, 0.48, 0.52, 0.55])
+        y_tr = np.array([0.0, 0.0, 1.0, 1.0])
+        cal.fit(p_tr, y_tr)
+
+        assert cal.slope_ <= 1.0, f"Slope exceeded max_slope ceiling: {cal.slope_}"
+        assert cal.slope_ >= 0.01, f"Slope fell below min guard: {cal.slope_}"
+
     def test_isotonic_method(self):
         cal = ProbabilityCalibrator(method="isotonic")
         p_tr = np.array([0.1, 0.3, 0.5, 0.7, 0.9])

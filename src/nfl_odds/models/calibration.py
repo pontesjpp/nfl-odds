@@ -29,6 +29,7 @@ class ProbabilityCalibrator:
         C: float = 0.5,
         min_prob: float = 0.0001,
         max_prob: float = 0.9999,
+        max_slope: float = 1.0,
     ):
         if method not in ("platt", "isotonic"):
             raise ValueError(f"Unknown calibration method: '{method}'. Must be 'platt' or 'isotonic'.")
@@ -36,6 +37,7 @@ class ProbabilityCalibrator:
         self.C = C
         self.min_prob = min_prob
         self.max_prob = max_prob
+        self.max_slope = max_slope
         self.is_fitted: bool = False
         self.slope_: float = 1.0
         self.intercept_: float = 0.0
@@ -70,8 +72,8 @@ class ProbabilityCalibrator:
             lr.fit(z_sym, y_sym)
 
             fitted_w = float(lr.coef_[0][0])
-            # Positive slope guard (w > 0) to ensure strict monotonicity
-            self.slope_ = max(fitted_w, 0.01)
+            # Positive slope guard & Shrinkage ceiling (0.01 <= w <= max_slope)
+            self.slope_ = max(0.01, min(self.max_slope, fitted_w))
             self.intercept_ = 0.0
             self.is_fitted = True
 
@@ -128,6 +130,7 @@ class ProbabilityCalibrator:
             "C": self.C,
             "min_prob": self.min_prob,
             "max_prob": self.max_prob,
+            "max_slope": self.max_slope,
             "is_fitted": self.is_fitted,
         }
         if self.method == "platt":
@@ -150,6 +153,7 @@ class ProbabilityCalibrator:
             C=data.get("C", 0.5),
             min_prob=data.get("min_prob", 0.0001),
             max_prob=data.get("max_prob", 0.9999),
+            max_slope=data.get("max_slope", 1.0),
         )
         inst.is_fitted = bool(data.get("is_fitted", False))
         if inst.method == "platt":

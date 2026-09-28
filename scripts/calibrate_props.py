@@ -70,7 +70,7 @@ def train_market_calibrator(
     p_arr = np.array(p_tr_all)
     y_arr = np.array(y_tr_all)
 
-    calibrator = ProbabilityCalibrator(method=method, C=0.5)
+    calibrator = ProbabilityCalibrator(method=method, C=0.5, max_slope=1.0)
     calibrator.fit(p_arr, y_arr)
 
     print(

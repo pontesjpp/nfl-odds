@@ -14,18 +14,46 @@ def calculate_rolling_stats(df: pl.DataFrame, target_cols: List[str], window_siz
     return df.with_columns(exprs)
 
 def _apply_shrinkage(df: pl.DataFrame, col: str, k: float) -> pl.DataFrame:
-    """Applies bayesian shrinkage to a season_avg column based on positional mean."""
+    """Applies bayesian shrinkage to a season_avg column based on positional starter mean."""
     pos_mean_col = f"{col}_pos_mean"
     if "position" in df.columns:
-        pos_mean = df.group_by(["position", "season", "week"]).agg(
-            pl.col(f"{col}_season_avg").mean().alias(pos_mean_col)
+        # Determine starter criteria to avoid dragging averages down with inactive/backup players
+        if col == "passing_yards":
+            if "attempts_season_avg" in df.columns:
+                starter_cond = (pl.col("position") != "QB") | (pl.col("attempts_season_avg") >= 12) | (pl.col("passing_yards_season_avg") >= 60)
+            else:
+                starter_cond = (pl.col("position") != "QB") | (pl.col("passing_yards_season_avg") >= 60)
+        elif col in ("rushing_yards", "carry_share"):
+            if "carries_season_avg" in df.columns:
+                starter_cond = (pl.col("position") != "RB") | (pl.col("carries_season_avg") >= 5) | (pl.col(f"{col}_season_avg") >= 15)
+            else:
+                starter_cond = pl.lit(True)
+        elif col in ("receiving_yards", "target_share", "wopr"):
+            if "targets_season_avg" in df.columns:
+                starter_cond = (~pl.col("position").is_in(["WR", "TE"])) | (pl.col("targets_season_avg") >= 2) | (pl.col(f"{col}_season_avg") >= 15)
+            else:
+                starter_cond = pl.lit(True)
+        else:
+            starter_cond = pl.lit(True)
+
+        starter_df = df.filter(starter_cond)
+        pos_mean_starter = starter_df.group_by(["position", "season", "week"]).agg(
+            pl.col(f"{col}_season_avg").mean().alias(f"{pos_mean_col}_starter")
         )
-        df = df.join(pos_mean, on=["position", "season", "week"], how="left")
-        
+        pos_mean_all = df.group_by(["position", "season", "week"]).agg(
+            pl.col(f"{col}_season_avg").mean().alias(f"{pos_mean_col}_all")
+        )
+
+        df = df.join(pos_mean_starter, on=["position", "season", "week"], how="left")
+        df = df.join(pos_mean_all, on=["position", "season", "week"], how="left")
+
+        pos_mean_final = pl.coalesce([pl.col(f"{pos_mean_col}_starter"), pl.col(f"{pos_mean_col}_all")])
+        df = df.with_columns(pos_mean_final.alias(pos_mean_col)).drop([f"{pos_mean_col}_starter", f"{pos_mean_col}_all"])
+
         n = pl.col("games_played_sample_size")
         shrunk = (n / (n + k)) * pl.col(f"{col}_season_avg") + (k / (n + k)) * pl.col(pos_mean_col)
         df = df.with_columns(shrunk.fill_nan(0).alias(f"{col}_shrunk_season_avg"))
-    
+
     return df
 
 def build_player_features(
