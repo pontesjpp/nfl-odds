@@ -90,7 +90,7 @@ export default function Home() {
   const [selections, setSelections] = useState<Record<string, 'over' | 'under' | null>>({});
 
   // Portfolio States
-  const [portfolioTab, setPortfolioTab] = useState<'safe' | 'safe_flat' | 'high_risk' | 'all_props'>('safe_flat');
+  const [portfolioTab, setPortfolioTab] = useState<'safe' | 'safe_flat' | 'high_risk' | 'all_props'>('safe');
   const [portfolioSafeCount, setPortfolioSafeCount] = useState<number>(0);
   const [portfolioSafeFlatCount, setPortfolioSafeFlatCount] = useState<number>(0);
   const [portfolioHighRiskCount, setPortfolioHighRiskCount] = useState<number>(0);
@@ -782,9 +782,9 @@ export default function Home() {
 
   const handleClearPortfolio = async () => {
     const portfolioLabel = portfolioTab === 'safe' 
-      ? 'Carteira Dinâmica Inteligente (+EV 2.5% - 15%)' 
+      ? 'Carteira Atual (Dynamic Sizing)' 
       : portfolioTab === 'safe_flat'
-      ? 'Carteira Recomendadas Flat 1u (+EV 2.5% - 15%)'
+      ? 'Carteira Atual Flat (1.0u)'
       : portfolioTab === 'high_risk' 
       ? 'Carteira de Alto Risco (EV > 20%)' 
       : 'Carteira All Props (100% das Props)';
@@ -852,7 +852,7 @@ export default function Home() {
         body: JSON.stringify(payload)
       });
       const data = await res.json();
-      const destName = ptype === 'high_risk' ? 'Carteira de Alto Risco (EV > 20%)' : ptype === 'all_props' ? 'Carteira All Props' : 'Carteira Conservadora (+EV 2.5% a 15%)';
+      const destName = ptype === 'high_risk' ? 'Carteira de Alto Risco (EV > 20%)' : ptype === 'all_props' ? 'Carteira All Props' : ptype === 'safe_flat' ? 'Carteira Atual Flat (1.0u)' : 'Carteira Atual (Dynamic Sizing)';
       if (data.status === 'already_exists') {
         alert(`Esta aposta já está registrada na ${destName}.`);
       } else {
@@ -1144,7 +1144,7 @@ export default function Home() {
     { id: 'schedule', label: 'Agenda & Todas as Props' },
     { id: 'recommended', label: 'Recomendações Seguras', badge: safeCount > 0 ? `${safeCount} Oportunidades` : undefined },
     { id: 'top_picks', label: 'Highest EVs (Risk)' },
-    { id: 'investments', label: 'Carteira de Investimentos', badge: (portfolioSafeCount + portfolioHighRiskCount + portfolioAllPropsCount) > 0 ? `${portfolioSafeCount + portfolioHighRiskCount + portfolioAllPropsCount} Ativos` : undefined },
+    { id: 'investments', label: 'Carteira de Investimentos', badge: (portfolioSafeCount + portfolioSafeFlatCount + portfolioHighRiskCount + portfolioAllPropsCount) > 0 ? `${portfolioSafeCount + portfolioSafeFlatCount + portfolioHighRiskCount + portfolioAllPropsCount} Ativos` : undefined },
     { id: 'calculator', label: 'Calculadora de EV' },
   ];
 
@@ -2564,9 +2564,9 @@ export default function Home() {
                     <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0"></span>
                     <span className="text-[11px] sm:text-xs">
                       {portfolioTab === 'safe'
-                        ? `Atualização de mercado: Existem ${liveSafeCount} recomendações disponíveis ao vivo vs ${portfolioSafeCount} salvas na carteira dinâmica.`
+                        ? `Atualização de mercado: Existem ${liveSafeCount} recomendações disponíveis ao vivo vs ${portfolioSafeCount} salvas na Carteira Atual (Dynamic Sizing).`
                         : portfolioTab === 'safe_flat'
-                        ? `Atualização de mercado: Existem ${liveSafeFlatCount} recomendações disponíveis ao vivo vs ${portfolioSafeFlatCount} salvas na carteira flat 1u.`
+                        ? `Atualização de mercado: Existem ${liveSafeFlatCount} recomendações disponíveis ao vivo vs ${portfolioSafeFlatCount} salvas na Carteira Atual Flat (1.0u).`
                         : portfolioTab === 'high_risk'
                         ? `Atualização de mercado: Existem ${liveHighRiskCount} apostas de alto risco disponíveis ao vivo vs ${portfolioHighRiskCount} salvas na carteira.`
                         : `Atualização de mercado: Existem ${liveAllPropsCount} props com +EV disponíveis ao vivo vs ${portfolioAllPropsCount} salvas na carteira.`}
@@ -2585,113 +2585,192 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Portfolio Switcher Sub-Tabs */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 p-1.5 sm:p-2 bg-[#0C0C0E] border border-[#2B261D] rounded-2xl shadow-xl">
-                <div className="grid grid-cols-2 lg:flex items-center gap-1 sm:gap-2 p-1 bg-[#15130F] rounded-xl border border-[#2B261D] w-full sm:w-auto">
-                  {/* Tab 1: Recomendadas Dinâmica Inteligente */}
+              {/* Portfolio Switcher - 2 Principais (Em Destaque) + Outras Carteiras (Menores) */}
+              <div className="flex flex-col gap-3.5 p-3 sm:p-4 bg-[#0C0C0E] border border-[#2B261D] rounded-2xl shadow-2xl">
+                {/* Principais Section Header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-2 w-2 rounded-full bg-[#10B981] animate-pulse"></span>
+                    <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.16em] text-[#C5A880]">
+                      Carteiras Principais • Sweet Spot (+EV 1.0% a 11.5%)
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-zinc-500 hidden md:inline">
+                    Selecione o modelo de gestão de banca preferido
+                  </span>
+                </div>
+
+                {/* Grid das 2 Carteiras Principais */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {/* Card 1: Carteira Atual (Dynamic Sizing) */}
                   <button
+                    type="button"
                     onClick={() => {
                       setPortfolioTab('safe');
                       fetchPortfolio('safe');
                     }}
-                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
+                    className={`text-left p-4 rounded-xl transition-all duration-200 relative overflow-hidden flex flex-col justify-between gap-3 cursor-pointer border ${
                       portfolioTab === 'safe'
-                        ? 'bg-[#10B981] text-black font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-gradient-to-br from-[#10B981]/25 via-[#10B981]/10 to-[#12110E] border-[#10B981] shadow-[0_0_30px_rgba(16,185,129,0.22)] ring-1 ring-[#10B981]/50'
+                        : 'bg-[#15130F] border-[#2B261D] hover:border-[#10B981]/50 hover:bg-[#191612]'
                     }`}
                   >
-                    <span className="text-sm">🧠</span>
-                    <span className="truncate">
-                      <span className="sm:hidden">Dinâmica</span>
-                      <span className="hidden sm:inline">Recomendadas (Dinâmica)</span>
-                    </span>
-                    <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
-                      portfolioTab === 'safe' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-zinc-300'
-                    }`}>
-                      <span className="hidden sm:inline">+EV 2.5%-15% • </span>{portfolioSafeCount}
-                    </span>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                          ⭐ Principal
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full bg-[#10B981]/15 text-emerald-400 font-mono text-[10px] font-semibold border border-emerald-500/20">
+                          Dynamic Sizing
+                        </span>
+                      </div>
+                      <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-colors ${
+                        portfolioTab === 'safe' ? 'bg-[#10B981] text-black shadow-sm' : 'bg-zinc-800 text-zinc-300 border border-zinc-700/50'
+                      }`}>
+                        {portfolioSafeCount} {portfolioSafeCount === 1 ? 'aposta' : 'apostas'}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-xl">🧠</span>
+                        <h3 className="text-base sm:text-lg font-bold font-mono text-white tracking-tight">
+                          Carteira Atual
+                        </h3>
+                        {portfolioTab === 'safe' && (
+                          <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-500/30 text-emerald-300 border border-emerald-500/50">
+                            Selecionada
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] font-mono text-zinc-400 leading-relaxed">
+                        Dimensionamento quantitativo dinâmico por mercado (Rushing 1.25x, Receiving 1.00x, Passing 0.65x) com haircut para EV alto (&gt;8%) e penalidade de cauda.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2.5 border-t border-white/5 text-[10px] font-mono text-zinc-400">
+                      <span className="flex items-center gap-1.5 text-zinc-300">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        Stakes variáveis (0.5u - 1.5u)
+                      </span>
+                      <span className="text-emerald-400 font-semibold">
+                        Sweet Spot (+EV 1.0% a 11.5%)
+                      </span>
+                    </div>
                   </button>
 
-                  {/* Tab 2: Recomendadas Flat 1u (Sem alocação inteligente) */}
+                  {/* Card 2: Carteira Atual Flat (1.0u) */}
                   <button
+                    type="button"
                     onClick={() => {
                       setPortfolioTab('safe_flat');
                       fetchPortfolio('safe_flat');
                     }}
-                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
+                    className={`text-left p-4 rounded-xl transition-all duration-200 relative overflow-hidden flex flex-col justify-between gap-3 cursor-pointer border ${
                       portfolioTab === 'safe_flat'
-                        ? 'bg-[#00E5FF] text-black font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-gradient-to-br from-[#00E5FF]/25 via-[#00E5FF]/10 to-[#12110E] border-[#00E5FF] shadow-[0_0_30px_rgba(0,229,255,0.22)] ring-1 ring-[#00E5FF]/50'
+                        : 'bg-[#15130F] border-[#2B261D] hover:border-[#00E5FF]/50 hover:bg-[#191612]'
                     }`}
                   >
-                    <span className="text-sm">📏</span>
-                    <span className="truncate">
-                      <span className="sm:hidden">Flat 1u</span>
-                      <span className="hidden sm:inline">Recomendadas (Flat 1u)</span>
-                    </span>
-                    <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
-                      portfolioTab === 'safe_flat' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-cyan-300'
-                    }`}>
-                      <span className="hidden sm:inline">Flat 1.0u • </span>{portfolioSafeFlatCount}
-                    </span>
-                  </button>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                          ⭐ Principal
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full bg-[#00E5FF]/15 text-cyan-300 font-mono text-[10px] font-semibold border border-cyan-500/20">
+                          Flat 1.0u
+                        </span>
+                      </div>
+                      <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-colors ${
+                        portfolioTab === 'safe_flat' ? 'bg-[#00E5FF] text-black shadow-sm' : 'bg-zinc-800 text-zinc-300 border border-zinc-700/50'
+                      }`}>
+                        {portfolioSafeFlatCount} {portfolioSafeFlatCount === 1 ? 'aposta' : 'apostas'}
+                      </span>
+                    </div>
 
-                  {/* Tab 3: Carteira de Alto Risco */}
-                  <button
-                    onClick={() => {
-                      setPortfolioTab('high_risk');
-                      fetchPortfolio('high_risk');
-                    }}
-                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
-                      portfolioTab === 'high_risk'
-                        ? 'bg-amber-500 text-black font-bold shadow-[0_0_15px_rgba(245,158,11,0.3)]'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <span className="text-sm">⚡</span>
-                    <span className="truncate">
-                      <span className="sm:hidden">Alto Risco</span>
-                      <span className="hidden sm:inline">Carteira de Alto Risco</span>
-                    </span>
-                    <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
-                      portfolioTab === 'high_risk' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-amber-400'
-                    }`}>
-                      <span className="hidden sm:inline">EV &gt; 20% • </span>{portfolioHighRiskCount}
-                    </span>
-                  </button>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-xl">📏</span>
+                        <h3 className="text-base sm:text-lg font-bold font-mono text-white tracking-tight">
+                          Carteira Atual Flat
+                        </h3>
+                        {portfolioTab === 'safe_flat' && (
+                          <span className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-cyan-500/30 text-cyan-300 border border-cyan-500/50">
+                            Selecionada
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] font-mono text-zinc-400 leading-relaxed">
+                        Exatas mesmas recomendações selecionadas no Sweet Spot, porém com aposta fixa e padronizada de 1.0 unidade em todas as entradas.
+                      </p>
+                    </div>
 
-                  {/* Tab 4: All Props */}
-                  <button
-                    onClick={() => {
-                      setPortfolioTab('all_props');
-                      fetchPortfolio('all_props');
-                    }}
-                    className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-lg font-mono text-[11px] sm:text-xs uppercase tracking-wider transition-all duration-200 text-center ${
-                      portfolioTab === 'all_props'
-                        ? 'bg-sky-500 text-black font-bold shadow-[0_0_15px_rgba(14,165,233,0.3)]'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <span className="text-sm">🌐</span>
-                    <span className="truncate">All Props</span>
-                    <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold ${
-                      portfolioTab === 'all_props' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-sky-400'
-                    }`}>
-                      <span className="hidden sm:inline">Todas as Props • </span>{portfolioAllPropsCount}
-                    </span>
+                    <div className="flex items-center justify-between pt-2.5 border-t border-white/5 text-[10px] font-mono text-zinc-400">
+                      <span className="flex items-center gap-1.5 text-zinc-300">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                        Stake fixa uniforme (1.0u)
+                      </span>
+                      <span className="text-cyan-400 font-semibold">
+                        Sweet Spot (+EV 1.0% a 11.5%)
+                      </span>
+                    </div>
                   </button>
                 </div>
 
-                <div className="text-right px-4 hidden md:block">
-                  <span className="text-[11px] font-mono text-zinc-400 block">
-                    {portfolioTab === 'safe' 
-                      ? 'Alocação quantitativa dinâmica ponderada por IA (Over/Under) e companheiros (+EV 2.5% a 15%)'
-                      : portfolioTab === 'safe_flat'
-                      ? 'Recomendações com stake fixa uniforme de 1.0 unidade em todas as entradas (+EV 2.5% a 15%)'
-                      : portfolioTab === 'high_risk'
-                      ? 'Props com desregulagem matemática severa (EV > 20%), alta volatilidade'
-                      : 'Universo completo de props do mercado (todas as 227 props avaliadas)'}
-                  </span>
+                {/* Sub-Section: Outras Carteiras (Menores) */}
+                <div className="pt-2.5 border-t border-[#2B261D]/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-600"></span>
+                    <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-zinc-500 font-bold">
+                      Outras Carteiras (Secundárias):
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* Alto Risco - Menor */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPortfolioTab('high_risk');
+                        fetchPortfolio('high_risk');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg font-mono text-[11px] uppercase tracking-wider transition-all duration-150 flex items-center gap-2 border cursor-pointer ${
+                        portfolioTab === 'high_risk'
+                          ? 'bg-amber-500 text-black font-bold border-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+                          : 'bg-[#15130F] text-zinc-400 border-[#2B261D] hover:text-white hover:border-amber-500/40'
+                      }`}
+                    >
+                      <span>⚡</span>
+                      <span>Carteira de Alto Risco</span>
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                        portfolioTab === 'high_risk' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-amber-400'
+                      }`}>
+                        EV &gt; 20% • {portfolioHighRiskCount}
+                      </span>
+                    </button>
+
+                    {/* All Props - Menor */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPortfolioTab('all_props');
+                        fetchPortfolio('all_props');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg font-mono text-[11px] uppercase tracking-wider transition-all duration-150 flex items-center gap-2 border cursor-pointer ${
+                        portfolioTab === 'all_props'
+                          ? 'bg-sky-500 text-black font-bold border-sky-400 shadow-[0_0_12px_rgba(14,165,233,0.3)]'
+                          : 'bg-[#15130F] text-zinc-400 border-[#2B261D] hover:text-white hover:border-sky-500/40'
+                      }`}
+                    >
+                      <span>🌐</span>
+                      <span>All Props</span>
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                        portfolioTab === 'all_props' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-sky-400'
+                      }`}>
+                        100% Props • {portfolioAllPropsCount}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -2704,9 +2783,9 @@ export default function Home() {
                       <div className="flex justify-between items-center mb-3 sm:mb-4">
                         <h2 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-zinc-400 truncate">
                           {portfolioTab === 'safe' 
-                            ? 'Relatório Financeiro • Carteira Conservadora Dinâmica (+EV 2.5% a 15%)' 
+                            ? 'Relatório Financeiro • Carteira Atual (Dynamic Sizing • +EV 1.0% a 11.5%)' 
                             : portfolioTab === 'safe_flat'
-                            ? 'Relatório Financeiro • Recomendações Flat 1.0u (+EV 2.5% a 15%)'
+                            ? 'Relatório Financeiro • Carteira Atual Flat (Stake Fixa 1.0u • +EV 1.0% a 11.5%)'
                             : portfolioTab === 'high_risk'
                             ? 'Relatório Financeiro • Carteira de Alto Risco (Apenas EV > 20%)'
                             : 'Relatório Financeiro • Carteira All Props (100% das Props)'}
@@ -3141,12 +3220,12 @@ export default function Home() {
                         className={`w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#15130F] text-white font-mono text-xs uppercase tracking-wider border border-[#2B261D] transition-all flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(16,185,129,0.12)] ${
                           isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-[#10B981]/50'
                         }`}
-                        title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar recomendações seguras com sizing dinâmico"}
+                        title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar Carteira Atual com dynamic sizing"}
                       >
                         <svg className="w-4 h-4 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                         </svg>
-                        <span>Sincronizar Dinâmica (+EV 2.5% a 15%)</span>
+                        <span>Sincronizar Carteira Atual (Dynamic Sizing)</span>
                       </button>
                     ) : portfolioTab === 'safe_flat' ? (
                       <button
@@ -3155,12 +3234,12 @@ export default function Home() {
                         className={`w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#15130F] text-cyan-300 font-mono text-xs uppercase tracking-wider border border-cyan-900/40 transition-all flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(0,229,255,0.15)] ${
                           isReadOnly ? 'opacity-40 cursor-not-allowed' : 'hover:bg-[#201C15] hover:border-cyan-400/50'
                         }`}
-                        title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar recomendações com stake fixa de 1.0 unidade"}
+                        title={isReadOnly ? "Ação bloqueada no modo somente leitura" : "Sincronizar Carteira Atual Flat com stake fixa de 1.0 unidade"}
                       >
                         <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                         </svg>
-                        <span>Sincronizar Flat 1.0u (+EV 2.5% a 15%)</span>
+                        <span>Sincronizar Carteira Atual Flat (1.0u)</span>
                       </button>
                     ) : portfolioTab === 'high_risk' ? (
                       <button
@@ -3626,9 +3705,9 @@ export default function Home() {
                           <td colSpan={11} className="py-16 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
                             {portfolioBets.length === 0 
                               ? (portfolioTab === 'safe'
-                                  ? 'A carteira conservadora dinâmica está vazia. Clique em "Sincronizar Dinâmica" para importar apostas (+EV 1.0% a 11.5%).'
+                                  ? 'A Carteira Atual (Dynamic Sizing) está vazia. Clique em "Sincronizar Carteira Atual" para importar apostas (+EV 1.0% a 11.5%).'
                                   : portfolioTab === 'safe_flat'
-                                  ? 'A carteira flat 1.0u está vazia. Clique em "Sincronizar Flat 1.0u" para importar recomendações (+EV 1.0% a 11.5%).'
+                                  ? 'A Carteira Atual Flat está vazia. Clique em "Sincronizar Carteira Atual Flat" para importar recomendações (+EV 1.0% a 11.5%).'
                                   : portfolioTab === 'high_risk'
                                   ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas" para importar apostas (EV > 20%).'
                                   : 'A carteira All Props está vazia. Clique em "Sincronizar Props" para importar todas as props com valor esperado positivo (+EV > 0).')
@@ -3887,9 +3966,9 @@ export default function Home() {
                     <div className="py-12 px-4 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
                       {portfolioBets.length === 0 
                         ? (portfolioTab === 'safe'
-                            ? 'A carteira conservadora dinâmica está vazia. Clique em "Sincronizar Dinâmica" para importar apostas.'
+                            ? 'A Carteira Atual (Dynamic Sizing) está vazia. Clique em "Sincronizar Carteira Atual" para importar apostas.'
                             : portfolioTab === 'safe_flat'
-                            ? 'A carteira flat 1.0u está vazia. Clique em "Sincronizar Flat 1.0u" para importar recomendações.'
+                            ? 'A Carteira Atual Flat está vazia. Clique em "Sincronizar Carteira Atual Flat" para importar recomendações.'
                             : portfolioTab === 'high_risk'
                             ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas" para importar apostas.'
                             : 'A carteira All Props está vazia. Clique em "Sincronizar Props" para importar todas as props.')

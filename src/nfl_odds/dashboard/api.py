@@ -1413,6 +1413,7 @@ async def run_pipeline_api(request: Request):
         # Auto-sync portfolios for pending bets so recommendations and portfolio stay 100% aligned
         try:
             import_safe_picks(replace_pending=True)
+            import_safe_flat(replace_pending=True)
             import_high_risk_picks(replace_pending=True)
             import_all_props(replace_pending=True)
         except Exception as sync_err:
