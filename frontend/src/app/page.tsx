@@ -389,12 +389,11 @@ export default function Home() {
   // AI Sizing & Contextual Explanation Modal State
   const [selectedAiBet, setSelectedAiBet] = useState<any | null>(null);
 
-  // Security / Read-Only Demonstration Mode & MFA State
+  // Security / Read-Only Demonstration Mode & Admin State
   const [isReadOnly, setIsReadOnly] = useState<boolean>(true);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [adminModalOpen, setAdminModalOpen] = useState<boolean>(false);
   const [adminPassword, setAdminPassword] = useState<string>('');
-  const [adminTotp, setAdminTotp] = useState<string>('');
   const [adminAuthLoading, setAdminAuthLoading] = useState<boolean>(false);
   const [adminAuthError, setAdminAuthError] = useState<string | null>(null);
 
@@ -423,7 +422,6 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           password: adminPassword,
-          totp_code: adminTotp.trim() || undefined,
         }),
       });
       const data = await res.json();
@@ -438,7 +436,6 @@ export default function Home() {
       setIsReadOnly(false);
       setAdminModalOpen(false);
       setAdminPassword('');
-      setAdminTotp('');
       setPortfolioMessage('Autenticado como Administrador com sucesso!');
       await fetchPortfolio(portfolioTab);
     } catch (err) {
@@ -1225,7 +1222,7 @@ export default function Home() {
                 setAdminModalOpen(true);
               }}
               className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0C0C0E] hover:bg-[#15130F] border border-[#2B261D] hover:border-[#D4AF37]/40 text-zinc-400 hover:text-[#D4AF37] font-mono text-[10px] tracking-wider uppercase transition-all"
-              title="Acesso de Administrador via MFA"
+              title="Acesso de Administrador"
             >
               <span>🔒</span>
               <span>ADMIN</span>
@@ -4716,7 +4713,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Admin MFA Authentication Modal */}
+      {/* Admin Authentication Modal */}
       {adminModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
           <div className="bg-[#0C0C0E] border border-[#D4AF37]/50 rounded-2xl w-full max-w-md overflow-hidden shadow-[0_0_50px_rgba(212,175,55,0.15)]">
@@ -4730,7 +4727,7 @@ export default function Home() {
                     Acesso de Administrador
                   </h3>
                   <span className="font-mono text-[10px] text-[#C5A880] tracking-wider uppercase">
-                    Autenticação MFA (TOTP)
+                    Autenticação com Senha
                   </span>
                 </div>
               </div>
@@ -4745,7 +4742,7 @@ export default function Home() {
 
             <form onSubmit={handleAdminLogin} className="p-6 space-y-4">
               <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-                Para atualizar odds em tempo real, executar scraping ou liquidar resultados, confirme suas credenciais de administrador.
+                Para atualizar odds em tempo real, executar scraping ou liquidar resultados, confirme sua senha de administrador.
               </p>
 
               {adminAuthError && (
@@ -4767,25 +4764,6 @@ export default function Home() {
                   required
                   autoFocus
                   className="w-full bg-[#15130F] border border-[#2B261D] focus:border-[#D4AF37] rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none transition-colors font-mono"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-mono text-zinc-300 uppercase tracking-wider block">
-                    Código de 6 Dígitos (Google Authenticator / Authy)
-                  </label>
-                  <span className="text-[10px] font-mono text-[#D4AF37]">MFA / TOTP</span>
-                </div>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  maxLength={6}
-                  value={adminTotp}
-                  onChange={(e) => setAdminTotp(e.target.value.replace(/\D/g, ''))}
-                  placeholder="000 000"
-                  className="w-full bg-[#15130F] border border-[#2B261D] focus:border-[#D4AF37] rounded-xl px-4 py-2.5 text-center text-xl tracking-[0.35em] text-[#D4AF37] font-mono placeholder-zinc-700 focus:outline-none transition-colors"
                 />
               </div>
 

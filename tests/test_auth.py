@@ -13,6 +13,7 @@ from nfl_odds.dashboard.api import app
 def setup_env(monkeypatch):
     monkeypatch.setenv("ADMIN_PASSWORD", "test_admin_pass")
     monkeypatch.setenv("MFA_SECRET", "JBSWY3DPEHPK3PXP")
+    monkeypatch.setenv("ENABLE_MFA", "true")
     monkeypatch.setenv("TOKEN_SECRET", "test_token_secret_123")
     monkeypatch.setenv("READ_ONLY_MODE", "true")
 
@@ -23,6 +24,20 @@ def test_credentials_verification():
     assert verify_credentials("test_admin_pass", valid_code) is True
     assert verify_credentials("wrong_pass", valid_code) is False
     assert verify_credentials("test_admin_pass", "000000") is False
+
+def test_password_only_login_when_mfa_disabled(monkeypatch):
+    monkeypatch.delenv("ENABLE_MFA", raising=False)
+    monkeypatch.delenv("MFA_SECRET", raising=False)
+    
+    # Credentials verification succeeds with password alone
+    assert verify_credentials("test_admin_pass") is True
+    assert verify_credentials("wrong_pass") is False
+    
+    # API login succeeds without totp_code
+    client = TestClient(app)
+    res = client.post("/api/auth/login", json={"password": "test_admin_pass"})
+    assert res.status_code == 200
+    assert res.json()["is_admin"] is True
 
 def test_token_creation_and_validation():
     token = create_admin_token()

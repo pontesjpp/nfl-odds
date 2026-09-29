@@ -13,6 +13,9 @@ def get_admin_password() -> str:
     return os.getenv("ADMIN_PASSWORD", os.getenv("ADMIN_SECRET", "admin123")).strip()
 
 def get_mfa_secret() -> str:
+    # MFA / Google Authenticator is disabled by default; set ENABLE_MFA=true to activate
+    if os.getenv("ENABLE_MFA", "false").lower() not in ("true", "1", "yes"):
+        return ""
     return os.getenv("MFA_SECRET", "").strip()
 
 def get_token_secret() -> str:

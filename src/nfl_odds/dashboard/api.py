@@ -85,9 +85,9 @@ def auth_status(request: Request):
 @app.post("/api/auth/login")
 def auth_login(req: LoginRequest):
     if not verify_credentials(req.password, req.totp_code):
-        detail_msg = "Credenciais incorretas."
+        detail_msg = "Senha incorreta."
         if get_mfa_secret():
-            detail_msg = "Senha incorreta ou código do aplicativo autenticador (MFA) inválido."
+            detail_msg = "Senha incorreta ou código MFA inválido."
         raise HTTPException(status_code=401, detail=detail_msg)
     
     token = create_admin_token()
@@ -157,7 +157,7 @@ async def security_middleware(request: Request, call_next):
                 return JSONResponse(
                     status_code=403,
                     content={
-                        "detail": "🔒 Ação restrita ao Administrador: Faça login com seu autenticador MFA para atualizar odds, rodar scraping ou alterar o portfólio."
+                        "detail": "🔒 Ação restrita ao Administrador: Faça login para atualizar odds, rodar scraping ou alterar o portfólio."
                     }
                 )
     return await call_next(request)
@@ -1240,7 +1240,7 @@ async def trigger_remote_workflow(
     if not is_request_admin(request):
         raise HTTPException(
             status_code=403,
-            detail="🔒 Apenas o Administrador autenticado com MFA pode acionar a atualização remota."
+            detail="🔒 Apenas o Administrador autenticado pode acionar a atualização remota."
         )
 
     # 2. Upfront GITHUB_TOKEN Validation (Returns 400 instead of 500 error)
@@ -1388,7 +1388,7 @@ async def run_pipeline_api(request: Request):
     if not is_request_admin(request):
         raise HTTPException(
             status_code=403,
-            detail="🔒 Apenas o Administrador autenticado com MFA pode atualizar odds e acionar a IA."
+            detail="🔒 Apenas o Administrador autenticado pode atualizar odds e acionar a IA."
         )
     is_render = os.getenv("RENDER") == "true" or os.getenv("IS_RENDER") == "true"
     has_token = bool(os.getenv("GITHUB_TOKEN") or os.getenv("GH_PAT") or os.getenv("GITHUB_PAT"))
