@@ -52,6 +52,7 @@ yarn-error.log*
 # Machine Learning models and serialized weights
 *.joblib
 !data/*_model.joblib
+!data/*_calibrator.joblib
 *.pkl
 *.pickle
 

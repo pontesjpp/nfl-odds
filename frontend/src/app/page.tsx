@@ -80,8 +80,8 @@ interface PortfolioSummary {
 
 export default function Home() {
   const [mode, setMode] = useState<Mode>('schedule');
-  const [currentWeek, setCurrentWeek] = useState<number>(3);
-  const [selectedWeek, setSelectedWeek] = useState<number>(3);
+  const [currentWeek, setCurrentWeek] = useState<number>(4);
+  const [selectedWeek, setSelectedWeek] = useState<number>(4);
   const [availableWeeks, setAvailableWeeks] = useState<number[]>(Array.from({ length: 18 }, (_, i) => i + 1));
   const [schedule, setSchedule] = useState<any[]>([]);
   const [selectedGame, setSelectedGame] = useState<any>(null);
@@ -526,7 +526,7 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          week: Number(selectedWeek) || 3,
+          week: Number(selectedWeek) || 4,
           fast: fastMode,
         }),
       });

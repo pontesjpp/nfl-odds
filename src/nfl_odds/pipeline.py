@@ -12,7 +12,7 @@ from nfl_odds.features.patch_week1 import patch_week1_teams
 from nfl_odds.models.train import PlayerPropModel, split_temporal
 from nfl_odds.betting.ev_calc import analyze_opportunities
 
-def run_pipeline(live=False, week=3):
+def run_pipeline(live=False, week=4):
     print(f"1. Collecting NFL Data (2022-2026) for Week {week}...")
     years_to_load = [2022, 2023, 2024, 2025, 2026]
     
@@ -262,7 +262,7 @@ def run_pipeline(live=False, week=3):
 def main():
     parser = argparse.ArgumentParser(description="NFL Odds EV Pipeline")
     parser.add_argument("--live", action="store_true", help="Use live/extracted Betclic odds")
-    parser.add_argument("--week", type=int, default=3, help="NFL Week number (default: 3)")
+    parser.add_argument("--week", type=int, default=4, help="NFL Week number (default: 4)")
     args = parser.parse_args()
     run_pipeline(live=args.live, week=args.week)
 

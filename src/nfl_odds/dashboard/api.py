@@ -594,7 +594,7 @@ def get_team_defense_endpoint(
     return profile
 
 @app.get("/api/defense-rankings")
-def get_league_defense_rankings(season: int = 2026, week: int = 3):
+def get_league_defense_rankings(season: int = 2026, week: int = 4):
     return compute_defense_rankings(season=season, week=week)
 
 class PredictRequest(BaseModel):
@@ -768,7 +768,7 @@ def get_current_nfl_week(season: int = 2026) -> int:
     except Exception as e:
         print(f"Erro ao detectar semana ativa pelo calendário: {e}")
 
-    return 3
+    return 4
 
 def load_cached_schedule(season: int = 2026, week: Optional[int] = None) -> List[dict]:
     schedule_file = f"data/schedule_{season}.json"
@@ -1187,7 +1187,7 @@ def get_locked_games_and_teams(season: int = 2026):
     return locked_game_ids, locked_team_weeks
 
 class TriggerWorkflowRequest(BaseModel):
-    week: Optional[int] = 3
+    week: Optional[int] = 4
     fast: Optional[bool] = False
     workflow_id: Optional[str] = "update_odds.yml"
 
@@ -2126,7 +2126,7 @@ def settle_portfolio(
         )
 
         # 1. Carregar catálogo completo de jogos finalizados e estatísticas oficiais (ESPN + nflreadpy) POR SEMANA
-        candidate_weeks = list(set(b.week for b in candidate_bets if b.week)) or [3]
+        candidate_weeks = list(set(b.week for b in candidate_bets if b.week)) or [4]
         finished_games_by_week: Dict[int, Dict[str, Any]] = {}
         players_by_week: Dict[int, List[Dict[str, Any]]] = {}
         for w in candidate_weeks:
