@@ -46,9 +46,14 @@ echo "🧠 [2/3] Calculando probabilidades XGBoost e apostas de valor (+EV)..."
 uv run python pipeline.py --live --week "$WEEK"
 echo ""
 
+# 2.1 Sincronizar carteiras no SQLite
+echo "📊 Sincronizando apostas nas carteiras do banco..."
+uv run python -c "from nfl_odds.dashboard.api import import_safe_picks, import_safe_flat, import_high_risk_picks, import_all_props; import_safe_picks(replace_pending=True); import_safe_flat(replace_pending=True); import_high_risk_picks(replace_pending=True); import_all_props(replace_pending=True)" || true
+echo ""
+
 # 3. Verificar se houve novos dados gerados
 echo "💾 [3/3] Verificando dados gerados..."
-if git diff --quiet data/live_value_bets.parquet data/betclic_parsed_odds.parquet 2>/dev/null; then
+if git diff --quiet data/live_value_bets.parquet data/betclic_parsed_odds.parquet data/nfl_odds.db 2>/dev/null; then
     echo "ℹ️  Nenhuma aposta nova encontrada em relação ao último envio."
     echo "   (As linhas no Betclic ainda não mudaram ou já estavam sincronizadas)."
     exit 0
@@ -59,7 +64,7 @@ TIMESTAMP=$(date '+%Y-%m-%d %H:%M')
 COMMIT_MSG="chore: update live odds week $WEEK ($TIMESTAMP)"
 
 echo "📤 Subindo novas oportunidades para o GitHub..."
-git add data/live_value_bets.parquet data/betclic_parsed_odds.parquet data/live_features.parquet data/*_cache.json 2>/dev/null || true
+git add data/live_value_bets.parquet data/betclic_parsed_odds.parquet data/live_features.parquet data/nfl_odds.db data/*_cache.json 2>/dev/null || true
 git commit -m "$COMMIT_MSG"
 git push origin master
 
