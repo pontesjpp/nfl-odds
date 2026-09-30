@@ -51,13 +51,13 @@
     "player_name": "Rico Dowdle",
     "team": "PIT",
     "espn_id": 4038815,
-    "headline": "Dowdle (toe) wasn't present for Monday's walkthrough practice, Brooke Pryor of ESPN.com reports.",
-    "story": "Dowdle was unable to practice in any fashion last week before being ruled out ahead of Sunday's 30-27 win over the Bengals. The Steelers will face a quick turnaround for Week 4, when they'll travel to Cleveland for a Thursday night matchup with the Browns. Dowdle's lack of involvement in the team stretch and walkthrough Monday doesn't bode well for his chances of being ready to play three days later.",
-    "published": "Mon Sep 28 13:45:50 PDT 2026",
+    "headline": "Dowdle (toe) was estimated as a non-participant on Tuesday's injury report, Nick Farabaugh of PennLive.com reports.",
+    "story": "The Steelers held a walkthrough for the second time in as many days, and as was the case Monday Dowdle was unable to get any work in. He was at least present Tuesday after not being spotted during the media-viewing portion the day before, but he will presumably have to practice in at least some capacity Wednesday in order to have any chance to suit up for Pittsburgh's Week 4 matchup with Cleveland on Thursday.",
+    "published": "Tue Sep 29 16:28:15 PDT 2026",
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.9323158
+    "_cached_at": 1790750621.9894996
   },
   "3917792_Daniel Jones_IND": {
     "player_name": "Daniel Jones",
@@ -285,7 +285,7 @@
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.8331804
+    "_cached_at": 1790750621.8850784
   },
   "4036378_Jordan Love_GB": {
     "player_name": "Jordan Love",
@@ -633,7 +633,7 @@
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663462.921962
+    "_cached_at": 1790750621.4312124
   },
   "4372016_Jaylen Waddle_DEN": {
     "player_name": "Jaylen Waddle",
@@ -969,19 +969,19 @@
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.5353777
+    "_cached_at": 1790750621.56717
   },
   "4035687_Michael Pittman Jr._PIT": {
     "player_name": "Michael Pittman Jr.",
     "team": "PIT",
     "espn_id": 4035687,
     "headline": "Pittman caught two passes on five targets for 16 yards in Sunday's 30-27 win over the Bengals.",
-    "story": "Pittman was cleared to return from a one-game absence due to a foot injury. Despite the low offensive output, he played 45 of 62 offensive snaps (72.3 percent), which was second-most among Steelers wide receivers behind DK Metcalf (56). Pittman was also tied for the second-most targets, though six Pittsburgh pass catchers were targeted at least four times by Aaron Rodgers. Pittman has a 5-74-0 receiving line (eight targets) across two regular-season games heading into Thursday's game against the Browns, whose secondary could be without starters Grant Delpit (shoulder) and Tyson Campbell (knee).",
+    "story": "Pittman was cleared to return from a one-game absence due to a foot injury. Despite the low offensive output, he played 45 of 62 offensive snaps (72.3 percent), which was second-most among Steelers wide receivers behind DK Metcalf (56). Pittman also was tied for the second-most targets, though six Pittsburgh pass catchers were targeted at least four times by Aaron Rodgers. Pittman has a 5-74-0 receiving line (eight targets) across two regular-season contests heading into Thursday's game against the Browns, whose secondary could be without starters Grant Delpit (shoulder) and Tyson Campbell (knee).",
     "published": "Mon Sep 28 18:15:58 PDT 2026",
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.6354482
+    "_cached_at": 1790750621.6713183
   },
   "4431492_Roman Wilson_PIT": {
     "player_name": "Roman Wilson",
@@ -993,19 +993,19 @@
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.734927
+    "_cached_at": 1790750621.780397
   },
   "4361411_Pat Freiermuth_PIT": {
     "player_name": "Pat Freiermuth",
     "team": "PIT",
     "espn_id": 4361411,
-    "headline": "Freiermuth caught four passes (on five targets) for 32 yards while logging a two-yard carry during the Steelers' 20-3 loss to the Patriots on Sunday.",
-    "story": "Freiermuth and Darnell Washington were both named starters for Sunday's game, with the former leading all Steelers tight ends with 46 of 67 offensive snaps (68.7 percent). Unlike Week 1 against the Falcons, Freiermuth did not draw a red-zone target from Aaron Rodgers in Week 2, with the veteran quarterback averaging just 4.8 yards per pass attempt against New England. Freiermuth will take a 9-78-1 line (on 10 targets) into a Week 3 AFC North divisional showdown against the Bengals.",
-    "published": "Mon Sep 21 15:54:05 PDT 2026",
+    "headline": "Freiermuth recorded two receptions for 30 yards on four targets and carried once for one yard in Sunday's 30-27 win over the Bengals.",
+    "story": "Freiermuth took the field for 37 of the Steelers' 62 offensive snaps, with his 60 percent share placing him slightly behind fellow tight end Darnell Washington (47 snaps, 76 percent). The Steelers should continue to make ample use of two-tight-end sets to keep Freiermuth involved in their game plans, but since he doesn't project to see heavy target volume week to week, he'll remain a largely touchdown-dependent fantasy option.",
+    "published": "Tue Sep 29 13:57:44 PDT 2026",
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663462.8204339
+    "_cached_at": 1790750621.3231828
   },
   "4432773_Brian Thomas Jr._JAX": {
     "player_name": "Brian Thomas Jr.",
@@ -1323,37 +1323,37 @@
     "player_name": "Jerry Jeudy",
     "team": "CLE",
     "espn_id": 4241463,
-    "headline": "Jeudy failed to haul in his lone target during the Browns' 23-19 win over the Buccaneers on Sunday.",
-    "story": "Jeudy couldn't improve on his 2-26-0 line (on four targets) during the Browns' Week 1 loss to the Jaguars. The seventh-year pro played 34 of 58 offensive snaps Sunday (58.6 percent), which was third most among Cleveland wide receivers behind rookies Denzel Boston (54) and KC Concepcion (38). Jeudy finished the 2025 regular season with the second-most receiving yards on the Browns, but it appears Boston, Concepcion, tight end Harold Fannin and even running back Quinshon Judkins are the preferred targets for Deshaun Watson to open the season. Jeudy will look for better results in Cleveland's home opener against Carolina on Sept. 27.",
-    "published": "Mon Sep 21 16:30:37 PDT 2026",
+    "headline": "Jeudy finished Sunday's 21-18 victory against Carolina with no targets or touches.",
+    "story": "It was the second straight week that Jeudy didn't log a reception, and this time he didn't even get a target (he logged just one in Week 2 versus Tampa Bay). The veteran wideout continues to be on the field fairly often -- he's recorded an offensive snap share of over 50 percent in each of the Browns' three contests, including Sunday, when he played 51 percent of the team's offensive snaps. However, he doesn't seem to be clicking well with QB Deshaun Watson, and at this point fantasy managers have little reason to include him in their lineups.",
+    "published": "Tue Sep 29 17:32:30 PDT 2026",
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.0383103
+    "_cached_at": 1790750622.1043127
   },
   "4870653_KC Concepcion_CLE": {
     "player_name": "KC Concepcion",
     "team": "CLE",
     "espn_id": 4870653,
-    "headline": "Concepcion finished Sunday's 21-18 victory versus Carolina with two catches on nine targets for nine yards. He also returned one punt for one yard.",
+    "headline": "Concepcion finished Sunday's 21-18 victory versus Carolina with two catches (on nine targets) for nine yards. He also returned one punt for one yard.",
     "story": "Concepcion actually tied tight end Harold Fannin for the team lead with nine targets, but the rookie wideout managed to haul in just two of those looks. His receptions went for five and four yards, continuing what has become a trend, as he's averaging a meager 6.7 yards per reception so far this season. The target share indicates that the Browns want Concepcion to be an integral part of the passing game, but so far he doesn't seem to be clicking with QB Deshaun Watson.",
     "published": "Mon Sep 28 21:15:01 PDT 2026",
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.13683
+    "_cached_at": 1790750622.2099698
   },
   "4832800_Denzel Boston_CLE": {
     "player_name": "Denzel Boston",
     "team": "CLE",
     "espn_id": 4832800,
-    "headline": "Boston caught two passes on four passes for 41 yards during the Browns' 21-18 win over the Panthers on Sunday. He also caught a two-point conversion.",
+    "headline": "Boston caught two of four targets for 41 yards during the Browns' 21-18 win over the Panthers on Sunday. He also caught a two-point conversion.",
     "story": "The rookie second-rounder was held without a catch until the fourth quarter, when he caught 28- and 13-yard passes from Deshaun Watson before the duo connected on a two-point conversion late in the fourth quarter to extend the Browns' lead to three points. Boston was unable to record a touchdown catch for a third-straight game, though he still finished Sunday's contest as the Browns' second-leading receiver behind tight end Harold Fannin (51). Boston, Fannin and rookie first-rounder KC Concepcion will continue to serve as Watson's top targets in the passing game, with Jerry Jeudy and Isaiah Bond working in rotation. Boston will take a 9-195-2 receiving line (on 15 targets) into Thursday's AFC North showdown against the Steelers.",
     "published": "Mon Sep 28 17:32:15 PDT 2026",
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.236848
+    "_cached_at": 1790750622.319676
   },
   "3122840_Deshaun Watson_CLE": {
     "player_name": "Deshaun Watson",
@@ -1365,7 +1365,7 @@
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.3358765
+    "_cached_at": 1790750622.427574
   },
   "5081397_Dylan Sampson_CLE": {
     "player_name": "Dylan Sampson",
@@ -1377,7 +1377,7 @@
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663463.4338033
+    "_cached_at": 1790750622.5341895
   },
   "4686612_Tre' Harris_LAC": {
     "player_name": "Tre' Harris",
@@ -2529,6 +2529,6 @@
     "injuries": [],
     "practice_status": null,
     "has_raw_news": true,
-    "_cached_at": 1790663462.2833169
+    "_cached_at": 1790750620.8020027
   }
 }
