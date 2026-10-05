@@ -1438,9 +1438,16 @@ def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, game
         live_all_props_count = 0
         if not df_live_bets.empty:
             ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-            live_safe_count = int(((df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 11.5)).sum())
+            has_mkt = "market" in df_live_bets.columns
+            safe_m = (df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 7.5)
+            if has_mkt:
+                safe_m = safe_m & (df_live_bets["market"] != "passing_yards")
+            live_safe_count = int(safe_m.sum())
             live_safe_flat_count = live_safe_count
-            live_high_risk_count = int((df_live_bets[ev_col] > 20.0).sum())
+            hr_m = (df_live_bets[ev_col] > 20.0) & (df_live_bets[ev_col] <= 40.0)
+            if has_mkt:
+                hr_m = hr_m & (df_live_bets["market"] != "passing_yards")
+            live_high_risk_count = int(hr_m.sum())
             # All props com EV positivo estrito
             df_positive = df_live_bets[df_live_bets[ev_col] > 0.0]
             live_all_props_count = len(df_positive.drop_duplicates(subset=["player_name", "market", "line"]))
@@ -1671,15 +1678,26 @@ def add_portfolio_bet(req: PortfolioAddRequest):
         db.close()
 
 @app.post("/api/portfolio/import-safe-picks")
-def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, portfolio_type: str = "safe"):
+def import_safe_picks(
+    replace_pending: bool = False, 
+    flat_stake: bool = False, 
+    portfolio_type: str = "safe",
+    max_bets_per_game: int = 3
+):
     df_live_bets = get_live_bets_df(force=True)
     if df_live_bets.empty:
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         
     ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-    mask = (df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 11.5)
+    # Filtro quantitativo otimizado: EV entre 1.0% e 7.5% e exclusão de passing_yards (volatilidade tóxica / 30% WR)
+    mask = (df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 7.5)
+    if "market" in df_live_bets.columns:
+        mask = mask & (df_live_bets["market"] != "passing_yards")
     
-    safe_df = df_live_bets[mask]
+    safe_df = df_live_bets[mask].copy()
+    if ev_col in safe_df.columns:
+        safe_df = safe_df.sort_values(ev_col, ascending=False)
+        
     target_ptype = "safe_flat" if (flat_stake or portfolio_type == "safe_flat") else "safe"
     target_week = int(safe_df["week"].iloc[0]) if ("week" in safe_df.columns and not safe_df.empty) else 1
     
@@ -1702,6 +1720,7 @@ def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, p
             del_query.delete(synchronize_session=False)
             db.commit()
 
+        game_bet_counts = {}
         for _, row in safe_df.iterrows():
             team = str(row.get("team", "")) if row.get("team") else None
             game_id = str(row.get("game_id", "")) if row.get("game_id") else None
@@ -1712,6 +1731,12 @@ def import_safe_picks(replace_pending: bool = False, flat_stake: bool = False, p
             if (game_id and game_id in locked_game_ids) or (team and (team, week) in locked_team_weeks):
                 skipped_locked_count += 1
                 continue
+
+            # Trava de dispersão de risco por partida (máximo de 3 apostas por jogo)
+            if game_id:
+                if game_bet_counts.get(game_id, 0) >= max_bets_per_game:
+                    continue
+                game_bet_counts[game_id] = game_bet_counts.get(game_id, 0) + 1
                 
             player_name = str(row.get("player_name", ""))
             market = str(row.get("market", ""))
@@ -1840,16 +1865,21 @@ def import_safe_flat(replace_pending: bool = False):
     return import_safe_picks(replace_pending=replace_pending, flat_stake=True, portfolio_type="safe_flat")
 
 @app.post("/api/portfolio/import-high-risk-picks")
-def import_high_risk_picks(replace_pending: bool = False):
+def import_high_risk_picks(replace_pending: bool = False, max_bets_per_game: int = 3):
     df_live_bets = get_live_bets_df(force=True)
     if df_live_bets.empty:
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         
     ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-    # Regra estrita de alto risco: apenas EV > 20.0%
-    mask = df_live_bets[ev_col] > 20.0
+    # Regra estrita de alto risco calibrada: EV entre 20.0% e 40.0% e exclusão de passing_yards (elimina alucinações de cauda)
+    mask = (df_live_bets[ev_col] > 20.0) & (df_live_bets[ev_col] <= 40.0)
+    if "market" in df_live_bets.columns:
+        mask = mask & (df_live_bets["market"] != "passing_yards")
     
-    hr_df = df_live_bets[mask]
+    hr_df = df_live_bets[mask].copy()
+    if ev_col in hr_df.columns:
+        hr_df = hr_df.sort_values(ev_col, ascending=False)
+        
     target_week = int(hr_df["week"].iloc[0]) if ("week" in hr_df.columns and not hr_df.empty) else 1
     
     locked_game_ids, locked_team_weeks = get_locked_games_and_teams(2026)
@@ -1871,6 +1901,7 @@ def import_high_risk_picks(replace_pending: bool = False):
             del_query.delete(synchronize_session=False)
             db.commit()
 
+        game_bet_counts = {}
         for _, row in hr_df.iterrows():
             team = str(row.get("team", "")) if row.get("team") else None
             game_id = str(row.get("game_id", "")) if row.get("game_id") else None
@@ -1881,6 +1912,12 @@ def import_high_risk_picks(replace_pending: bool = False):
             if (game_id and game_id in locked_game_ids) or (team and (team, week) in locked_team_weeks):
                 skipped_locked_count += 1
                 continue
+
+            # Trava de dispersão de risco por partida (máximo de 3 apostas por jogo)
+            if game_id:
+                if game_bet_counts.get(game_id, 0) >= max_bets_per_game:
+                    continue
+                game_bet_counts[game_id] = game_bet_counts.get(game_id, 0) + 1
                 
             player_name = str(row.get("player_name", ""))
             market = str(row.get("market", ""))

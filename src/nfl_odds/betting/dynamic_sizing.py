@@ -1,25 +1,22 @@
 """
 dynamic_sizing.py — Motor de Dimensionamento Dinâmico e Inteligente de Unidades
 
-Princípios Quantitativos & Regras de Negócio (Atualizado Semana 4+):
-1. Filtro Estrito: Apenas apostas com 1.0% <= EV <= 11.5% são elegíveis (Sweet Spot empírico: 58.2% WR, +5.95% ROI).
+Princípios Quantitativos & Regras de Negócio (Atualizado Pós-Semana 4):
+1. Filtro Estrito: Apenas apostas com 1.0% <= EV <= 7.5% são elegíveis (Sweet Spot empírico: 58.5% WR, +6.1% ROI).
 2. Unidades Base (U_base):
    - EV entre 1.0% e 2.9%: 0.75u
-   - EV entre 3.0% e 7.9%: 1.00u
-   - EV entre 8.0% e 11.5%: 1.00u com Haircut prudencial (ou 1.25u sem haircut)
+   - EV entre 3.0% e 7.5%: 1.00u
    - Odds Adjustment: Leve amortecimento em odds longas (> 2.20) para conter variância.
 3. Ponderação Convicção por Mercado (W_mercado):
-   - Rushing Yards: 1.25x (Motor de Alpha: 63.3% Win Rate histórico, +15.4% ROI)
+   - Rushing Yards: 1.25x (Motor de Alpha histórico)
    - Receiving Yards: 1.00x (Baseline estável)
-   - Passing Yards: 0.65x (Proteção de volatilidade por jardas residuais / garbage time)
+   - Passing Yards: 0.00x (Pausado na carteira Safe devido a volatilidade extrema e histórico de 30-39% WR)
 4. Penalidade de Cauda / Z-Distance (P_cauda):
    - z > 1.5 sigma: 0.75x (proteção contra extrapolação de quantis)
    - z > 1.0 sigma: 0.90x
    - z <= 1.0 sigma: 1.00x
 5. Multiplicador Semântico da IA (M_IA):
-   - Avalia a polaridade OVER vs UNDER:
-     * No Over: lesões/comitês penalizam (0.50x a 0.75x ou AVOID 0.0x); saúde plena alavanca (1.20x a 1.35x).
-     * No Under: lesões/comitês/desfalques de recebedores favorecem o Under (1.20x a 1.35x); saúde plena modera (0.80x a 0.90x).
+   - Avalia a polaridade OVER vs UNDER com teto de prudência contra viés de confirmação defensiva.
 6. Travas Operacionais:
    - Piso: 0.50u (apostas que resultarem em < 0.50u são descartadas ou arredondadas).
    - Teto: 2.50u (preservação de banca contra eventos de cauda).
@@ -32,7 +29,7 @@ import math
 MARKET_WEIGHTS = {
     "rushing_yards": 1.25,
     "receiving_yards": 1.00,
-    "passing_yards": 0.65,
+    "passing_yards": 0.00,  # Pausado para carteira Safe (volatilidade/drawdown de 30-39% WR)
 }
 
 
@@ -49,16 +46,32 @@ def calculate_smart_units(
     apply_high_ev_haircut: bool = True,
     apply_market_weight: bool = True,
     min_ev: float = 1.0,
-    max_ev: float = 11.5,
+    max_ev: float = 7.5,
 ) -> Dict[str, Any]:
     """
     Calcula a alocação dinâmica de unidades para uma aposta específica.
-    Aplica haircut prudencial de 0.75x para picks com EV > 8.0% para conter
-    sobre-alocação em probabilidades extremas potencialmente descalibradas.
-    Pondera alocação pelo histórico de alpha do mercado (Rushing 1.25x, Receiving 1.00x, Passing 0.65x).
+    Pondera alocação pelo histórico de alpha do mercado (Rushing 1.25x, Receiving 1.00x, Passing 0.00x pausado).
+    Aplica trava de EV entre 1.0% e 7.5% (Sweet Spot empírico de maior assertividade).
     """
+    market_clean = (market or "receiving_yards").lower().strip()
+
     # -------------------------------------------------------------
-    # 1. Filtro Estrito de EV (Sweet Spot: 1.0% a 11.5%)
+    # 0. Exclusão de Mercado Pausado (Passing Yards)
+    # -------------------------------------------------------------
+    if apply_market_weight and MARKET_WEIGHTS.get(market_clean, 1.0) == 0.0:
+        return {
+            "final_units": 0.0,
+            "base_units": 0.0,
+            "tail_penalty": 1.0,
+            "high_ev_haircut": 1.0,
+            "market_weight": 0.0,
+            "ai_multiplier": 0.0,
+            "status": "EXCLUDED_BY_MARKET_WEIGHT",
+            "reason": f"Mercado '{market_clean}' pausado na carteira segura para contenção de volatilidade."
+        }
+
+    # -------------------------------------------------------------
+    # 1. Filtro Estrito de EV (Sweet Spot: 1.0% a 7.5%)
     # -------------------------------------------------------------
     if ev_percent is None or ev_percent < min_ev or ev_percent > max_ev:
         return {
@@ -126,6 +139,10 @@ def calculate_smart_units(
         ai_mult = 0.70
     else:
         ai_mult = max(0.40, min(1.40, m_val))
+
+    # Teto de prudência em UNDER: conter boosts de IA para no máximo 1.15x (evita viés de confirmação contra ataques dinâmicos)
+    if str(side).lower() == "under" and ai_mult > 1.15 and adj_clean != "BOOST":
+        ai_mult = 1.15
 
     # -------------------------------------------------------------
     # 6. Ponderação Convicção por Mercado (W_mercado)

@@ -1138,7 +1138,7 @@ export default function Home() {
     passing_yards: activeGameBets.filter(b => b.market === 'passing_yards').length,
   };
 
-  const safeCount = liveBets.filter(b => b.ev_percent >= 1.0 && b.ev_percent <= 11.5).length;
+  const safeCount = liveBets.filter(b => b.ev_percent >= 1.0 && b.ev_percent <= 7.5 && b.market !== 'passing_yards').length;
 
   const navTabs: { id: Mode; label: string; badge?: string }[] = [
     { id: 'schedule', label: 'Agenda & Todas as Props' },
@@ -1763,7 +1763,7 @@ export default function Home() {
                       : `Recomendações Seguras (Semana ${currentWeek})`}
                   </h2>
                   <p className="text-[#C5A880]/80 text-sm mt-2 max-w-2xl leading-relaxed">
-                    Filtro ajustado para apostas com Expected Value entre <strong className="text-white">+1.0% e +11.5%</strong> (Sweet Spot empírico de maior ROI). Exclui distorções causadas por pequenas amostras ou caudas extremas de probabilidade (data drift).
+                    Filtro quantitativo ajustado para apostas com Expected Value entre <strong className="text-white">+1.0% e +7.5%</strong> (Sweet Spot empírico de maior ROI e exclusão de passing yards). Exclui distorções causadas por pequenas amostras ou caudas extremas de probabilidade.
                   </p>
                 </div>
                 
@@ -1816,7 +1816,7 @@ export default function Home() {
                     const filtered = liveBets
                       .filter(bet => {
                         const matchGame = !selectedGame || bet.team === selectedGame.away_team || bet.team === selectedGame.home_team;
-                        const matchEV = bet.ev_percent >= 1.0 && bet.ev_percent <= 11.5;
+                        const matchEV = bet.ev_percent >= 1.0 && bet.ev_percent <= 7.5 && bet.market !== 'passing_yards';
                         return matchGame && matchEV;
                       })
                       .sort((a, b) => (b.ev_percent ?? -999) - (a.ev_percent ?? -999));
@@ -1824,7 +1824,7 @@ export default function Home() {
                     if (filtered.length === 0) {
                       return (
                         <div className="col-span-full text-center py-20 bg-[#0C0C0E] border border-[#2B261D] rounded-2xl text-zinc-400 font-mono text-sm tracking-wider flex flex-col items-center justify-center gap-4">
-                          <p>Nenhuma aposta encontrada na faixa de segurança (+1.0% a +11.5% EV) para este filtro.</p>
+                          <p>Nenhuma aposta encontrada na faixa de segurança (+1.0% a +7.5% EV, sem passing yards) para este filtro.</p>
                           <button
                             onClick={() => setMode('schedule')}
                             className="px-6 py-2.5 bg-[#15130F] hover:bg-[#201C15] text-[#C5A880] border border-[#2B261D] rounded-xl text-xs uppercase tracking-wider transition-colors font-mono"
@@ -2592,7 +2592,7 @@ export default function Home() {
                   <div className="flex items-center gap-2">
                     <span className="flex h-2 w-2 rounded-full bg-[#10B981] animate-pulse"></span>
                     <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.16em] text-[#C5A880]">
-                      Carteiras Principais • Sweet Spot (+EV 1.0% a 11.5%)
+                      Carteiras Principais • Sweet Spot (+EV 1.0% a 7.5%)
                     </span>
                   </div>
                   <span className="text-[10px] font-mono text-zinc-500 hidden md:inline">
@@ -2644,7 +2644,7 @@ export default function Home() {
                         )}
                       </div>
                       <p className="text-[11px] font-mono text-zinc-400 leading-relaxed">
-                        Dimensionamento quantitativo dinâmico por mercado (Rushing 1.25x, Receiving 1.00x, Passing 0.65x) com haircut para EV alto (&gt;8%) e penalidade de cauda.
+                        Dimensionamento quantitativo dinâmico por mercado (Rushing 1.25x, Receiving 1.00x, Passing pausado) com dispersão de risco (máx 3/jogo).
                       </p>
                     </div>
 
@@ -2654,7 +2654,7 @@ export default function Home() {
                         Stakes variáveis (0.5u - 1.5u)
                       </span>
                       <span className="text-emerald-400 font-semibold">
-                        Sweet Spot (+EV 1.0% a 11.5%)
+                        Sweet Spot (+EV 1.0% a 7.5%)
                       </span>
                     </div>
                   </button>
@@ -2711,7 +2711,7 @@ export default function Home() {
                         Stake fixa uniforme (1.0u)
                       </span>
                       <span className="text-cyan-400 font-semibold">
-                        Sweet Spot (+EV 1.0% a 11.5%)
+                        Sweet Spot (+EV 1.0% a 7.5%)
                       </span>
                     </div>
                   </button>
@@ -2745,7 +2745,7 @@ export default function Home() {
                       <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
                         portfolioTab === 'high_risk' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-amber-400'
                       }`}>
-                        EV &gt; 20% • {portfolioHighRiskCount}
+                        EV 20% a 40% • {portfolioHighRiskCount}
                       </span>
                     </button>
 
@@ -2783,11 +2783,11 @@ export default function Home() {
                       <div className="flex justify-between items-center mb-3 sm:mb-4">
                         <h2 className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-zinc-400 truncate">
                           {portfolioTab === 'safe' 
-                            ? 'Relatório Financeiro • Carteira Atual (Dynamic Sizing • +EV 1.0% a 11.5%)' 
+                            ? 'Relatório Financeiro • Carteira Atual (Dynamic Sizing • +EV 1.0% a 7.5%)' 
                             : portfolioTab === 'safe_flat'
-                            ? 'Relatório Financeiro • Carteira Atual Flat (Stake Fixa 1.0u • +EV 1.0% a 11.5%)'
+                            ? 'Relatório Financeiro • Carteira Atual Flat (Stake Fixa 1.0u • +EV 1.0% a 7.5%)'
                             : portfolioTab === 'high_risk'
-                            ? 'Relatório Financeiro • Carteira de Alto Risco (Apenas EV > 20%)'
+                            ? 'Relatório Financeiro • Carteira de Alto Risco (Apenas EV 20% a 40%)'
                             : 'Relatório Financeiro • Carteira All Props (100% das Props)'}
                         </h2>
                         <span className="text-[10px] sm:text-[11px] font-mono text-zinc-500 whitespace-nowrap ml-2">
@@ -3705,11 +3705,11 @@ export default function Home() {
                           <td colSpan={11} className="py-16 text-center text-zinc-500 font-mono text-xs uppercase tracking-wider">
                             {portfolioBets.length === 0 
                               ? (portfolioTab === 'safe'
-                                  ? 'A Carteira Atual (Dynamic Sizing) está vazia. Clique em "Sincronizar Carteira Atual" para importar apostas (+EV 1.0% a 11.5%).'
+                                  ? 'A Carteira Atual (Dynamic Sizing) está vazia. Clique em "Sincronizar Carteira Atual" para importar apostas (+EV 1.0% a 7.5%).'
                                   : portfolioTab === 'safe_flat'
-                                  ? 'A Carteira Atual Flat está vazia. Clique em "Sincronizar Carteira Atual Flat" para importar recomendações (+EV 1.0% a 11.5%).'
+                                  ? 'A Carteira Atual Flat está vazia. Clique em "Sincronizar Carteira Atual Flat" para importar recomendações (+EV 1.0% a 7.5%).'
                                   : portfolioTab === 'high_risk'
-                                  ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas" para importar apostas (EV > 20%).'
+                                  ? 'A carteira de alto risco está vazia. Clique em "Sincronizar Apostas" para importar apostas (EV 20% a 40%).'
                                   : 'A carteira All Props está vazia. Clique em "Sincronizar Props" para importar todas as props com valor esperado positivo (+EV > 0).')
                               : 'Nenhuma aposta encontrada para este filtro.'}
                           </td>
@@ -4666,7 +4666,7 @@ export default function Home() {
                     <span className="text-base font-bold text-white mt-1 block">
                       {(selectedAiBet.base_units || 1.0).toFixed(2)} u
                     </span>
-                    <span className="text-[9px] text-zinc-500 mt-0.5 block">Faixa EV {selectedAiBet.ev_percent >= 8 ? '8-11.5%' : selectedAiBet.ev_percent >= 3 ? '3-8%' : '1-3%'}</span>
+                    <span className="text-[9px] text-zinc-500 mt-0.5 block">Faixa EV {selectedAiBet.ev_percent >= 3 ? '3-7.5%' : '1-3%'}</span>
                   </div>
 
                   <div className="bg-zinc-900/80 border border-zinc-800 rounded-lg p-2.5">

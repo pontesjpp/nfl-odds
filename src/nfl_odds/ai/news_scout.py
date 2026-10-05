@@ -509,14 +509,14 @@ class PlayerNewsScout:
     ) -> Dict[str, Dict[str, Any]]:
         """
         Executa a pesquisa e coleta de notícias para os jogadores únicos recomendados
-        (EV entre 1.0% e 11.5%) E seus companheiros correlacionados (recebedores para QB, QB para WR, etc).
+        (EV entre 1.0% e 40.0% das carteiras Safe e High Risk) e seus companheiros correlacionados.
         Retorna dicionário mapeado por nome do atleta.
         """
         if df_bets.is_empty():
             return {}
 
         df_rec = df_bets.filter(
-            (pl.col("ev_percent") >= 1.0) & (pl.col("ev_percent") <= 11.5)
+            (pl.col("ev_percent") >= 1.0) & (pl.col("ev_percent") <= 40.0)
         )
         if df_rec.is_empty():
             return {}
