@@ -30,6 +30,7 @@ class ProbabilityCalibrator:
         min_prob: float = 0.0001,
         max_prob: float = 0.9999,
         max_slope: float = 1.0,
+        symmetrized: bool = True,
     ):
         if method not in ("platt", "isotonic"):
             raise ValueError(f"Unknown calibration method: '{method}'. Must be 'platt' or 'isotonic'.")
@@ -38,15 +39,20 @@ class ProbabilityCalibrator:
         self.min_prob = min_prob
         self.max_prob = max_prob
         self.max_slope = max_slope
+        self.symmetrized = symmetrized
         self.is_fitted: bool = False
         self.slope_: float = 1.0
         self.intercept_: float = 0.0
         self.iso_: Optional[Any] = None
+        self.is_side_aware: bool = False
+        self.over_calibrator: Optional["ProbabilityCalibrator"] = None
+        self.under_calibrator: Optional["ProbabilityCalibrator"] = None
 
     def fit(
         self,
         raw_probs: Union[np.ndarray, List[float]],
         actuals: Union[np.ndarray, List[float]],
+        fit_intercept: Optional[bool] = None,
     ) -> "ProbabilityCalibrator":
         """Fit calibration mapping on training probabilities and binary outcomes."""
         p = np.asarray(raw_probs, dtype=np.float64).flatten()
@@ -61,20 +67,31 @@ class ProbabilityCalibrator:
         eps = 1e-6
         p = np.clip(p, eps, 1.0 - eps)
 
+        use_intercept = fit_intercept if fit_intercept is not None else (not self.symmetrized)
+
         if self.method == "platt":
             z = logit(p)
-            # Symmetrized training pairs to mathematically force b = 0
-            z_sym = np.concatenate([z, -z]).reshape(-1, 1)
-            y_sym = np.concatenate([y, 1.0 - y])
+            if self.symmetrized and not use_intercept:
+                # Symmetrized training pairs to mathematically force b = 0
+                z_sym = np.concatenate([z, -z]).reshape(-1, 1)
+                y_sym = np.concatenate([y, 1.0 - y])
 
-            # LogisticRegression with L2 regularization
-            lr = LogisticRegression(C=self.C, fit_intercept=False, solver="lbfgs")
-            lr.fit(z_sym, y_sym)
+                lr = LogisticRegression(C=self.C, fit_intercept=False, solver="lbfgs")
+                lr.fit(z_sym, y_sym)
 
-            fitted_w = float(lr.coef_[0][0])
-            # Positive slope guard & Shrinkage ceiling (0.01 <= w <= max_slope)
-            self.slope_ = max(0.01, min(self.max_slope, fitted_w))
-            self.intercept_ = 0.0
+                fitted_w = float(lr.coef_[0][0])
+                self.slope_ = max(0.01, min(self.max_slope, fitted_w))
+                self.intercept_ = 0.0
+            else:
+                # Asymmetric empirical calibration with non-zero intercept
+                z_mat = z.reshape(-1, 1)
+                lr = LogisticRegression(C=self.C, fit_intercept=True, solver="lbfgs")
+                lr.fit(z_mat, y)
+
+                fitted_w = float(lr.coef_[0][0])
+                self.slope_ = max(0.01, min(self.max_slope, fitted_w))
+                self.intercept_ = float(lr.intercept_[0])
+
             self.is_fitted = True
 
         elif self.method == "isotonic":
@@ -87,12 +104,74 @@ class ProbabilityCalibrator:
 
         return self
 
+    def fit_sides(
+        self,
+        raw_probs_over: Union[np.ndarray, List[float]],
+        actuals_over: Union[np.ndarray, List[float]],
+        raw_probs_under: Optional[Union[np.ndarray, List[float]]] = None,
+        actuals_under: Optional[Union[np.ndarray, List[float]]] = None,
+    ) -> "ProbabilityCalibrator":
+        """Fits independent directional calibrators for OVER and UNDER outcomes."""
+        p_o = np.asarray(raw_probs_over, dtype=np.float64).flatten()
+        y_o = np.asarray(actuals_over, dtype=np.float64).flatten()
+
+        if raw_probs_under is not None:
+            p_u = np.asarray(raw_probs_under, dtype=np.float64).flatten()
+        else:
+            p_u = 1.0 - p_o
+
+        if actuals_under is not None:
+            y_u = np.asarray(actuals_under, dtype=np.float64).flatten()
+        else:
+            y_u = 1.0 - y_o
+
+        self.over_calibrator = ProbabilityCalibrator(
+            method=self.method,
+            C=self.C,
+            min_prob=self.min_prob,
+            max_prob=self.max_prob,
+            max_slope=self.max_slope,
+            symmetrized=False,
+        ).fit(p_o, y_o, fit_intercept=True)
+
+        self.under_calibrator = ProbabilityCalibrator(
+            method=self.method,
+            C=self.C,
+            min_prob=self.min_prob,
+            max_prob=self.max_prob,
+            max_slope=self.max_slope,
+            symmetrized=False,
+        ).fit(p_u, y_u, fit_intercept=True)
+
+        self.is_side_aware = True
+        self.is_fitted = True
+        self.slope_ = self.over_calibrator.slope_
+        self.intercept_ = self.over_calibrator.intercept_
+        return self
+
     def calibrate(
         self,
         raw_probs: Union[float, np.ndarray, List[float]],
+        side: Optional[Union[str, np.ndarray, List[str]]] = None,
     ) -> np.ndarray:
         """Calibrate raw probabilities into strictly bounded, monotonic probabilities."""
         p = np.asarray(raw_probs, dtype=np.float64)
+
+        if self.is_side_aware:
+            if isinstance(side, (list, np.ndarray)) and len(side) == p.size:
+                side_arr = np.char.lower(np.asarray(side, dtype=str).flatten())
+                p_flat = p.flatten()
+                out = np.zeros_like(p_flat)
+                under_mask = (side_arr == "under")
+                if np.any(under_mask) and self.under_calibrator is not None:
+                    out[under_mask] = self.under_calibrator.calibrate(p_flat[under_mask])
+                if np.any(~under_mask) and self.over_calibrator is not None:
+                    out[~under_mask] = self.over_calibrator.calibrate(p_flat[~under_mask])
+                return out.reshape(p.shape)
+            elif isinstance(side, str) and side.lower().strip() == "under" and self.under_calibrator is not None:
+                return self.under_calibrator.calibrate(p)
+            elif self.over_calibrator is not None:
+                return self.over_calibrator.calibrate(p)
 
         # Input sanitization
         p = np.nan_to_num(p, nan=0.5)
@@ -119,8 +198,6 @@ class ProbabilityCalibrator:
 
         # Enforce strict probability bounds [min_prob, max_prob]
         cal_p = np.clip(cal_p, self.min_prob, self.max_prob)
-
-        # Guarantee binary point-symmetry when input contains complementary pairs
         return np.asarray(cal_p, dtype=np.float64)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -131,8 +208,15 @@ class ProbabilityCalibrator:
             "min_prob": self.min_prob,
             "max_prob": self.max_prob,
             "max_slope": self.max_slope,
+            "symmetrized": self.symmetrized,
             "is_fitted": self.is_fitted,
+            "is_side_aware": self.is_side_aware,
         }
+        if self.is_side_aware:
+            if self.over_calibrator is not None:
+                data["over_calibrator"] = self.over_calibrator.to_dict()
+            if self.under_calibrator is not None:
+                data["under_calibrator"] = self.under_calibrator.to_dict()
         if self.method == "platt":
             data["slope"] = float(self.slope_)
             data["intercept"] = float(self.intercept_)
@@ -154,8 +238,17 @@ class ProbabilityCalibrator:
             min_prob=data.get("min_prob", 0.0001),
             max_prob=data.get("max_prob", 0.9999),
             max_slope=data.get("max_slope", 1.0),
+            symmetrized=data.get("symmetrized", True),
         )
         inst.is_fitted = bool(data.get("is_fitted", False))
+        inst.is_side_aware = bool(data.get("is_side_aware", False))
+
+        if inst.is_side_aware:
+            if "over_calibrator" in data and data["over_calibrator"] is not None:
+                inst.over_calibrator = cls.from_dict(data["over_calibrator"])
+            if "under_calibrator" in data and data["under_calibrator"] is not None:
+                inst.under_calibrator = cls.from_dict(data["under_calibrator"])
+
         if inst.method == "platt":
             inst.slope_ = float(data.get("slope", 1.0))
             inst.intercept_ = float(data.get("intercept", 0.0))

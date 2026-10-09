@@ -99,7 +99,7 @@ def test_live_bets(client):
     bets = response.json()
     assert isinstance(bets, list)
     assert len(bets) > 0
-    assert any(b.get("week") in (3, 4) for b in bets)
+    assert any(b.get("week") in (3, 4, 5) for b in bets)
 
 def test_bets_alias(client):
     response = client.get("/api/bets")

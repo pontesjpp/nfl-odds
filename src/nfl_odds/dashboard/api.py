@@ -1438,15 +1438,11 @@ def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, game
         live_all_props_count = 0
         if not df_live_bets.empty:
             ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-            has_mkt = "market" in df_live_bets.columns
-            safe_m = (df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 7.5)
-            if has_mkt:
-                safe_m = safe_m & (df_live_bets["market"] != "passing_yards")
+            prob_cond = (df_live_bets["prob_win"] >= 0.55) if "prob_win" in df_live_bets.columns else True
+            safe_m = (df_live_bets[ev_col] >= 3.5) & (df_live_bets[ev_col] <= 40.0) & prob_cond
             live_safe_count = int(safe_m.sum())
             live_safe_flat_count = live_safe_count
-            hr_m = (df_live_bets[ev_col] > 20.0) & (df_live_bets[ev_col] <= 40.0)
-            if has_mkt:
-                hr_m = hr_m & (df_live_bets["market"] != "passing_yards")
+            hr_m = (df_live_bets[ev_col] > 15.0) & (df_live_bets[ev_col] <= 45.0)
             live_high_risk_count = int(hr_m.sum())
             # All props com EV positivo estrito
             df_positive = df_live_bets[df_live_bets[ev_col] > 0.0]
@@ -1689,10 +1685,9 @@ def import_safe_picks(
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         
     ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-    # Filtro quantitativo otimizado: EV entre 1.0% e 7.5% e exclusão de passing_yards (volatilidade tóxica / 30% WR)
-    mask = (df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 7.5)
-    if "market" in df_live_bets.columns:
-        mask = mask & (df_live_bets["market"] != "passing_yards")
+    # Reclassificação baseada em Edge Real Calibrado (P(Win) >= 55% e EV >= 3.5%)
+    prob_cond = (df_live_bets["prob_win"] >= 0.55) if "prob_win" in df_live_bets.columns else True
+    mask = (df_live_bets[ev_col] >= 3.5) & (df_live_bets[ev_col] <= 40.0) & prob_cond
     
     safe_df = df_live_bets[mask].copy()
     if ev_col in safe_df.columns:
@@ -1871,10 +1866,8 @@ def import_high_risk_picks(replace_pending: bool = False, max_bets_per_game: int
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         
     ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-    # Regra estrita de alto risco calibrada: EV entre 20.0% e 40.0% e exclusão de passing_yards (elimina alucinações de cauda)
-    mask = (df_live_bets[ev_col] > 20.0) & (df_live_bets[ev_col] <= 40.0)
-    if "market" in df_live_bets.columns:
-        mask = mask & (df_live_bets["market"] != "passing_yards")
+    # Carteira de Retorno Agressivo / Cauda Longa: EV > 15.0% e <= 45.0%
+    mask = (df_live_bets[ev_col] > 15.0) & (df_live_bets[ev_col] <= 45.0)
     
     hr_df = df_live_bets[mask].copy()
     if ev_col in hr_df.columns:

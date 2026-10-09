@@ -210,10 +210,10 @@ def run_pipeline(live=False, week=4):
             
         if len(test_eval) > 0:
             lines = test_eval["line"].to_numpy()
-            probs_over = model.probability_over_line(test_eval, lines, calibrate=True)
+            probs_over, probs_under = model.probability_both_sides(test_eval, lines, distribution="lognormal", calibrate=True)
             
             df_eval_with_odds = test_eval.select(["player_name", "team", "season", "week", "market", "line", "odds", "side", "espn_id"])
-            results = analyze_opportunities(df_eval_with_odds, probs_over)
+            results = analyze_opportunities(df_eval_with_odds, probs_over, probs_under)
             all_results.append(results)
     
     if len(all_results) > 0:

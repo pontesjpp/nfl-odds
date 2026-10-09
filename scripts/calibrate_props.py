@@ -56,26 +56,30 @@ def train_market_calibrator(
         base_lines = preds[:, len(model.quantiles) // 2]
 
     # Generate training instances across line variants (spread across the market line spectrum)
-    p_tr_all: list = []
-    y_tr_all: list = []
+    p_tr_over_all: list = []
+    y_tr_over_all: list = []
+    p_tr_under_all: list = []
+    y_tr_under_all: list = []
 
     for mult in [0.85, 0.95, 1.0, 1.05, 1.15]:
         lines = np.round(base_lines * mult * 2) / 2.0
-        # Calculate raw uncalibrated probabilities
-        raw_p = model.probability_over_line(sub, lines, calibrate=False)
-        actual_y = (sub[market].to_numpy() > lines).astype(float)
-        p_tr_all.extend(raw_p)
-        y_tr_all.extend(actual_y)
+        # Calculate raw uncalibrated probabilities with asymmetric lognormal modeling
+        raw_p_over, raw_p_under = model.probability_both_sides(sub, lines, distribution="lognormal", calibrate=False)
+        actual_over = (sub[market].to_numpy() > lines).astype(float)
+        actual_under = 1.0 - actual_over
 
-    p_arr = np.array(p_tr_all)
-    y_arr = np.array(y_tr_all)
+        p_tr_over_all.extend(raw_p_over)
+        y_tr_over_all.extend(actual_over)
+        p_tr_under_all.extend(raw_p_under)
+        y_tr_under_all.extend(actual_under)
 
     calibrator = ProbabilityCalibrator(method=method, C=0.5, max_slope=1.0)
-    calibrator.fit(p_arr, y_arr)
+    calibrator.fit_sides(p_tr_over_all, y_tr_over_all, p_tr_under_all, y_tr_under_all)
 
     print(
-        f"[{market}] Fitted {method} calibrator on {len(p_arr)} samples | "
-        f"Slope w={calibrator.slope_:.4f}, Intercept b={calibrator.intercept_:.4f}"
+        f"[{market}] Fitted dual-side {method} calibrator on {len(p_tr_over_all)} samples | "
+        f"OVER: w={calibrator.over_calibrator.slope_:.4f}, b={calibrator.over_calibrator.intercept_:.4f} | "
+        f"UNDER: w={calibrator.under_calibrator.slope_:.4f}, b={calibrator.under_calibrator.intercept_:.4f}"
     )
 
     # Persist as standalone calibrator joblib

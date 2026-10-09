@@ -1,16 +1,18 @@
 """
 dynamic_sizing.py — Motor de Dimensionamento Dinâmico e Inteligente de Unidades
 
-Princípios Quantitativos & Regras de Negócio (Atualizado Pós-Semana 4):
-1. Filtro Estrito: Apenas apostas com 1.0% <= EV <= 7.5% são elegíveis (Sweet Spot empírico: 58.5% WR, +6.1% ROI).
+Princípios Quantitativos & Regras de Negócio (Atualizado com Calibração Dual-Side & Edge Real):
+1. Filtro de Edge Real: Apenas apostas com EV real calibrado entre 2.5% e 40.0% e P(Win) >= 55.0% são elegíveis.
+   A calibração dual-side eliminou o viés empírico de Under, restaurando a monotonicidade de retorno.
 2. Unidades Base (U_base):
-   - EV entre 1.0% e 2.9%: 0.75u
-   - EV entre 3.0% e 7.5%: 1.00u
+   - EV entre 2.5% e 5.9%: 0.75u
+   - EV entre 6.0% e 14.9%: 1.00u
+   - EV >= 15.0%: 1.25u (com Haircut prudencial de 0.80x se EV > 25% para conter variância).
    - Odds Adjustment: Leve amortecimento em odds longas (> 2.20) para conter variância.
 3. Ponderação Convicção por Mercado (W_mercado):
-   - Rushing Yards: 1.25x (Motor de Alpha histórico)
+   - Rushing Yards: 1.20x (Motor de Alpha histórico)
    - Receiving Yards: 1.00x (Baseline estável)
-   - Passing Yards: 0.00x (Pausado na carteira Safe devido a volatilidade extrema e histórico de 30-39% WR)
+   - Passing Yards: 0.80x (Reintegrado sob calibração dual-side e modelagem paramétrica Log-Normal)
 4. Penalidade de Cauda / Z-Distance (P_cauda):
    - z > 1.5 sigma: 0.75x (proteção contra extrapolação de quantis)
    - z > 1.0 sigma: 0.90x
@@ -27,9 +29,9 @@ from typing import Dict, Any, Optional, List, Tuple
 import math
 
 MARKET_WEIGHTS = {
-    "rushing_yards": 1.25,
+    "rushing_yards": 1.20,
     "receiving_yards": 1.00,
-    "passing_yards": 0.00,  # Pausado para carteira Safe (volatilidade/drawdown de 30-39% WR)
+    "passing_yards": 0.80,  # Reativado sob calibração dual-side
 }
 
 
@@ -45,8 +47,8 @@ def calculate_smart_units(
     ai_sizing_rationale: Optional[str] = None,
     apply_high_ev_haircut: bool = True,
     apply_market_weight: bool = True,
-    min_ev: float = 1.0,
-    max_ev: float = 7.5,
+    min_ev: float = 2.5,
+    max_ev: float = 40.0,
 ) -> Dict[str, Any]:
     """
     Calcula a alocação dinâmica de unidades para uma aposta específica.
@@ -105,14 +107,14 @@ def calculate_smart_units(
     # -------------------------------------------------------------
     # 3. Base Quantitativa Normalizada (U_base) & Haircut de Alto EV
     # -------------------------------------------------------------
-    high_ev_haircut = 0.75 if (apply_high_ev_haircut and ev_percent > 8.0) else 1.00
+    high_ev_haircut = 0.80 if (apply_high_ev_haircut and ev_percent > 25.0) else 1.00
 
-    if ev_percent < 3.0:
+    if ev_percent < 6.0:
         base_units = 0.75
-    elif ev_percent < 8.0:
+    elif ev_percent < 15.0:
         base_units = 1.00
     else:
-        base_units = 1.00 if apply_high_ev_haircut else 1.25
+        base_units = 1.25
 
     # Amortecimento em odds longas (> 2.20) para conter variância matemática
     if odds > 2.20:

@@ -1,11 +1,11 @@
 from nfl_odds.betting.dynamic_sizing import calculate_smart_units, compute_portfolio_exposure_and_stats
 
 def test_ev_filter_boundaries():
-    res_low = calculate_smart_units(ev_percent=0.5)
+    res_low = calculate_smart_units(ev_percent=1.0)
     assert res_low["status"] == "EXCLUDED_BY_EV_FILTER"
     assert res_low["final_units"] == 0.0
 
-    res_high = calculate_smart_units(ev_percent=13.5)
+    res_high = calculate_smart_units(ev_percent=45.0)
     assert res_high["status"] == "EXCLUDED_BY_EV_FILTER"
     assert res_high["final_units"] == 0.0
 
@@ -14,16 +14,16 @@ def test_ev_filter_boundaries():
     assert res_valid["final_units"] == 1.0
 
 def test_market_weights():
-    # Rushing: 1.25x
+    # Rushing: 1.20x
     res_rush = calculate_smart_units(ev_percent=6.0, market="rushing_yards", apply_high_ev_haircut=False)
-    assert res_rush["market_weight"] == 1.25
+    assert res_rush["market_weight"] == 1.20
     assert res_rush["final_units"] == 1.25
 
-    # Passing: 0.00x (pausado na carteira segura para contenção de volatilidade)
+    # Passing: 0.80x (reativado sob calibrador dual-side)
     res_pass = calculate_smart_units(ev_percent=6.0, market="passing_yards", apply_high_ev_haircut=False)
-    assert res_pass["market_weight"] == 0.00
-    assert res_pass["status"] == "EXCLUDED_BY_MARKET_WEIGHT"
-    assert res_pass["final_units"] == 0.0
+    assert res_pass["market_weight"] == 0.80
+    assert res_pass["status"] == "APPROVED"
+    assert res_pass["final_units"] == 0.75
 
     # Receiving: 1.00x
     res_rec = calculate_smart_units(ev_percent=6.0, market="receiving_yards", apply_high_ev_haircut=False)
@@ -58,8 +58,8 @@ def test_over_vs_under_polarities():
 
 def test_discretization_and_clamping():
     res_boost = calculate_smart_units(
-        ev_percent=10.0, 
-        max_ev=15.0,
+        ev_percent=16.0, 
+        max_ev=20.0,
         market="receiving_yards", 
         ai_multiplier=1.35, 
         recommendation_adjustment="BOOST", 
@@ -69,13 +69,13 @@ def test_discretization_and_clamping():
     assert (res_boost["final_units"] * 4) % 1 == 0
 
 def test_high_ev_haircut():
-    # Bets with EV > 8.0% get 0.75x haircut factor
-    res_high_ev = calculate_smart_units(ev_percent=10.0, max_ev=15.0, market="receiving_yards", apply_high_ev_haircut=True)
-    assert res_high_ev["high_ev_haircut"] == 0.75
-    assert res_high_ev["final_units"] == 0.75
+    # Bets with EV > 25.0% get 0.80x haircut factor
+    res_high_ev = calculate_smart_units(ev_percent=28.0, market="receiving_yards", apply_high_ev_haircut=True)
+    assert res_high_ev["high_ev_haircut"] == 0.80
+    assert res_high_ev["final_units"] == 1.00
 
-    # Bets with EV <= 8.0% do not get haircut
-    res_med_ev = calculate_smart_units(ev_percent=7.5, market="receiving_yards", apply_high_ev_haircut=True)
+    # Bets with EV <= 25.0% do not get haircut
+    res_med_ev = calculate_smart_units(ev_percent=12.0, market="receiving_yards", apply_high_ev_haircut=True)
     assert res_med_ev["high_ev_haircut"] == 1.00
     assert res_med_ev["final_units"] == 1.00
 

@@ -12,25 +12,39 @@ def calculate_ev(model_prob_win: float, odds: float, stake: float = 10.0) -> flo
 def calculate_edge(model_prob_win: float, implied_prob: float) -> float:
     return model_prob_win - implied_prob
 
-def analyze_opportunities(df_odds: pl.DataFrame, model_probs: np.ndarray) -> pl.DataFrame:
+from typing import Optional
+
+def analyze_opportunities(
+    df_odds: pl.DataFrame, 
+    model_probs: np.ndarray,
+    model_probs_under: Optional[np.ndarray] = None,
+) -> pl.DataFrame:
     """
     df_odds must have columns: ['odds', 'side', 'line']
-    model_probs is the probability of OVER.
+    model_probs is the calibrated probability of OVER (or single model prob).
+    model_probs_under is the independently calibrated probability of UNDER.
     """
-    
-    # Calculate prob of winning depending on the side
-    # If side is 'over', prob_win = model_probs
-    # If side is 'under', prob_win = 1.0 - model_probs
-    
-    probs = pl.Series("model_prob", model_probs)
-    df = df_odds.with_columns(probs)
-    
-    df = df.with_columns(
-        pl.when(pl.col("side") == "over").then(pl.col("model_prob"))
-        .otherwise(1.0 - pl.col("model_prob"))
-        .clip(0.0001, 0.9999)
-        .alias("prob_win")
-    )
+    if model_probs_under is not None:
+        p_over = pl.Series("model_prob_over", model_probs)
+        p_under = pl.Series("model_prob_under", model_probs_under)
+        df = df_odds.with_columns([p_over, p_under])
+        df = df.with_columns(
+            pl.when(pl.col("side") == "over").then(pl.col("model_prob_over"))
+            .otherwise(pl.col("model_prob_under"))
+            .clip(0.0001, 0.9999)
+            .alias("prob_win")
+        )
+        df = df.with_columns(pl.col("prob_win").alias("model_prob"))
+    else:
+        probs = pl.Series("model_prob", model_probs)
+        df = df_odds.with_columns(probs)
+        
+        df = df.with_columns(
+            pl.when(pl.col("side") == "over").then(pl.col("model_prob"))
+            .otherwise(1.0 - pl.col("model_prob"))
+            .clip(0.0001, 0.9999)
+            .alias("prob_win")
+        )
     
     df = df.with_columns([
         (1.0 / pl.col("odds")).alias("implied_prob")
