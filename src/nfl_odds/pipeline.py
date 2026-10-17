@@ -67,6 +67,16 @@ def run_pipeline(live=False, week=4):
         print(f"-> USING REAL LINES FROM SCRAPER / PARQUET")
         df_odds = pl.read_parquet("data/betclic_parsed_odds.parquet")
         
+        # Filtro estrito: Se data/links.txt existir, considerar APENAS odds dos links da rodada atual
+        # Isso impede que odds residuais de rodadas anteriores (ex: times em Bye Week) entrem na semana atual
+        if os.path.exists("data/links.txt") and "match_url" in df_odds.columns:
+            with open("data/links.txt", "r") as f:
+                active_links = [line.strip().rstrip("/") for line in f if line.strip()]
+            if active_links:
+                df_odds = df_odds.filter(
+                    pl.col("match_url").str.strip_chars().str.strip_chars_end("/").is_in(active_links)
+                )
+        
         mapping_df = df_test_base.select(["player_id", "player_display_name"]).drop_nulls().unique()
         mapping_df = mapping_df.with_columns(
             pl.col("player_display_name").str.to_lowercase().str.replace_all(r"[.\s']", "").alias("name_clean")
@@ -240,6 +250,10 @@ def run_pipeline(live=False, week=4):
                 pl.Series("game_id", game_ids),
                 pl.Series("opponent", opps)
             ])
+            # Descartar atletas cujo time não joga nesta semana (Bye week / sem partida válida)
+            final_results = final_results.filter(
+                pl.col("game_id").is_not_null() & pl.col("opponent").is_not_null()
+            )
         except Exception as e:
             print(f"Warning: Could not attach schedule info: {e}")
             

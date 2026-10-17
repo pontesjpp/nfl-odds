@@ -1438,14 +1438,34 @@ def get_portfolio(portfolio_type: str = "safe", week: Optional[str] = None, game
         live_all_props_count = 0
         if not df_live_bets.empty:
             ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-            prob_cond = (df_live_bets["prob_win"] >= 0.55) if "prob_win" in df_live_bets.columns else True
-            safe_m = (df_live_bets[ev_col] >= 3.5) & (df_live_bets[ev_col] <= 40.0) & prob_cond
-            live_safe_count = int(safe_m.sum())
+            has_mkt = "market" in df_live_bets.columns
+            has_gid = "game_id" in df_live_bets.columns
+            valid_game = (df_live_bets["game_id"].notna() & (df_live_bets["game_id"] != "nan") & (df_live_bets["game_id"] != "")) if has_gid else True
+
+            # Sweet Spot estrito para Safe: EV entre 1.0% e 5.0%, sem passing yards, sem ghost games, deduplicado por (player, market)
+            prob_cond = (df_live_bets["prob_win"] >= 0.54) if "prob_win" in df_live_bets.columns else True
+            safe_m = (df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 5.0) & prob_cond & valid_game
+            if has_mkt:
+                safe_m = safe_m & (df_live_bets["market"] != "passing_yards")
+            safe_candidates = df_live_bets[safe_m]
+            if not safe_candidates.empty and has_mkt:
+                live_safe_count = len(safe_candidates.drop_duplicates(subset=["player_name", "market"]))
+            else:
+                live_safe_count = int(safe_m.sum())
             live_safe_flat_count = live_safe_count
-            hr_m = (df_live_bets[ev_col] > 15.0) & (df_live_bets[ev_col] <= 45.0)
-            live_high_risk_count = int(hr_m.sum())
-            # All props com EV positivo estrito
-            df_positive = df_live_bets[df_live_bets[ev_col] > 0.0]
+
+            # High Risk: EV entre 10.0% e 25.0%, sem passing yards, sem ghost games, deduplicado por (player, market)
+            hr_m = (df_live_bets[ev_col] >= 10.0) & (df_live_bets[ev_col] <= 25.0) & valid_game
+            if has_mkt:
+                hr_m = hr_m & (df_live_bets["market"] != "passing_yards")
+            hr_candidates = df_live_bets[hr_m]
+            if not hr_candidates.empty and has_mkt:
+                live_high_risk_count = len(hr_candidates.drop_duplicates(subset=["player_name", "market"]))
+            else:
+                live_high_risk_count = int(hr_m.sum())
+
+            # All props com EV positivo estrito e partida válida
+            df_positive = df_live_bets[(df_live_bets[ev_col] > 0.0) & valid_game]
             live_all_props_count = len(df_positive.drop_duplicates(subset=["player_name", "market", "line"]))
 
         all_bets = db.query(Bet).all()
@@ -1685,9 +1705,15 @@ def import_safe_picks(
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         
     ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-    # Reclassificação baseada em Edge Real Calibrado (P(Win) >= 55% e EV >= 3.5%)
-    prob_cond = (df_live_bets["prob_win"] >= 0.55) if "prob_win" in df_live_bets.columns else True
-    mask = (df_live_bets[ev_col] >= 3.5) & (df_live_bets[ev_col] <= 40.0) & prob_cond
+    has_mkt = "market" in df_live_bets.columns
+    has_gid = "game_id" in df_live_bets.columns
+    valid_game = (df_live_bets["game_id"].notna() & (df_live_bets["game_id"] != "nan") & (df_live_bets["game_id"] != "")) if has_gid else True
+
+    # Sweet Spot estrito para Safe: EV entre 1.0% e 5.0%, P(Win) >= 54%, exclusão de passing yards e jogos inválidos
+    prob_cond = (df_live_bets["prob_win"] >= 0.54) if "prob_win" in df_live_bets.columns else True
+    mask = (df_live_bets[ev_col] >= 1.0) & (df_live_bets[ev_col] <= 5.0) & prob_cond & valid_game
+    if has_mkt:
+        mask = mask & (df_live_bets["market"] != "passing_yards")
     
     safe_df = df_live_bets[mask].copy()
     if ev_col in safe_df.columns:
@@ -1716,7 +1742,27 @@ def import_safe_picks(
             db.commit()
 
         game_bet_counts = {}
+        seen_player_markets = set()
         for _, row in safe_df.iterrows():
+            player_name = str(row.get("player_name", ""))
+            market = str(row.get("market", ""))
+            line = float(row.get("line", 0.0))
+            side = str(row.get("side", "over")).lower()
+
+            # 1. Deduplicação estrita de risco por atleta e mercado (máximo 1 linha por jogador no mercado)
+            pm_key = (player_name, market)
+            if pm_key in seen_player_markets:
+                continue
+
+            # 2. Proteção contra a Armadilha do Reserva (Injury Trap / RB2 com linha alta de titular):
+            pos_r = row.get("pos_rank")
+            depth_r = str(row.get("depth_role", "") or "")
+            is_backup_rb = (market == "rushing_yards") and (
+                (pos_r is not None and pos_r >= 2) or "reserva" in depth_r.lower()
+            )
+            if is_backup_rb and line >= 50.0 and side == "under":
+                continue
+
             team = str(row.get("team", "")) if row.get("team") else None
             game_id = str(row.get("game_id", "")) if row.get("game_id") else None
             season = int(row.get("season", 2026))
@@ -1732,11 +1778,6 @@ def import_safe_picks(
                 if game_bet_counts.get(game_id, 0) >= max_bets_per_game:
                     continue
                 game_bet_counts[game_id] = game_bet_counts.get(game_id, 0) + 1
-                
-            player_name = str(row.get("player_name", ""))
-            market = str(row.get("market", ""))
-            line = float(row.get("line", 0.0))
-            side = str(row.get("side", "over")).lower()
             odds = float(row.get("odds", 1.85))
             season = int(row.get("season", 2026))
             week = int(row.get("week", target_week))
@@ -1828,6 +1869,7 @@ def import_safe_picks(
                 )
                 db.add(new_bet)
                 imported_count += 1
+                seen_player_markets.add(pm_key)
             else:
                 if existing.result == "pending" and not existing.is_locked:
                     existing.odds = odds
@@ -1842,6 +1884,7 @@ def import_safe_picks(
                     existing.edge = edge_v
                     existing.ev_percent = ev_v
                     updated_count += 1
+                seen_player_markets.add(pm_key)
                 
         db.commit()
         return {
@@ -1866,8 +1909,14 @@ def import_high_risk_picks(replace_pending: bool = False, max_bets_per_game: int
         return {"imported": 0, "message": "Nenhuma aposta ao vivo encontrada."}
         
     ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
-    # Carteira de Retorno Agressivo / Cauda Longa: EV > 15.0% e <= 45.0%
-    mask = (df_live_bets[ev_col] > 15.0) & (df_live_bets[ev_col] <= 45.0)
+    has_mkt = "market" in df_live_bets.columns
+    has_gid = "game_id" in df_live_bets.columns
+    valid_game = (df_live_bets["game_id"].notna() & (df_live_bets["game_id"] != "nan") & (df_live_bets["game_id"] != "")) if has_gid else True
+
+    # Regra estrita de alto risco calibrada: EV entre 10.0% e 25.0%, sem passing_yards e sem jogos inválidos
+    mask = (df_live_bets[ev_col] >= 10.0) & (df_live_bets[ev_col] <= 25.0) & valid_game
+    if has_mkt:
+        mask = mask & (df_live_bets["market"] != "passing_yards")
     
     hr_df = df_live_bets[mask].copy()
     if ev_col in hr_df.columns:
@@ -1895,7 +1944,27 @@ def import_high_risk_picks(replace_pending: bool = False, max_bets_per_game: int
             db.commit()
 
         game_bet_counts = {}
+        seen_player_markets = set()
         for _, row in hr_df.iterrows():
+            player_name = str(row.get("player_name", ""))
+            market = str(row.get("market", ""))
+            line = float(row.get("line", 0.0))
+            side = str(row.get("side", "over")).lower()
+
+            # 1. Deduplicação estrita de risco por atleta e mercado (máximo 1 linha por jogador no mercado)
+            pm_key = (player_name, market)
+            if pm_key in seen_player_markets:
+                continue
+
+            # 2. Proteção contra a Armadilha do Reserva (Injury Trap / RB2 com linha alta de titular):
+            pos_r = row.get("pos_rank")
+            depth_r = str(row.get("depth_role", "") or "")
+            is_backup_rb = (market == "rushing_yards") and (
+                (pos_r is not None and pos_r >= 2) or "reserva" in depth_r.lower()
+            )
+            if is_backup_rb and line >= 50.0 and side == "under":
+                continue
+
             team = str(row.get("team", "")) if row.get("team") else None
             game_id = str(row.get("game_id", "")) if row.get("game_id") else None
             season = int(row.get("season", 2026))
@@ -1911,11 +1980,6 @@ def import_high_risk_picks(replace_pending: bool = False, max_bets_per_game: int
                 if game_bet_counts.get(game_id, 0) >= max_bets_per_game:
                     continue
                 game_bet_counts[game_id] = game_bet_counts.get(game_id, 0) + 1
-                
-            player_name = str(row.get("player_name", ""))
-            market = str(row.get("market", ""))
-            line = float(row.get("line", 0.0))
-            side = str(row.get("side", "over")).lower()
             odds = float(row.get("odds", 1.85))
             season = int(row.get("season", 2026))
             week = int(row.get("week", target_week))
@@ -1970,6 +2034,7 @@ def import_high_risk_picks(replace_pending: bool = False, max_bets_per_game: int
                 )
                 db.add(new_bet)
                 imported_count += 1
+                seen_player_markets.add(pm_key)
             else:
                 if existing.result == "pending" and not existing.is_locked:
                     existing.odds = odds
@@ -1982,6 +2047,7 @@ def import_high_risk_picks(replace_pending: bool = False, max_bets_per_game: int
                     existing.side_favorability = str(row.get("side_favorability", "NEUTRAL")) if row.get("side_favorability") else None
                     existing.ai_summary = str(row.get("ai_summary", "")) if row.get("ai_summary") else None
                     updated_count += 1
+                seen_player_markets.add(pm_key)
                 
         db.commit()
         return {
@@ -2002,8 +2068,10 @@ def import_all_props(replace_pending: bool = False, mode: str = "best_side"):
         
     ev_col = "ev_percent" if "ev_percent" in df_live_bets.columns else "ev_10_eur"
     
-    # REGRA ESTRITA: Apenas props com EV positivo (> 0). Props com EV negativo nunca entram na carteira!
-    df_positive = df_live_bets[df_live_bets[ev_col] > 0.0]
+    # REGRA ESTRITA: Apenas props com EV positivo (> 0) e partida válida (sem bye week). Props com EV negativo nunca entram na carteira!
+    has_gid = "game_id" in df_live_bets.columns
+    valid_game = (df_live_bets["game_id"].notna() & (df_live_bets["game_id"] != "nan") & (df_live_bets["game_id"] != "")) if has_gid else True
+    df_positive = df_live_bets[(df_live_bets[ev_col] > 0.0) & valid_game]
     
     if mode == "all_rows":
         target_df = df_positive
@@ -2153,11 +2221,13 @@ def settle_portfolio(
         from nfl_odds.data.live_stats import (
             get_all_finished_game_stats,
             match_player_in_stats,
-            clean_team_code
+            clean_team_code,
+            fetch_espn_scoreboard
         )
 
         # 1. Carregar catálogo completo de jogos finalizados e estatísticas oficiais (ESPN + nflreadpy) POR SEMANA
         candidate_weeks = list(set(b.week for b in candidate_bets if b.week)) or [4]
+        scoreboard_by_week = {w: fetch_espn_scoreboard(season=2026, week=w) for w in candidate_weeks}
         finished_games_by_week: Dict[int, Dict[str, Any]] = {}
         players_by_week: Dict[int, List[Dict[str, Any]]] = {}
         for w in candidate_weeks:
@@ -2191,7 +2261,20 @@ def settle_portfolio(
                 is_game_finished = True
                 
             if not is_game_finished:
-                # O jogo deste jogador ainda não terminou ou não iniciou
+                # Se a rodada inteira já terminou (todos os jogos da semana foram finalizados)
+                # e o time não jogou (ou aposta sem partida válida/bye week), a aposta é anulada (push / void)
+                w_sb = scoreboard_by_week.get(b_week, [])
+                week_all_finished = len(w_sb) > 0 and all(g.get("completed") for g in w_sb)
+                if week_all_finished:
+                    if prev_result != "push":
+                        bet.result = "push"
+                        bet.actual_value = 0.0
+                        bet.profit_units = 0.0
+                        bet.settled_at = datetime.now()
+                        bet.is_locked = True
+                        bet.notes = f"Sem partida na rodada {b_week} (Bye week / Aposta anulada)"
+                        settled_count += 1
+                        settled_game_names.add(f"Sem jogo ({clean_b_team or 'N/A'})")
                 continue
                 
             # Verifica se temos as estatísticas oficiais carregadas para este time na semana correspondente

@@ -90,7 +90,8 @@ class ProbabilityCalibrator:
 
                 fitted_w = float(lr.coef_[0][0])
                 self.slope_ = max(0.01, min(self.max_slope, fitted_w))
-                self.intercept_ = float(lr.intercept_[0])
+                # Limita o intercepto a [-0.25, 0.25] para evitar distorções de cauda (ex: transformar 50% em 75%)
+                self.intercept_ = max(-0.25, min(0.25, float(lr.intercept_[0])))
 
             self.is_fitted = True
 

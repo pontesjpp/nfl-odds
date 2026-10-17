@@ -29,9 +29,9 @@ from typing import Dict, Any, Optional, List, Tuple
 import math
 
 MARKET_WEIGHTS = {
-    "rushing_yards": 1.20,
+    "rushing_yards": 1.25,
     "receiving_yards": 1.00,
-    "passing_yards": 0.80,  # Reativado sob calibração dual-side
+    "passing_yards": 0.00,  # Pausado para carteira Safe (volatilidade/drawdown de 44.8% WR e -18.4% ROI)
 }
 
 
@@ -47,13 +47,13 @@ def calculate_smart_units(
     ai_sizing_rationale: Optional[str] = None,
     apply_high_ev_haircut: bool = True,
     apply_market_weight: bool = True,
-    min_ev: float = 2.5,
-    max_ev: float = 40.0,
+    min_ev: float = 1.0,
+    max_ev: float = 5.0,
 ) -> Dict[str, Any]:
     """
     Calcula a alocação dinâmica de unidades para uma aposta específica.
     Pondera alocação pelo histórico de alpha do mercado (Rushing 1.25x, Receiving 1.00x, Passing 0.00x pausado).
-    Aplica trava de EV entre 1.0% e 7.5% (Sweet Spot empírico de maior assertividade).
+    Aplica trava de EV entre 1.0% e 5.0% (Sweet Spot empírico de maior assertividade: 60.8% WR, +10.5% ROI).
     """
     market_clean = (market or "receiving_yards").lower().strip()
 
@@ -107,14 +107,16 @@ def calculate_smart_units(
     # -------------------------------------------------------------
     # 3. Base Quantitativa Normalizada (U_base) & Haircut de Alto EV
     # -------------------------------------------------------------
-    high_ev_haircut = 0.80 if (apply_high_ev_haircut and ev_percent > 25.0) else 1.00
+    high_ev_haircut = 0.75 if (apply_high_ev_haircut and ev_percent > 8.0) else 1.00
 
-    if ev_percent < 6.0:
+    if ev_percent < 3.0:
         base_units = 0.75
-    elif ev_percent < 15.0:
+    elif ev_percent <= 5.0:
+        base_units = 1.00
+    elif ev_percent < 8.0:
         base_units = 1.00
     else:
-        base_units = 1.25
+        base_units = 1.00 if apply_high_ev_haircut else 1.25
 
     # Amortecimento em odds longas (> 2.20) para conter variância matemática
     if odds > 2.20:
